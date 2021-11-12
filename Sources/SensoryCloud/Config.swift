@@ -17,11 +17,11 @@ public class Config {
 
     static var cloudHost: CloudHost?
 
-    public static func setCloudHost(host: String, port: Int) {
+    public static func setCloudHost(host: String, port: Int = 443) {
         cloudHost = CloudHost(host: host, port: port, isSecure: true)
     }
 
-    public static func setInsecureCloudHost(host: String, port: Int) {
+    public static func setInsecureCloudHost(host: String, port: Int = 443) {
         cloudHost = CloudHost(host: host, port: port, isSecure: false)
     }
 
