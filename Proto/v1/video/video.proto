@@ -1,0 +1,224 @@
+// sensory.api.video
+syntax = "proto3";
+
+package sensory.api.v1.video;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/v1/video";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.v1.video";
+option java_outer_classname = "SensoryApiV1VideoProto";
+
+import "validate/validate.proto";
+import "common/common.proto";
+
+// Handles the retrieval and management of video models
+service VideoModels {
+  // Get available models for enrollment and authentication
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc GetModels (GetModelsRequest) returns (GetModelsResponse) {}
+}
+
+// Handles all video-related biometrics
+service VideoBiometrics {
+  // Enrolls a user with a stream of video. Streams a CreateEnrollmentResponse
+  // as the video is processed.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc CreateEnrollment(stream CreateEnrollmentRequest) returns (stream CreateEnrollmentResponse) {}
+
+  // Authenticates a user with a stream of video against an existing enrollment.
+  // Streams an AuthenticateResponse as the video is processed.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc Authenticate(stream AuthenticateRequest) returns (stream AuthenticateResponse) {}
+}
+
+// Handles all video recognition endpoints
+service VideoRecognition {
+  // Validates the liveness of a single image or stream of images.
+  // Streams a ValidateRecognitionResponse as the images are processed.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc ValidateLiveness(stream ValidateRecognitionRequest) returns (stream LivenessRecognitionResponse) {}
+}
+
+// A model that is available for use
+message VideoModel {
+  // The name of the model
+  string name = 1;
+  // Boolean representing if a model can be used in enrollment
+  bool isEnrollable = 2;
+  // Model type string
+  common.ModelType modelType = 3;
+  // Specific object for which this model is made
+  string fixedObject = 4;
+  // List of versions available for this model
+  repeated string versions = 5;
+  // The technology backing this model
+  common.TechnologyType technology = 6;
+}
+
+// Request to get a list of the available models
+message GetModelsRequest {
+}
+
+// Response containing the models currently available
+message GetModelsResponse {
+  repeated VideoModel models = 1; // List of supported models
+}
+
+// The top-level message sent by the client for the `CreateEnrollment` method.
+// Multiple `CreateEnrollmentRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `imageContent`.
+// All subsequent messages must contain `imageContent` and
+// must not contain a `config` message.
+message CreateEnrollmentRequest {
+  // The streaming request, which is either a config or image content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `CreateEnrollmentRequest` message must contain a
+    // `config`  message.
+    CreateEnrollmentConfig config = 1;
+
+    // The image content to be recognized sent as bytes.
+    bytes imageContent = 2;
+  }
+}
+
+// The top-level message sent by the client for the `Authenticate` method.
+// Multiple `AuthenticateRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `imageContent`.
+// All subsequent messages must contain `imageContent` and
+// must not contain a `config` message.
+message AuthenticateRequest {
+  // The streaming request, which is either a config or image content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `AuthenticateRequest` message must contain a
+    // `config`  message.
+    AuthenticateConfig config = 1;
+
+    // The image content to be recognized sent as bytes.
+    bytes imageContent = 2;
+  }
+}
+
+// The top-level message sent by the client for the `ValidateLiveness` method.
+// Multiple `ValidateRecognitionRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `imageContent`.
+// All subsequent messages must contain `imageContent` and
+// must not contain a `config` message.
+message ValidateRecognitionRequest {
+  // The streaming request, which is either a config or image content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `ValidateRecognitionRequest` message must contain a
+    // `config`  message.
+    ValidateRecognitionConfig config = 1;
+
+    // The image content to be recognized sent as bytes.
+    bytes imageContent = 2;
+  }
+}
+
+// Response to an enrollment request
+message CreateEnrollmentResponse {
+  // Percent Complete as values between 0 and 100
+  int64 percentComplete = 1;
+    // Liveness check bit. This value with always be false if 'isLivenessEnabled' is set to false in the CreateEnrollmentConfig
+    bool isAlive = 2;
+  // If enrollment is successful, this value will be the unique Enrollment ID
+  string enrollmentId = 3;
+  // Model used for enrollment
+  string modelName = 4;
+  // Model version used for enrollment
+  string modelVersion = 5;
+}
+
+// Response to an authentication request
+message AuthenticateResponse {
+  // Success / Failure bit
+  bool success = 1;
+  // Score of the authentication (lower is better)
+  float score = 2;
+  // Liveness check bit. This value with always be false if 'isLivenessEnabled' is set to false in the AuthenticateConfig
+  bool isAlive = 3;
+  // Optional token that will be returned upon a successful authentication if doIncludeToken is set to true in the AuthenticateConfig
+  common.TokenResponse token = 4;
+}
+
+// Response to a liveness recognition request
+message LivenessRecognitionResponse {
+  // Success / Failure bit
+  bool isAlive = 1;
+  // Score of the liveness (lower is better)
+  float score = 2;
+}
+
+// Provides information for an enrollment
+message CreateEnrollmentConfig {
+  // The unique user Identifer. This value should be a unique email address or username known by the user.
+  string userId = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // The unique device Identifer. This value should be something retrieved by the devie prior to enrollment (like MAC Address)
+  // this value is used to identify a device uniquely across multiple enrollments
+  string deviceId = 2 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // Name of background model to be enrolled in
+  // Background models can be retrieved from the GetModels() gRPC call
+  string modelName = 3 [(validate.rules).string = {min_len: 1, max_len: 255}];
+
+  // Description of the enrollment as entered by the user.
+  // Max length is 1023 characters
+  string description = 4 [(validate.rules).string.max_len = 1023];
+
+  // Enable a liveness check on the image, which will further improve the security of enrollment at the expense of a slightly slower response.
+  bool isLivenessEnabled = 5;
+
+  // The liveness threshold
+  RecognitionThreshold livenessThreshold = 6 [(validate.rules).enum.defined_only = true];
+
+  // Information about how the video data will be compressed.
+  common.CompressionConfiguration compression = 7;
+}
+
+// Provides information for an image-based authentication
+message AuthenticateConfig {
+  // The unique enrollment Identifer
+  string enrollmentId = 1 [(validate.rules).string.uuid = true]; // Unique identifier created at enrollment
+
+  // Enable a liveness check on the image, which will further improve the security of authentication at the expense of a slightly slower response.
+  bool isLivenessEnabled = 2;
+
+  // The liveness threshold
+  RecognitionThreshold livenessThreshold = 3 [(validate.rules).enum.defined_only = true];
+
+  // Information aobut how the video data will be compressed.
+  common.CompressionConfiguration compression = 4;
+
+  // A boolean indicating if the response should include an OAuth token for the user associated with the enrollmentId
+  // The OAuth token will only be returned if the authentication is successful.
+  // It's important to note there will be a minor performance hit to authentication, as OAuth token generation is a semi-expensive operation.
+  bool doIncludeToken = 5;
+}
+
+// Provides information for a video-based event recognition
+message ValidateRecognitionConfig {
+  // Name of model to validate against
+  // Models can be retrieved from the GetModels() gRPC call
+  string modelName = 1 [(validate.rules).string = {min_len: 1, max_len: 255}];
+
+  // The unique user Identifer
+  string userId = 2 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // The model threshold
+  RecognitionThreshold threshold = 3 [(validate.rules).enum.defined_only = true];
+}
+
+// Specifies how sensitive the recognition threshold of the model should be
+enum RecognitionThreshold {
+  LOW = 0;
+  MEDIUM = 1;
+  HIGH = 2;
+  HIGHEST = 3;
+}

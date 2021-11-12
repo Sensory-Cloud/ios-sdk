@@ -1,0 +1,147 @@
+// sensory.api.management
+syntax = "proto3";
+
+package sensory.api.v1.management;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/v1/management";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.v1.management";
+option java_outer_classname = "SensoryApiV1ManagementEnrollmentProto";
+
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "common/common.proto";
+
+// Service to manage Enrollments in the database
+service EnrollmentService {
+  // Get enrollments from the database that match the specified criteria
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc GetEnrollments (GetEnrollmentsRequest) returns (GetEnrollmentsResponse) {}
+
+  // Get all enrollment groups that match the specified criteria
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc GetEnrollmentGroups (GetEnrollmentsRequest) returns (GetEnrollmentGroupsResponse) {}
+
+  // Creates a new enrollment group without any associated enrollments
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc CreateEnrollmentGroup (CreateEnrollmentGroupRequest) returns (EnrollmentGroupResponse) {}
+
+  // Appends an enrollment to an enrollment group
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc AppendEnrollmentGroup (AppendEnrollmentGroupRequest) returns (EnrollmentGroupResponse) {}
+
+  // Deletes an enrollment from the database
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc DeleteEnrollment (DeleteEnrollmentRequest) returns (EnrollmentResponse) {}
+
+  // Deletes an enrollment group from the database
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc DeleteEnrollmentGroup (DeleteEnrollmentGroupRequest) returns (EnrollmentGroupResponse) {}
+}
+
+// Criteria to filter the returned enrollments
+// A client may only retrieve enrollments
+message GetEnrollmentsRequest {
+  string userId = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];    // The id or userId of the user
+}
+
+// A response containing a list of enrollments
+message GetEnrollmentsResponse {
+  // A list of enrollments
+  repeated EnrollmentResponse enrollments = 1;
+  // An indication of if the requesting oauth agent is trusted for these enrollments.
+  // If the device is not trusted, identifying information will be removed from the enrollment response.
+  bool isRequestorTrusted = 2;
+}
+
+// A response containing a single enrollment
+message EnrollmentResponse {
+   // Unique enrollment idenfier (UUID)
+  string id = 1;
+   // Created at epoch
+  google.protobuf.Timestamp createdAt = 2;
+  // Updated at epoch
+  google.protobuf.Timestamp updatedAt = 3;
+  // User-entered Description
+  string description = 4;
+  // Name of the model belonging to the enrollment
+  string modelName = 5;
+  // Type of the model enrolled
+  common.ModelType modelType = 6;
+  // Version of the model enrolled
+  string modelVersion = 7;
+  // Id of the device that enrolled this model
+  string deviceId = 8;
+  // Id of the user that enrolled this model
+  string userId = 9;
+  // The type of data compression that was used during enrollment creation
+  common.CompressionConfiguration compression = 10;
+  // Name of the device that enrolled this model
+  string deviceName = 11;
+}
+
+// A response containing a list of enrollment groups
+message GetEnrollmentGroupsResponse {
+  // A list of enrollment groups
+  repeated EnrollmentGroupResponse enrollmentGroups = 1;
+}
+
+// A group of enrollments that can be authenticated together
+message EnrollmentGroupResponse {
+  // Unique group identifier (UUID)
+  string id = 1;
+  // Created at epoch
+  google.protobuf.Timestamp createdAt = 2;
+  // Updated at epoch
+  google.protobuf.Timestamp updatedAt = 3;
+  // Name of the enrollment group
+  string name = 4;
+  // Description of the enrollment group
+  string description = 5;
+  // Name of the model for this enrollment group
+  string modelName = 6;
+  // Type of the model for this enrollment gooup
+  common.ModelType modelType = 7;
+  // Version of the model
+  string modelVersion = 8;
+  // UserID of the user who created the enrollment group
+  string userId = 9;
+  // List of enrollments contained in this enrollment group
+  repeated EnrollmentResponse enrollments = 10;
+ }
+
+ // Request to create a new enrollment group
+ message CreateEnrollmentGroupRequest {
+   // Identifier for enrollment group
+   string id = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+   // Name of the enrollment group
+   string name = 2 [(validate.rules).string = {min_len: 1, max_len: 255}];
+   // Description for the enrollment group
+   string description = 3 [(validate.rules).string.max_len = 1023];
+   // Model name for the model used by this enrollment group
+   string modelName = 4 [(validate.rules).string = {min_len: 1, max_len: 255}];
+   // User ID of the user that owns the enrollment group
+   string userId = 5 [(validate.rules).string = {min_len: 1, max_len: 127}];
+   // List of enrollment IDs to include in the enrollment group
+   repeated string enrollmentIds = 6;
+}
+
+// Request to append additional enrollments to an enrollment group
+message AppendEnrollmentGroupRequest {
+  // Enrollment group ID to append enrollments to
+  string groupId = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+  // List of enrollment IDS to append
+  repeated string enrollmentIds = 2;
+}
+
+// A request to delete and enrollment by ID
+message DeleteEnrollmentRequest {
+  // The enrollment ID
+  string id = 1 [(validate.rules).string.uuid = true];
+}
+
+// A request to delete an enrollment group
+message DeleteEnrollmentGroupRequest {
+  // Enrollment Group ID
+  string id = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+}

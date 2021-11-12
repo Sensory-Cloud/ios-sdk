@@ -1,0 +1,90 @@
+// sensory.api.oauth
+syntax = "proto3";
+
+package sensory.api.oauth;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/oauth";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.oauth";
+option java_outer_classname = "SensoryApiOauthProto";
+
+import "validate/validate.proto";
+import "common/common.proto";
+
+// Service for OAuth function
+service OauthService {
+  // Obtain an OAuth token for the given credentials
+  // Endpoint does not require an authorization token
+  rpc GetToken (TokenRequest) returns (common.TokenResponse) {}
+
+  // Sign and return an OAuth token. The passed authorization token must have the SignToken authority.
+  // Therefore, Devices are not allowed to make this request.
+  // Sign does not validate credentials, and therefore should be used in specific circumstances where credentials are not required.
+  // One common usecase for the Sign request is an Io server issuing a user-scoped token after a successful authentication.
+  // Only a limited subset of of scopes may be requested from the SignToken request.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc SignToken (SignTokenRequest) returns (common.TokenResponse) {}
+
+  // Obtain information about oneself based on the passed OAuth token
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc GetWhoAmI (WhoAmIRequest) returns (WhoAmIResponse) {}
+
+  // Retrieve a public key by ID. Public keys retrieved by this endpoint can be used
+  // to validate tokens signed by the Sensory cloud.
+  rpc GetPublicKey (PublicKeyRequest) returns (PublicKeyResponse) {}
+}
+
+// Request to obtain an OAuth token
+message TokenRequest {
+  // Unique client identifier created at enrollment
+  string clientId = 1 [(validate.rules).string.uuid = true];
+  // Secret value correspoinding to the client ID
+  string secret = 2;
+}
+
+// Request to obtain an OAuth token on behalf of a user.
+message SignTokenRequest {
+  // User identifier - who the token is being issued to
+  string subject = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // The specific scope of the token
+  TokenScope scope = 2 [(validate.rules).enum.defined_only = true];
+
+  // The scope of a token in a SignTokenRequest.
+  enum TokenScope {
+    // Standard User
+    USER = 0;
+    // Super Administrator, capable of all operations
+    SUPER_ADMIN = 1;
+    // Billing Administrator, capable of all billing-related operations
+    BILLING_ADMIN = 2;
+    // Read-only Administrator, capable of all read operations
+    READ_ONLY_ADMIN = 3;
+  }
+}
+
+// Request to obtain information based on the passed authorization token
+message WhoAmIRequest {}
+
+// Response contect generated from the passed authorization token
+message WhoAmIResponse {
+  // Unique client identifier created at enrollment
+  string clientId = 1;
+  // Unique tenant UUID for the particular client
+  string tenantId = 2;
+
+}
+
+// Request for a public key by KeyID in order to validation a token signed by the Sensory Cloud
+message PublicKeyRequest {
+  // Unique keyId associated with the public key
+  string keyId = 1  [(validate.rules).string.uuid = true];
+}
+
+// Response to a public key request. Holds a byte array representing the public key.
+message PublicKeyResponse {
+  // The public key as bytes
+  bytes publicKey = 1;
+  // The key type
+  common.KeyType keyType = 2;
+}

@@ -1,0 +1,33 @@
+excluded:
+  - Sources/SensoryCloud/Generated/*
+
+opt_in_rules:
+  - force_unwrapping
+  - unneeded_parentheses_in_closure_argument
+  - unused_import
+
+line_length:
+  warning: 200
+  error: 250
+
+file_length:
+  warning: 500
+  error: 1200
+
+identifier_name:
+  min_length:
+    warning: 3
+    error: 2
+  excluded:
+    - id
+    - i
+    - j
+    - x
+    - y
+    - z
+
+function_parameter_count:
+  warning: 7
+  error: 10
+
+reporter: "xcode"

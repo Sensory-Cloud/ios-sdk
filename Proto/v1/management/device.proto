@@ -1,0 +1,48 @@
+// sensory.api.management
+syntax = "proto3";
+
+package sensory.api.v1.management;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/v1/management";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.v1.management";
+option java_outer_classname = "SensoryApiV1ManagementDeviceProto";
+
+import "validate/validate.proto";
+import "v1/management/client.proto";
+
+// Service to manage Devices in the database
+service DeviceService {
+  // Create a new device in the database
+  rpc EnrollDevice (EnrollDeviceRequest) returns (DeviceResponse) {}
+  // Allows a device to fetch information about itself
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc GetWhoAmI (DeviceGetWhoAmIRequest) returns (DeviceResponse) {}
+}
+
+// Request to enroll a new device in the system. Devices can then enroll and associate users with themselves.
+message EnrollDeviceRequest {
+  // The friendly name you'd like to associate with this device
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+  // The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
+  // A typical value would be a hardware serial number.
+  string deviceId = 2 [(validate.rules).string = {min_len: 1, max_len: 127}];
+  // Unique Tenant ID as UUID
+  string tenantId = 3 [(validate.rules).string.uuid = true];
+  // OAuth client-specific request details
+  CreateGenericClientRequest client = 4 [(validate.rules).message.required = true];
+  // If required, the credential to be validated by the server upon enrollment.
+  // Possible values are a shared secret or signed JWT.
+  string credential = 5;
+}
+
+// A response containing information about a device
+message DeviceResponse {
+  // The friendly name of the device
+  string name = 1;
+  // The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
+  string deviceId = 2;
+}
+
+// A request to obtain information about the calling device
+message DeviceGetWhoAmIRequest {}

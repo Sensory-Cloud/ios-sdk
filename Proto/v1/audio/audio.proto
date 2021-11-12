@@ -1,0 +1,321 @@
+// sensory.api.audio
+syntax = "proto3";
+
+package sensory.api.v1.audio;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/v1/audio";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.v1.audio";
+option java_outer_classname = "SensoryApiV1AudioProto";
+
+import "validate/validate.proto";
+import "common/common.proto";
+
+// Handles the retrieval and management of audio models
+service AudioModels {
+  // Get available models for enrollment and authentication
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc GetModels (GetModelsRequest) returns (GetModelsResponse) {}
+}
+
+// Handles all audio-related biometrics
+service AudioBiometrics {
+  // Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse
+  // as the audio is processed.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc CreateEnrollment(stream CreateEnrollmentRequest) returns (stream CreateEnrollmentResponse) {}
+
+  // Authenticates a user with a stream of audio against an existing enrollment.
+  // Streams an AuthenticateResponse as the audio is processed.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc Authenticate(stream AuthenticateRequest) returns (stream AuthenticateResponse) {}
+}
+
+// Handles all audio event processing
+service AudioEvents {
+  // Validates a phrase or sound with a stream of audio.
+  // Streams a ValidateEventResponse as the audio is processed.
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc ValidateEvent(stream ValidateEventRequest) returns (stream ValidateEventResponse) {}
+}
+
+// Request to get a list of the available models
+message GetModelsRequest {
+}
+
+// A model that is available for use
+message AudioModel {
+  // The name of the model
+  string name = 1;
+  // Boolean representing if a model can be used in enrollment
+  bool isEnrollable = 2;
+  // Model type
+  common.ModelType modelType = 3;
+  // Specific phrase used for enrollment (if applicable)
+  string fixedPhrase = 4;
+  // Required sampling rate for the data
+  int32 sampleRate = 5;
+  // List of versions available for this model
+  repeated string versions = 6;
+  // The technology backing this model
+  common.TechnologyType technology = 7;
+}
+
+// Response containing the models currently available
+message GetModelsResponse {
+  repeated AudioModel models = 1; // List of supported models
+}
+
+// The top-level message sent by the client for the `CreateEnrollment` method.
+// Multiple `CreateEnrollmentRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `audioContent`.
+// All subsequent messages must contain `audioContent` and
+// must not contain a `config` message.
+message CreateEnrollmentRequest {
+  // The streaming request, which is either a config or audio content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `CreateEnrollmentRequest` message must contain a
+    // `config`  message.
+    CreateEnrollmentConfig config = 1;
+
+    // The audio data to be recognized. Sequential chunks of audio data are sent
+    // in sequential `CreateEnrollmentRequest` messages. The first
+    // `CreateEnrollmentRequest` message must not contain `audioContent` data
+    // and all subsequent `CreateEnrollmentRequest` messages must contain
+    // `audioContent` data. The audio bytes must be encoded as specified in
+    // `AudioConfig`.
+    bytes audioContent = 2;
+  }
+}
+
+// The top-level message sent by the client for the `Authenticate` method.
+// Multiple `AuthenticateRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `audioContent`.
+// All subsequent messages must contain `audioContent` and
+// must not contain a `config` message.
+message AuthenticateRequest {
+  // The streaming request, which is either a config or audio content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `AuthenticateRequest` message must contain a
+    // `config`  message.
+    AuthenticateConfig config = 1;
+
+    // The audio data to be recognized. Sequential chunks of audio data are sent
+    // in sequential `AuthenticateRequest` messages. The first
+    // `AuthenticateRequest` message must not contain `audioContent` data
+    // and all subsequent `AuthenticateRequest` messages must contain
+    // `audioContent` data. The audio bytes must be encoded as specified in
+    // `AudioConfig`.
+    bytes audioContent = 2;
+  }
+}
+
+// The top-level message sent by the client for the `ValidateEvent` method.
+// Multiple `ValidateEventRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `audioContent`.
+// All subsequent messages must contain `audioContent` and
+// must not contain a `config` message.
+message ValidateEventRequest {
+  // The streaming request, which is either a config or audio content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `ValidateEventRequest` message must contain a
+    // `config`  message.
+    ValidateEventConfig config = 1;
+
+    // The audio data to be recognized. Sequential chunks of audio data are sent
+    // in sequential `ValidateEventRequest` messages. The first
+    // `ValidateEventRequest` message must not contain `audioContent` data
+    // and all subsequent `ValidateEventRequest` messages must contain
+    // `audioContent` data. The audio bytes must be encoded as specified in
+    // `AudioConfig`.
+    bytes audioContent = 2;
+  }
+}
+
+// Response to an enrollment request
+message CreateEnrollmentResponse {
+  // Percent Complete as values between 0 and 100
+  int64 percentComplete = 1;
+  // Relative energy of the processed audio as a value between 0 and 1
+  float audioEnergy = 2;
+  // If enrollment is successful, this value will be the unique Enrollment ID
+  string enrollmentId = 3;
+  // Model used for enrollment
+  string modelName = 4;
+  // Model version used for enrollment
+  string modelVersion = 5;
+}
+
+// Response to an authentication request
+message AuthenticateResponse {
+  // Relative energy of the processed audio as a value between 0 and 1
+  float audioEnergy = 1;
+  // Success / Failure bit
+  bool success = 2;
+  // Optional token that will be returned upon a successful authentication if doIncludeToken is set to true in the AuthenticateConfig
+  common.TokenResponse token = 3;
+  // The userID of the authenticated user
+  // Useful when evaluating enrollment groups
+  string userId = 4;
+  // The enrollmentID of the authenticated user
+  // Useful when evaluating enrollment groups
+  string enrollmentId = 5;
+}
+
+// Response from a ValidateEventRequest
+message ValidateEventResponse {
+  // Relative energy of the processed audio as a value between 0 and 1
+  float audioEnergy = 1;
+  // Success / Failure bit
+  bool success = 2;
+  // Indicates the id of the particular sound that was recognized.
+  // Useful for combined models where multiple sound events can be recognized by the same model.
+  string resultId = 3;
+  // The score of the event between -100 to +100. Smaller values typically indicate an invalid sound while larger values would generally indicate a detected sound.
+  float score = 4;
+}
+
+// Provides information for an audio-based enrollment
+message CreateEnrollmentConfig {
+  // Required. Provides information that specifies how to
+  // process the request.
+  AudioConfig audio = 1 [(validate.rules).message.required = true];
+
+  // The unique user Identifer. This value should be a unique email address or username known by the user.
+  string userId = 2 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // The unique device Identifer. This value should be something retrieved by the devie prior to enrollment (like MAC Address)
+  // this value is used to identify a device uniquely across multiple enrollments
+  string deviceId = 3 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // Name of background model to be enrolled in
+  // Background models can be retrieved from the GetModels() gRPC call
+  string modelName = 4 [(validate.rules).string = {min_len: 1, max_len: 255}];
+
+  // Description of the enrollment as entered by the user.
+  // Max length is 1023 characters
+  string description = 5 [(validate.rules).string.max_len = 1023];
+}
+
+// Provides information for an audio-based authentication
+message AuthenticateConfig {
+  // Required. Provides information that specifies how to
+  // process the request.
+  AudioConfig audio = 1 [(validate.rules).message.required = true];
+
+  // An identifier for what to authenticate against, either an individual enrollment or a group of enrollments
+  oneof authId {
+    option (validate.required) = true;
+    // Unique identifier created at enrollment
+    string enrollmentId = 2 [(validate.rules).string.uuid = true];
+    // Unique identifier for an enrollment group
+    string enrollmentGroupId = 3;
+  }
+
+  // A boolean indicating if the response should include an OAuth token for the user associated with the enrollmentId
+  // The OAuth token will only be returned if the authentication is successful.
+  // It's important to note there will be a minor performance hit to authentication, as OAuth token generation is a semi-expensive operation.
+  bool doIncludeToken = 4;
+
+  // The model sensitivity
+  ThresholdSensitivity sensitivity = 5 [(validate.rules).enum.defined_only = true];
+
+  // The model security
+  ThresholdSecurity security = 6 [(validate.rules).enum.defined_only = true];
+
+  // Specifies the authentication security mode
+  enum ThresholdSecurity {
+    // Default  Setting.  Targets  low  Imposter  Accept  (IA).  Recommended  when  TSSV  is  used  solely  for
+    // biometric authentication. Generally this mode assumes the user will produce the voice password in
+    // isolation (rather than part of a voice-query) and over short listening windows (e.g., 7 seconds or
+    // less).  This  provides  the  ultimate  rejection  of  imposter  voices  at  the  expense  of  false-rejects,
+    // particularly in high-noise environments 5 dB SNR and below.
+    HIGH = 0;
+
+    // Targets low False Reject (FR). Recommended to achieve low false reject or for applications where
+    // errors in imposter accept are not considered severe. Provides reduced rejection in extremely noisy
+    // environments. This mode is typically selected when TSSV is used in conjunction with a front-end
+    // fixed-trigger or part of a combined solution for voice-triggering in which the goal may be to gently
+    // reduce  voice-trigger  false  accepts  in  the  presence  of  noise,  or  to  reduce  the  chances  that  non-
+    // enrollees who say the wake word might accidentally cause an always-listening device to false-fire.
+    LOW = 1;
+  }
+}
+
+// Provides information for an audio-based event recognition
+message ValidateEventConfig {
+  // Required. Provides information that specifies how to
+  // process the request.
+  AudioConfig audio = 1 [(validate.rules).message.required = true];
+
+  // Name of model to validate against
+  // Models can be retrieved from the GetModels() gRPC call
+  string modelName = 2 [(validate.rules).string = {min_len: 1, max_len: 255}];
+
+  // The unique user Identifer
+  string userId = 3 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // The model sensitivity
+  ThresholdSensitivity sensitivity = 4 [(validate.rules).enum.defined_only = true];
+}
+
+// Provides audio configuration information that specifies how to process the request.
+message AudioConfig {
+  // The encoding of the audio data sent in the request.
+  enum AudioEncoding {
+    // Uncompressed 16-bit signed little-endian samples (Linear PCM).
+    LINEAR16 = 0;
+
+    // `FLAC` (Free Lossless Audio
+    // Codec) is the recommended encoding because it is
+    // lossless--therefore recognition is not compromised--and
+    // requires only about half the bandwidth of `LINEAR16`.
+    FLAC = 1;
+
+    // 8-bit samples that compand 14-bit audio samples using G.711 PCMU/mu-law.
+    MULAW = 2;
+  }
+
+  // Encoding of all sent audio data.
+  AudioEncoding encoding = 1 [(validate.rules).enum.defined_only = true];
+
+  // Sample rate in Hertz of the audio data sent in all messages. 16000Hz is optimal.
+  int32 sampleRateHertz = 2 [(validate.rules).int32.gt = 8000];
+
+  // The number of channels in the input audio data.
+  int32 audioChannelCount = 3 [(validate.rules).int32.gt = 0];
+
+  // Required. The language of the supplied audio as a
+  // [BCP-47](https://www.rfc-editor.org/rfc/bcp/bcp47.txt) language tag.
+  // Example: "en-US".
+  string languageCode = 4;
+}
+
+// Specifies how sensitive the event threshold of the model should be
+enum ThresholdSensitivity {
+  // Expects about 32 False Accepts per day for Fixed-Trigger models,
+  // and about 10 False Accepts per day for SoundID models
+  LOWEST = 0;
+
+  // Expects about 16 False Accepts per day for Fixed-Trigger models,
+  // and about 5 False Accepts per day for SoundID models
+  LOW = 1;
+
+  // Expects about 8 False Accepts per day for Fixed-Trigger models,
+  // and about 3 False Accepts per day for SoundID models
+  MEDIUM = 2;
+
+  // Expects about 3 False Accepts per day for Fixed-Trigger models,
+  // and about 2 False Accepts per day for SoundID models
+  HIGH = 3;
+
+  // Expects about 2 False Accepts per day for Fixed-Trigger models,
+  // and about 1 False Accept per day for SoundID models
+  HIGHEST = 4;
+}

@@ -1,0 +1,36 @@
+// sensory.api.management
+syntax = "proto3";
+
+package sensory.api.v1.management;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/v1/management";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.v1.management";
+option java_outer_classname = "SensoryApiV1ManagementClusterProto";
+
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+
+// Request to create a new cluster
+message ClusterRequest {
+  // The unique name for this cluster
+  string name = 1 [(validate.rules).string = {min_len: 1, max_len: 127}];
+  // Indication of if this cluster is deployed remotely (true) or in our cloud (false)
+  bool isRemote = 2;
+}
+
+// Response to a cluster request
+message ClusterResponse {
+  // The unique uuid for this cluster
+  string id = 1;
+  // The unique name for this cluster
+  string name = 2;
+  // Indication of if this cluster is deployed remotely (true) or in our cloud (false)
+  bool isRemote = 3;
+  // Tenant this cluster is associated with
+  string tenantId = 4;
+  // Created timestamp
+  google.protobuf.Timestamp createdAt = 5;
+  // Last updated timestamp
+  google.protobuf.Timestamp updatedAt = 6;
+}

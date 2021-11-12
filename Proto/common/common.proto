@@ -1,0 +1,179 @@
+// sensory.api.common
+syntax = "proto3";
+
+package sensory.api.common;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/common";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.common";
+option java_outer_classname = "SensoryApiCommonProto";
+
+import "validate/validate.proto";
+
+// A type of key supported by the API
+// Note: if you change this enum, ensure to update schema.prisma KeyType
+enum KeyType {
+  // General Public key - kept for backwards compatability
+  PUBLIC_KEY = 0;
+
+  // ED25519 Public key used for asymmetric cryptographic operations
+  PUBLIC_KEY_ED25519 = 1;
+
+  // Shared secret string
+  SHARED_SECRET = 3;
+}
+
+// A type of model supported by this API
+// Note: if you change this enum, ensure to update schema.prisma ModelType
+enum ModelType {
+  // Voice Auth Text Dependent (Enrollable)
+ VOICE_BIOMETRIC_TEXT_DEPENDENT = 0;
+ // Voice Auth Text Independent (Enrollable)
+ VOICE_BIOMETRIC_TEXT_INDEPENDENT = 1;
+ // Voice Wakeword (Enrollable)
+ VOICE_BIOMETRIC_WAKEWORD = 2;
+ // Voice Wakeword
+ VOICE_EVENT_WAKEWORD = 3;
+ // Voice Grammae Recognition such as LVCSR
+ VOICE_TRANSCRIBE_GRAMMAR = 4;
+ // Voice Commands and Search recognition
+ VOICE_TRANSCRIBE_COMMAND_AND_SEARCH = 5;
+
+ // Sound Event Auth (Enrollable)
+ SOUND_EVENT_ENROLLABLE = 100;
+ // Sound Event Revalidation
+ SOUND_EVENT_REVALIDATION = 101;
+ // Sound Event Recognition
+ SOUND_EVENT_FIXED = 102;
+ // Sound Scene Recognition
+ SOUND_SCENE_FIXED = 103;
+
+ // Face Auth (Enrollable)
+ FACE_BIOMETRIC = 201;
+ // Face Recognition
+ FACE_RECOGNITION = 202;
+ // Object Recognition
+ OBJECT_RECOGNITION = 203;
+ // Image Transformation
+ IMAGE_TRANSFORM = 204;
+
+ // Unknown Model Type
+ UNKNOWN = 1000;
+}
+
+// An enum denoting the type of Sensory technology employed
+enum TechnologyType {
+  // Truly Secure Speaker Verification, an audio authentication and wakeword tool
+  TSSV = 0;
+
+  // Truly Secure, a face identification and liveness suite
+  TS = 1;
+
+  // Truly Natural, a wakeword and speech recognition tool
+  TNL = 3;
+}
+
+// Every type of compression that is supported
+// Note: if you change this enum, ensure to update schema.prisma CompressionType
+enum CompressionType {
+
+ // Image data is in grayscale instead of full color
+ IMAGE_GRAYSCALE = 0;
+
+}
+
+// Configuration for how data can be compressed
+message CompressionConfiguration {
+ // List of every compression method that was used
+ repeated CompressionType compressions = 1;
+}
+
+// Possible client types
+enum ClientType {
+  // Sensory Root Token
+  ROOT = 0;
+
+  // User End Device (E.G. Sensory SDK on Smartphone)
+  DEVICE = 1;
+  // Remote Cluster   (E.G. Customer-Deployed Io Cluster)
+  CLUSTER = 2;
+  // User Account    (E.G. Customer-Portal)
+  USER = 3;
+}
+
+// Possible usage event type
+// Note: if you change this enum, ensure to update schema.prisma EventType
+enum UsageEventType {
+  // Authentication usage event
+  AUTHENTICATION = 0;
+
+  // Recognition usage event
+  RECOGNITION = 1;
+}
+
+// Response from a successful token request
+message TokenResponse {
+  // Signed JSON web token that should be added to any subsequent request
+  string accessToken = 1;
+  // Number of seconds until this token will expire
+  int32 expiresIn = 2;
+  // Signing key identifier which can be used to retrieve the matching public key via the GetPublicKey request
+  string keyId = 3;
+  // Token type
+  string tokenType = 4;
+}
+
+// An indication of the health of a particular service
+message ServiceHealth {
+  bool isHealthy = 1; // Is healthy indication
+  string name = 2;    // Name of the service
+  string message = 3; // Details of the service health
+}
+
+// Response from a GetHealth request
+message ServerHealthResponse {
+  bool isHealthy = 1;                   // Is healthy indication. True if all services are healthy.
+  string serverVersion = 2;             // Currently running server version
+  string id = 3;                        // Unique Identifier for the particular server
+  repeated ServiceHealth services = 4;  // List of services and their health statuses
+}
+
+// A summary of system statistics
+message SystemSummary {
+  CpuSummary cpu = 1 [(validate.rules).message.required = true];
+  MemorySummary memory = 2 [(validate.rules).message.required = true];
+}
+
+// Summary of all CPU useage as measured in ticks
+message CpuSummary {
+  // normal processes executing in user mode
+  uint64 user = 1;
+  // niced processes executing in user mode
+  uint64 nice = 2;
+  // processes executing in kernel mode
+  uint64 system = 3;
+  // idle cpu
+  uint64 idle = 4;
+  // waiting for I/O to complete
+  uint64 ioWait = 5;
+  // servicing interrupts
+  uint64 irq = 6;
+  // servicing softirqs
+  uint64 softIrq = 7;
+  // counts the ticks spent executing other virtual hosts
+  uint64 steal = 8;
+  // counts the time spent running a virtual CPU for guest operating systems under the control of the Linux kernel
+  uint64 guest = 9;
+  // time spent running a niced guest
+  uint64 guestNice = 10;
+}
+
+// A summary of memory usage
+message MemorySummary {
+  // total memory in use
+  uint64 memTotal = 1;
+  // total memory free
+  uint64 memFree = 2;
+  // total memory available by the system
+  uint64 memAvailable = 3;
+}

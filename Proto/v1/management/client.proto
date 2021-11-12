@@ -1,0 +1,71 @@
+// sensory.api.management
+syntax = "proto3";
+
+package sensory.api.v1.management;
+
+option go_package = "gitlab.com/sensory-cloud/server/titan.git/pkg/api/v1/management";
+option java_multiple_files = true;
+option java_package = "io.sensory.api.v1.management";
+option java_outer_classname = "SensoryApiV1ManagementClientProto";
+
+import "google/protobuf/timestamp.proto";
+import "validate/validate.proto";
+import "common/common.proto";
+
+// Serivce to manage OAuth clients in the database
+service ClientService {
+  // Create a new OAuth client
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc CreateClient (CreateClientRequest) returns (ClientResponse) {}
+
+  // Update an OAuth client
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc UpdateClient (UpdateClientRequest) returns (ClientResponse) {}
+
+  // Delete an OAuth client
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc DeleteClient (DeleteClientRequest) returns (ClientResponse) {}
+}
+
+// Request to generate a new Client
+message CreateClientRequest {
+  // Unique Client ID as UUID
+  string clientId = 1 [(validate.rules).string.uuid = true];
+  // Strong secret value (min length of 10)
+  string secret = 2 [(validate.rules).string.min_len = 10];
+   // Type of client meant to be created
+  common.ClientType type = 3 [(validate.rules).enum.defined_only = true];
+}
+
+// Request to create a generic client. Client type should be inferred by usage.
+// This data should be stored securely on the client endpoint.
+message CreateGenericClientRequest {
+  // Unique Client ID as UUID
+  string clientId = 1 [(validate.rules).string.uuid = true];
+  // Strong secret value (min length of 10)
+  string secret = 2 [(validate.rules).string.min_len = 10];
+}
+
+// Response to a client request
+message ClientResponse {
+  // The unique uuid for this client
+  string id = 1;
+  // The client type
+  common.ClientType type = 2;
+  // Created timestamp
+  google.protobuf.Timestamp createdAt = 3;
+  // Last updated timestamp
+  google.protobuf.Timestamp updatedAt = 4;
+}
+
+message UpdateClientRequest {
+  // Unique Client ID
+  string clientId = 1 [(validate.rules).string.uuid = true];
+  // Strong secret value (min length of 10)
+  string secret = 2 [(validate.rules).string.min_len = 10];
+}
+
+message DeleteClientRequest {
+  // Unique Client ID
+  string clientId = 1 [(validate.rules).string.uuid = true];
+}
