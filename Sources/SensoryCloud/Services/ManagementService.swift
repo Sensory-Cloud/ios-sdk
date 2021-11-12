@@ -41,7 +41,7 @@ public class ManagementService {
         NSLog("Requesting current enrollments from server with userID: %@", userID)
 
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_GetEnrollmentsRequest()
@@ -56,7 +56,7 @@ public class ManagementService {
         NSLog("Requesting current enrollment groups from server with userID: %@", userID)
 
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_GetEnrollmentsRequest()
@@ -77,7 +77,7 @@ public class ManagementService {
         NSLog("Requesting enrollment group creation with name: %@", groupName)
 
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_CreateEnrollmentGroupRequest()
@@ -99,7 +99,7 @@ public class ManagementService {
         NSLog("Requesting to append enrollments to enrollment group: %@", groupId)
 
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_AppendEnrollmentGroupRequest()
@@ -118,7 +118,7 @@ public class ManagementService {
         NSLog("Requesting to delete enrollment: %@", enrollmentID)
 
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_DeleteEnrollmentRequest()
@@ -151,7 +151,7 @@ public class ManagementService {
         NSLog("Requesting to delete enrollment group: %@", id)
 
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest()
@@ -165,6 +165,7 @@ public class ManagementService {
     public func enrollDevice(
         tenantID: String,
         name: String,
+        deviceID: String,
         credential: String,
         clientID: String,
         clientSecret: String
@@ -172,7 +173,7 @@ public class ManagementService {
         NSLog("Enrolling device: %@", name)
 
         do {
-            let client: Sensory_Api_V1_Management_DeviceServiceClient = try service.getClient()
+            let client: Sensory_Api_V1_Management_DeviceServiceClientProtocol = try service.getClient()
             // TODO: config
             let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(10)))
 
@@ -181,8 +182,7 @@ public class ManagementService {
             clientRequest.clientID = clientID
             clientRequest.secret = clientSecret
             request.name = name
-            // TODO: config
-            request.deviceID = UUID().uuidString
+            request.deviceID = deviceID
             request.tenantID = tenantID
             request.client = clientRequest
             request.credential = credential
