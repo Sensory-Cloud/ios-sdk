@@ -360,7 +360,7 @@ final class ManagementServiceTests: XCTestCase {
         let mockStream = mockClient.makeEnrollDeviceResponseStream { [weak self] part in
             switch part {
             case .metadata(let headers):
-                XCTAssert(headers.isEmpty) // Standard auth header shouldn't be added
+                XCTAssert(headers.isEmpty, "Standard auth header should not be sent")
                 self?.expectRequestMetadata.fulfill()
             case .message(let message):
                 XCTAssertEqual(expectedRequest, message)

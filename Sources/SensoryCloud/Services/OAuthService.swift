@@ -9,15 +9,20 @@ import Foundation
 import GRPC
 import NIO
 
-// TODO: better integration w/ service
-
 /// Service responsible for requesting new OAuth tokens
 ///
-/// - NOTE: This class is not a subclass of `Service` to prevent a circular dependency between `OAuthService` and `OAuthPersistence`
+/// - NOTE: This class does not depend on `Service` to avoid a circular dependency with `Service` and `TokenManager`
 public class OAuthService {
 
-    // TODO: share this w/ service
     let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
+
+    deinit {
+        do {
+            try group.syncShutdownGracefully()
+        } catch {
+            NSLog("Could not shutdown OAuth group gracefully: \(error.localizedDescription)")
+        }
+    }
 
     /// Requests a new OAuth token from the server
     ///
@@ -32,7 +37,7 @@ public class OAuthService {
                 throw NetworkError.notInitialized
             }
 
-            let client: Sensory_Api_Oauth_OauthServiceClient = getClient(host: host)
+            let client = try getClient(host: host)
             let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(10))) // TODO: configs
 
             var request = Sensory_Api_Oauth_TokenRequest()
@@ -44,15 +49,13 @@ public class OAuthService {
         }
     }
 
-    // TODO: share this w/ service
-    func getClient(host: CloudHost) -> Sensory_Api_Oauth_OauthServiceClient {
-        var connection: ClientConnection
-        if host.isSecure {
-            connection = ClientConnection.secure(group: group).connect(host: host.host, port: host.port)
-        } else {
-            connection = ClientConnection.insecure(group: group).connect(host: host.host, port: host.port)
-        }
+    func getClient(host: CloudHost) throws -> Sensory_Api_Oauth_OauthServiceClientProtocol {
+        let channel = try GRPCChannelPool.with(
+            target: .host(host.host, port: host.port),
+            transportSecurity: host.isSecure ? .tls(GRPCTLSConfiguration.makeClientConfigurationBackedByNIOSSL()) : .plaintext,
+            eventLoopGroup: group
+        )
 
-        return Sensory_Api_Oauth_OauthServiceClient(channel: connection)
+        return Sensory_Api_Oauth_OauthServiceClient(channel: channel)
     }
 }
