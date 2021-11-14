@@ -17,6 +17,7 @@ public enum VideoStreamError: Error {
     case photoAlreadyRequested
     case photoExportError
     case notRecording
+    case notConfigured
 }
 
 public enum CameraPosition {
@@ -32,6 +33,7 @@ public class VideoStreamInteractor: NSObject {
 
     public let session = AVCaptureSession()
     public weak var delegate: VideoStreamDelegate?
+    var configured = false
 
     private var photoRequested = false
 
@@ -41,7 +43,7 @@ public class VideoStreamInteractor: NSObject {
     /// Configures the interactor for video recording
     ///
     /// This function should only be called once for the lifetime of the app
-    public func configure() throws {
+    private func configure() throws {
         session.beginConfiguration()
         defer { session.commitConfiguration() }
 
@@ -66,10 +68,29 @@ public class VideoStreamInteractor: NSObject {
             NSLog("Could not set the video output")
             throw VideoStreamError.cameraOutputError
         }
+        configured = true
+    }
+
+    public func requestPermission(completion: ((Bool, Error?) -> Void)? = nil) {
+        AVCaptureDevice.requestAccess(for: .video) { allowed in
+            if allowed {
+                do {
+                    try VideoStreamInteractor.shared.configure()
+                    completion?(true, nil)
+                } catch {
+                    completion?(true, error)
+                }
+            } else {
+                completion?(false, nil)
+            }
+        }
     }
 
     /// Starts the video recording
-    public func startRecording() {
+    public func startRecording() throws {
+        if !configured {
+            throw VideoStreamError.notConfigured
+        }
         session.startRunning()
     }
 
