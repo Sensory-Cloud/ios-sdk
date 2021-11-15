@@ -15,11 +15,12 @@ protocol GrpcClient {
 }
 
 /// Overall Service class which maintains an in memory cache of various network elements and
-/// shared logic for creating clients and attaching OAuth tokens to server calls. This is an abstract
-/// class which should not be directly used and instead be subclassed by other service classes..
+/// shared logic for creating clients and attaching OAuth tokens to server calls.
 public class Service {
 
     /// Persistence for storing + loading access tokens from
+    ///
+    /// This variable defaults to a new instance of `TokenManager`. This variable may be set to allow for clients to manage their own OAuth credentials.
     public var credentialProvider: CredentialProvider = TokenManager()
 
     /// Static event loop group which is shared between all services
@@ -44,6 +45,8 @@ public class Service {
     ]
 
     init() {}
+
+    /// Shared service instance, This should only be used for setting a non-default `credentialProvider`
     public static let shared = Service()
 
     /// Returns a cached grpc client of the specified type, or creates and caches a new one

@@ -7,6 +7,7 @@
 
 import Foundation
 
+/// Internal class for interacting with Apple Keychain
 class KeychainPersistence {
 
     /// Saves a string to the Apple Keychain
@@ -83,6 +84,7 @@ class KeychainPersistence {
 
     /// Deletes an item from the Apple Keychain
     ///
+    /// No error will be thrown if the specified item cannot be found in Apple Keychain
     /// - Parameter id: Keychain id to delete data for
     func delete(id: String) throws {
         NSLog("Deleting item from keychain with tag: %@", id)

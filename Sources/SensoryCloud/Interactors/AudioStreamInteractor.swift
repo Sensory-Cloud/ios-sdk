@@ -8,31 +8,73 @@
 import Foundation
 import AVFoundation
 
-public enum AudioStreamError: Error {
-    case failedToConfigure
-    case failedToFindAudioComponent
-    case failedToFindMicrophoneUnit
-    case notConfigured
-}
-
+/// Delegate class for receiving processed audio data
 public protocol AudioStreamDelegate: AnyObject {
     /// This will be called periodically with new audio stream data when the interactor is recording
     func didProcessAudio(_ data: Data)
 }
 
+/// Class for getting a stream of audio data from the device's microphone
 public class AudioStreamInteractor {
     var microphoneUnit: AudioComponentInstance?
-    public weak var delegate: AudioStreamDelegate?
     var configured = false
 
-    public static var shared = AudioStreamInteractor()
     private init() {}
+
+    /// Shared instance
+    public static var shared = AudioStreamInteractor()
+
+    /// Delegate to receive audio data
+    public weak var delegate: AudioStreamDelegate?
 
     // Bus 1 is audio input
     private let bus1: AudioUnitElement = 1
 
     deinit {
         _ = microphoneUnit.map { AudioComponentInstanceDispose($0) }
+    }
+
+    /// Requests permission to record audio data from the user
+    ///
+    /// The app must contain a purpose string in the `Info.plist` file with the key `NSMicrophoneUsageDescription` for the system to allow microphone permissions
+    /// This function will also configure the audio recording and thus *must* be called every time the app launches before attempting to record any audio data
+    /// - Parameters:
+    ///   - completion: Completion block to be called after permissions have been granted/denied by the system
+    ///   - Bool: A boolean indicating if microphone permissions are allowed
+    ///   - Error: An error if one occurred while setting up configurations for audio recording
+    public func requestPermission(completion: ((Bool, Error?) -> Void)? = nil) {
+        let session = AVAudioSession.sharedInstance()
+
+        session.requestRecordPermission { [weak self] allowed in
+            if allowed {
+                do {
+                    try self?.configure()
+                    completion?(true, nil)
+                } catch {
+                    completion?(true, error)
+                }
+            } else {
+                completion?(false, nil)
+            }
+        }
+    }
+
+    /// Starts audio recording
+    ///
+    /// Processed audio is passed back via the `AudioStreamDelegate`
+    /// - Throws: `AudioStreamError.notConfigured` if configuration has not occurred yet. Call `requestPermissions` to configure the `AudioStreamInteractor` for recording
+    public func startRecording() throws {
+        if !configured { throw AudioStreamError.notConfigured }
+        guard let microphoneUnit = self.microphoneUnit else {
+            throw AudioStreamError.failedToFindMicrophoneUnit
+        }
+        AudioOutputUnitStart(microphoneUnit)
+    }
+
+    /// Stops audio recording
+    public func stopRecording() {
+        guard let microphoneUnit = self.microphoneUnit else { return }
+        AudioOutputUnitStop(microphoneUnit)
     }
 
     /// Configures the interactor for audio recording
@@ -61,38 +103,6 @@ public class AudioStreamInteractor {
         }
 
         configured = true
-    }
-
-    public func requestPermission(completion: ((Bool, Error?) -> Void)? = nil) {
-        let session = AVAudioSession.sharedInstance()
-
-        session.requestRecordPermission { [weak self] allowed in
-            if allowed {
-                do {
-                    try self?.configure()
-                    completion?(true, nil)
-                } catch {
-                    completion?(true, error)
-                }
-            } else {
-                completion?(false, nil)
-            }
-        }
-    }
-
-    /// Starts audio recording
-    public func startRecording() throws {
-        if !configured { throw AudioStreamError.notConfigured }
-        guard let microphoneUnit = self.microphoneUnit else {
-            throw AudioStreamError.failedToFindMicrophoneUnit
-        }
-        AudioOutputUnitStart(microphoneUnit)
-    }
-
-    /// Stops the audio recording
-    public func stopRecording() {
-        guard let microphoneUnit = self.microphoneUnit else { return }
-        AudioOutputUnitStop(microphoneUnit)
     }
 
     private func configureAudioSession() throws {

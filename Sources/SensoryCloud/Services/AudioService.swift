@@ -28,19 +28,23 @@ extension Sensory_Api_V1_Audio_AudioEventsClient: GrpcClient {
     }
 }
 
+/// A collection of grpc service calls for using audio models through Sensory Cloud
 public class AudioService {
 
     var service: Service
 
+    /// Initializes a new instance of `AudioService`
     public init() {
         self.service = Service.shared
     }
 
+    /// Internal initializer, used for unit testing
     init(service: Service) {
         self.service = service
     }
 
     /// Fetches a list of the current audio models supported by the cloud host
+    ///  - Returns: A future to be fulfilled with either a list of available models, or the network error that occurred
     public func getModels() -> EventLoopFuture<Sensory_Api_V1_Audio_GetModelsResponse> {
         NSLog("Requesting voice biometric models from server")
 
@@ -55,7 +59,8 @@ public class AudioService {
         }
     }
 
-    /// Opens a bidirectional stream to the server for the purpose of creating a model enrollment
+    // TODO: - DeviceID config
+    /// Opens a bidirectional stream to the server for the purpose of creating an audio enrollment
     ///
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
@@ -90,6 +95,7 @@ public class AudioService {
         audioConfig.encoding = .linear16
         audioConfig.sampleRateHertz = sampleRate
         audioConfig.audioChannelCount = 1
+        // TODO: - Config/parameter?
         audioConfig.languageCode = "en-US"
 
         var config = Sensory_Api_V1_Audio_CreateEnrollmentConfig()
@@ -107,7 +113,7 @@ public class AudioService {
         return call
     }
 
-    /// Opens a bidirectional stream to the server for the purpose of authentication against an enrollment
+    /// Opens a bidirectional stream to the server for the purpose of authentication against an audio enrollment
     ///
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
@@ -132,7 +138,7 @@ public class AudioService {
         )
     }
 
-    /// Opens a bidirectional stream to the server for the purpose of authentication against an enrollment group
+    /// Opens a bidirectional stream to the server for the purpose of authentication against an audio enrollment group
     ///
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:

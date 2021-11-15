@@ -28,19 +28,23 @@ extension Sensory_Api_V1_Video_VideoRecognitionClient: GrpcClient {
     }
 }
 
+/// A collection of grpc service calls for using vision models through Sensory Cloud
 public class VideoService {
 
     var service: Service
 
+    /// Initializes a new instance of `VideoService`
     public init() {
         self.service = Service.shared
     }
 
+    /// Internal initializer, used for unit testing
     init(service: Service) {
         self.service = service
     }
 
-    /// Fetches a list of the current video models supported by the server
+    /// Fetches a list of the current vision models supported by the cloud host
+    ///  - Returns: A future to be fulfilled with either a list of available models, or the network error that occurred
     public func getModels() -> EventLoopFuture<Sensory_Api_V1_Video_GetModelsResponse> {
         NSLog("Requesting video models from server")
 
@@ -104,7 +108,7 @@ public class VideoService {
         return call
     }
 
-    /// Opens a bidirectional stream to the server for the purpose of authentication
+    /// Opens a bidirectional stream to the server for the purpose of video authentication
     ///
     /// This call will automatically send the initial `VideoConfig` message to the server
     /// - Parameters:

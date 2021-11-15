@@ -9,12 +9,13 @@ import Foundation
 import GRPC
 import NIO
 
-/// Service responsible for requesting new OAuth tokens
-///
-/// - NOTE: This class does not depend on `Service` to avoid a circular dependency with `Service` and `TokenManager`
+/// A collection of grpc calls for enrolling and requesting OAuth tokens
 public class OAuthService {
 
     let group = PlatformSupport.makeEventLoopGroup(loopCount: 1)
+
+    /// Initializes a new instance of `OAuthService`
+    public init() {}
 
     deinit {
         do {
@@ -29,7 +30,7 @@ public class OAuthService {
     /// - Parameters:
     ///   - clientID: Client id to use in token request
     ///   - secret: Client secret to use in token request
-    /// - Returns: Future to be fulfilled with the new access token
+    /// - Returns: Future to be fulfilled with the new access token, or the network error that occurred
     public func getToken(clientID: String, secret: String) -> EventLoopFuture<Sensory_Api_Common_TokenResponse> {
         NSLog("Requesting OAuth Token with clientID %@", clientID)
         do {
@@ -49,6 +50,7 @@ public class OAuthService {
         }
     }
 
+    /// Fetches the grpc client class, `Service.getClient()` is not used to prevent a circular dependency between `Service` and `TokenManager`
     func getClient(host: CloudHost) throws -> Sensory_Api_Oauth_OauthServiceClientProtocol {
         let channel = try GRPCChannelPool.with(
             target: .host(host.host, port: host.port),

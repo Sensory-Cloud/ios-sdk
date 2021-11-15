@@ -7,8 +7,12 @@
 
 import Foundation
 
+
+/// Various network errors that may occur
 public enum NetworkError: Error {
+    /// This occurs if the cloud host is not set before attempting to make a network call
     case notInitialized
+    /// This is an internal error that occurs if the grpc server client class cannot be found
     case invalidClientClass(String)
 }
 

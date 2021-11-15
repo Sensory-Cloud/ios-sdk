@@ -7,7 +7,7 @@
 
 import Foundation
 
-/// A wrapper struct containing OAuth token credentials
+/// A wrapper struct for OAuth token credentials
 public struct AccessTokenCredentials {
     /// The OAuth client id
     public var clientID: String
@@ -19,16 +19,7 @@ public struct AccessTokenCredentials {
 /// A token manager class that may be used for managing and securely storing OAuth credentials for Sensory Cloud.
 ///
 /// Once credentials have been generated, `TokenManager` will automatically provide access tokens to the Sensory Cloud services
-///
-/// Clients may use their own token management if they desire. These token managers would be responsible for:
-///  - Generating their own clientIDs and client secrets
-///    - clientIDs should be a UUID
-///    - client secrets should be at least 10 hexadecimal characters that are generated in a cryptographically secure way
-///  - Storing these credentials as well as any requested access tokens in a secure way (i.e. Apple Keychain)
-///  - Requesting new access tokens and refreshing the access token when they expire
-///    - `OAuthService` provides the grpc calls to request new tokens
-///  - Providing OAuth tokens to the other Sensory Cloud Services
-///    - See `Service.credentialProvider` for instructions on injecting your own token manager
+/// See the documentation for `CredentialProvider` for instructions on providing your own token management for Sensory Cloud
 public class TokenManager {
 
     enum KeychainTag {
@@ -90,8 +81,8 @@ public class TokenManager {
 
     /// Returns a valid access token for Sensory Cloud grpc calls
     ///
-    /// This function will immediately return if the cached access token is still valid. If a new token needs to be requested,
-    /// This function will block on the current thread until a new token has been returned from the server.
+    /// This function will immediately return if the cached access token is still valid. If a new token needs to
+    /// be requested, this function will block on the current thread until a new token has been fetched from the server.
     /// - Throws: An error if one occurs while retrieving the saved token, or if an error occurs while requesting a new one
     /// - Returns: A valid access token
     public func getAccessToken() throws -> String {
@@ -140,6 +131,7 @@ public class TokenManager {
         }
     }
 
+    /// Fetches a new access token from a remote server
     private func fetchNewAccessToken() throws -> String {
         let clientID = try keychain.getString(id: KeychainTag.clientID)
         let secret = try keychain.getString(id: KeychainTag.clientSecret)
@@ -155,15 +147,14 @@ public class TokenManager {
         return result.accessToken
     }
 
+    /// Generates a cryptographically secure hex string of the specified length
     private func secRandomString(length: Int) throws -> String {
         // Generate a random bytes array
         let numBytes = Int(ceil(Double(length)/2))
         var bytes = [Int8](repeating: 0, count: numBytes)
         let status = SecRandomCopyBytes(kSecRandomDefault, bytes.count, &bytes)
         if status != errSecSuccess {
-            // TODO: better error
-            NSLog("Could not generate random string")
-            throw KeychainError.encodingError
+            throw KeychainError.insecureRandom
         }
 
         // Convert to hex string

@@ -22,21 +22,25 @@ extension Sensory_Api_V1_Management_DeviceServiceClient: GrpcClient {
     }
 }
 
+/// A collection of grpc service calls for managing existing enrollments and enrollment groups
 public class ManagementService {
 
     var service: Service
 
+    /// Initializes a new instance of `ManagementService`
     public init() {
         self.service = Service.shared
     }
 
+    /// Internal initializer, used for unit testing
     init(service: Service) {
         self.service = service
     }
 
     /// Fetches a list of the current enrollments for the given userID
     ///
-    /// - Parameter userID: userID to get enrollments for
+    /// - Parameter userID: userID to fetch enrollments for
+    /// - Returns: A future to be fulfilled with either a list of enrollments, or the network error that occurred
     public func getEnrollments(for userID: String) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentsResponse> {
         NSLog("Requesting current enrollments from server with userID: %@", userID)
 
@@ -52,6 +56,10 @@ public class ManagementService {
         }
     }
 
+    /// Fetches a list of the current enrollment groups owned by a given userID
+    ///
+    /// - Parameter userID: userID to fetch enrollment groups for
+    /// - Returns: A future to be fulfilled with either a list of enrollment groups, or the network error that occurred
     public func getEnrollmentGroups(for userID: String) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentGroupsResponse> {
         NSLog("Requesting current enrollment groups from server with userID: %@", userID)
 
@@ -67,6 +75,18 @@ public class ManagementService {
         }
     }
 
+    // TODO: make group ID internal?
+    /// Creates a new group of enrollments that can be used for group authentication
+    ///
+    /// Enrollment groups are initially created without any associated enrollments `appendEnrollmentGroup()`
+    /// may be used to add enrollments to an enrollment group
+    /// - Parameters:
+    ///   - userID: userID of the user that owns the enrollment group
+    ///   - groupID: Unique group identifier for the enrollment group
+    ///   - groupName: Friendly display name to use for the enrollment group
+    ///   - description: Description of the enrollment group
+    ///   - modelName: The name of the model that all enrollments in this group will use
+    /// - Returns: A future to be fulfilled with either the newly created enrollment group, or the network error that occurred
     public func createEnrollmentGroup(
         userID: String,
         groupID: String,
@@ -92,6 +112,11 @@ public class ManagementService {
         }
     }
 
+    /// Appends enrollments to an existing enrollment group
+    /// - Parameters:
+    ///   - groupId: GroupID of the enrollment group to append enrollments to
+    ///   - enrollments: A list of enrollment ids to append to the enrollment group
+    /// - Returns: A future to be fulfilled with either the updated enrollment group, or the network error that occurred
     public func appendEnrollmentGroup(
         groupId: String,
         enrollments: [String]
@@ -113,7 +138,9 @@ public class ManagementService {
 
     /// Requests the deletion of an enrollment
     ///
+    /// The server will prevent users from deleting their last enrollment
     /// - Parameter enrollmentID: enrollmentID for the enrollment to delete
+    /// - Returns: A future to be fulfilled with either the deleted enrollment, or the network error that occurred
     public func deleteEnrollment(with enrollmentID: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse> {
         NSLog("Requesting to delete enrollment: %@", enrollmentID)
 
@@ -131,6 +158,8 @@ public class ManagementService {
 
     /// Requests the deletion of multiple enrollments
     ///
+    /// If an error occurs during the deletion process, already completed deletions will not be rolled back
+    /// The server will prevent users from deleting their last enrollment
     /// - Parameter ids: List of enrollment ids to delete from the server
     /// - Returns: A future that will either contain a list of all server responses, or the first error to occur.
     public func deleteEnrollments(with ids: [String]) -> EventLoopFuture<[Sensory_Api_V1_Management_EnrollmentResponse]> {
@@ -147,6 +176,7 @@ public class ManagementService {
     /// Requests the deletion of enrollment groups
     ///
     /// - Parameter id: group ID to delete
+    /// - Returns: A future to be fulfilled with either the deleted enrollment group, or the network error that occurred
     public func deleteEnrollmentGroup(with id: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
         NSLog("Requesting to delete enrollment group: %@", id)
 
@@ -162,6 +192,25 @@ public class ManagementService {
         }
     }
 
+    // TODO: Move to OAuth Service
+    // TODO: tenantID/deviceID to config
+    /// Creates a new device enrollment
+    ///
+    /// The credential string authenticates that this device is allowed to enroll. Depending on the server configuration
+    /// the credential string may be one of multiple values:
+    ///  - An empty string if no authentication is configured on the server
+    ///  - A shared secret (password)
+    ///  - A signed JWT
+    ///
+    /// `TokenManager` may be used for securely generating a clientID and clientSecret for this call
+    /// - Parameters:
+    ///   - tenantID: TenantID to enroll the device into
+    ///   - name: Name of the enrolling device
+    ///   - deviceID: Unique identifier of the enrolling device
+    ///   - credential: Credential string to authenticate that this device is allowed to enroll
+    ///   - clientID: ClientID to use for OAuth token generation
+    ///   - clientSecret: Client Secret to use for OAuth token generation
+    /// - Returns: A future to be fulfilled with either the enrolled device, or the network error that occurred
     public func enrollDevice(
         tenantID: String,
         name: String,
