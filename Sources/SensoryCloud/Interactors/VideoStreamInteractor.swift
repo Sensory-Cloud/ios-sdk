@@ -72,10 +72,10 @@ public class VideoStreamInteractor: NSObject {
     }
 
     public func requestPermission(completion: ((Bool, Error?) -> Void)? = nil) {
-        AVCaptureDevice.requestAccess(for: .video) { allowed in
+        AVCaptureDevice.requestAccess(for: .video) { [weak self] allowed in
             if allowed {
                 do {
-                    try VideoStreamInteractor.shared.configure()
+                    try self?.configure()
                     completion?(true, nil)
                 } catch {
                     completion?(true, error)
@@ -88,9 +88,7 @@ public class VideoStreamInteractor: NSObject {
 
     /// Starts the video recording
     public func startRecording() throws {
-        if !configured {
-            throw VideoStreamError.notConfigured
-        }
+        if !configured { throw VideoStreamError.notConfigured }
         session.startRunning()
     }
 

@@ -12,6 +12,7 @@ public enum AudioStreamError: Error {
     case failedToConfigure
     case failedToFindAudioComponent
     case failedToFindMicrophoneUnit
+    case notConfigured
 }
 
 public protocol AudioStreamDelegate: AnyObject {
@@ -22,6 +23,7 @@ public protocol AudioStreamDelegate: AnyObject {
 public class AudioStreamInteractor {
     var microphoneUnit: AudioComponentInstance?
     public weak var delegate: AudioStreamDelegate?
+    var configured = false
 
     public static var shared = AudioStreamInteractor()
     private init() {}
@@ -36,7 +38,7 @@ public class AudioStreamInteractor {
     /// Configures the interactor for audio recording
     ///
     /// This function should only be called once for the lifetime of the app
-    public func configure() throws {
+    private func configure() throws {
         try configureAudioSession()
 
         var audioComponentDescription = self.describeComponent()
@@ -57,16 +59,38 @@ public class AudioStreamInteractor {
                 throw AudioStreamError.failedToConfigure
             }
         }
+
+        configured = true
+    }
+
+    public func requestPermission(completion: ((Bool, Error?) -> Void)? = nil) {
+        let session = AVAudioSession.sharedInstance()
+
+        session.requestRecordPermission { [weak self] allowed in
+            if allowed {
+                do {
+                    try self?.configure()
+                    completion?(true, nil)
+                } catch {
+                    completion?(true, error)
+                }
+            } else {
+                completion?(false, nil)
+            }
+        }
     }
 
     /// Starts audio recording
-    public func start() {
-        guard let microphoneUnit = self.microphoneUnit else { return }
+    public func startRecording() throws {
+        if !configured { throw AudioStreamError.notConfigured }
+        guard let microphoneUnit = self.microphoneUnit else {
+            throw AudioStreamError.failedToFindMicrophoneUnit
+        }
         AudioOutputUnitStart(microphoneUnit)
     }
 
     /// Stops the audio recording
-    public func stop() {
+    public func stopRecording() {
         guard let microphoneUnit = self.microphoneUnit else { return }
         AudioOutputUnitStop(microphoneUnit)
     }
