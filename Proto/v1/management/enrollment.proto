@@ -32,6 +32,8 @@ service EnrollmentService {
 
   // Deletes an enrollment from the database
   // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  // A user may not delete their last enrollment, as this would lead to a situation where a user could
+  // lock themselves out of the system forever.
   rpc DeleteEnrollment (DeleteEnrollmentRequest) returns (EnrollmentResponse) {}
 
   // Deletes an enrollment group from the database
@@ -78,6 +80,8 @@ message EnrollmentResponse {
   common.CompressionConfiguration compression = 10;
   // Name of the device that enrolled this model
   string deviceName = 11;
+  // Indicates if liveness was evaluated during the enrollment
+  bool didEnrollWithLiveness = 12;
 }
 
 // A response containing a list of enrollment groups

@@ -115,6 +115,9 @@ public struct Sensory_Api_V1_Management_EnrollmentResponse {
   /// Name of the device that enrolled this model
   public var deviceName: String = String()
 
+  /// Indicates if liveness was evaluated during the enrollment
+  public var didEnrollWithLiveness: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -358,6 +361,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     9: .same(proto: "userId"),
     10: .same(proto: "compression"),
     11: .same(proto: "deviceName"),
+    12: .same(proto: "didEnrollWithLiveness"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -377,6 +381,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
       case 9: try { try decoder.decodeSingularStringField(value: &self.userID) }()
       case 10: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
       case 11: try { try decoder.decodeSingularStringField(value: &self.deviceName) }()
+      case 12: try { try decoder.decodeSingularBoolField(value: &self.didEnrollWithLiveness) }()
       default: break
       }
     }
@@ -416,6 +421,9 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if !self.deviceName.isEmpty {
       try visitor.visitSingularStringField(value: self.deviceName, fieldNumber: 11)
     }
+    if self.didEnrollWithLiveness != false {
+      try visitor.visitSingularBoolField(value: self.didEnrollWithLiveness, fieldNumber: 12)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -431,6 +439,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if lhs.userID != rhs.userID {return false}
     if lhs._compression != rhs._compression {return false}
     if lhs.deviceName != rhs.deviceName {return false}
+    if lhs.didEnrollWithLiveness != rhs.didEnrollWithLiveness {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -40,8 +40,8 @@ message ServerConfig {
   ClusterResponse cluster = 2;
   // Feature flags enabling specific server features
 	repeated int32 featureFlags = 3;
-  // Configuration for collecting prometheus metrucs
-  PrometheusConfig prometheus = 4;
+  // Unused prometheus configuration
+  reserved 4;
   // Configuration for where/how to persist collected audio/video data
   DataPersistenceConfig dataPersistence = 5;
   // Issuer to request OAuth tokens from
@@ -60,14 +60,9 @@ message ServerConfig {
   string databaseURL = 10;
   // Controls the security requirements and configuration for device enrollment
   DeviceEnrollmentConfig deviceEnrollmentConfig = 11;
-}
-
-// Configurations for prometheus metrics
-message PrometheusConfig {
-  // URL to push metrics to
-  string url = 1;
-  // Password for the prometheus pushgateway
-  string password = 2;
+  // URL to use for sentry error reporting
+  // This value can be overwritten with the environmental variable "SENTRY_URL"
+  string sentryURL = 12;
 }
 
 // Configuration for where to save collected audio/vido data

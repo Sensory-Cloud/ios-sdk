@@ -421,3 +421,117 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
   }
 }
 
+/// Handles all audio transcriptions
+///
+/// Usage: instantiate `Sensory_Api_V1_Audio_AudioTranscriptionsClient`, then call methods of this protocol to make API calls.
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? { get }
+
+  func transcribe(
+    callOptions: CallOptions?,
+    handler: @escaping (Sensory_Api_V1_Audio_TranscribeResponse) -> Void
+  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse>
+}
+
+extension Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
+  public var serviceName: String {
+    return "sensory.api.v1.audio.AudioTranscriptions"
+  }
+
+  /// Transcribes voice into text.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// Callers should use the `send` method on the returned object to send messages
+  /// to the server. The caller should send an `.end` after the final message has been sent.
+  ///
+  /// - Parameters:
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
+  public func transcribe(
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Sensory_Api_V1_Audio_TranscribeResponse) -> Void
+  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse> {
+    return self.makeBidirectionalStreamingCall(
+      path: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe",
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTranscribeInterceptors() ?? [],
+      handler: handler
+    )
+  }
+}
+
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when invoking 'transcribe'.
+  func makeTranscribeInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse>]
+}
+
+public final class Sensory_Api_V1_Audio_AudioTranscriptionsClient: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the sensory.api.v1.audio.AudioTranscriptions service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+public final class Sensory_Api_V1_Audio_AudioTranscriptionsTestClient: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
+  private let fakeChannel: FakeChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol?
+
+  public var channel: GRPCChannel {
+    return self.fakeChannel
+  }
+
+  public init(
+    fakeChannel: FakeChannel = FakeChannel(),
+    defaultCallOptions callOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.fakeChannel = fakeChannel
+    self.defaultCallOptions = callOptions
+    self.interceptors = interceptors
+  }
+
+  /// Make a streaming response for the Transcribe RPC. This must be called
+  /// before calling 'transcribe'. See also 'FakeStreamingResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeTranscribeResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_TranscribeRequest>) -> () = { _ in }
+  ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse> {
+    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe", requestHandler: requestHandler)
+  }
+
+  public func enqueueTranscribeResponses(
+    _ responses: [Sensory_Api_V1_Audio_TranscribeResponse],
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_TranscribeRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeTranscribeResponseStream(requestHandler)
+    // These are the only operation on the stream; try! is fine.
+    responses.forEach { try! stream.sendMessage($0) }
+    try! stream.sendEnd()
+  }
+
+  /// Returns true if there are response streams enqueued for 'Transcribe'
+  public var hasTranscribeResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe")
+  }
+}
+

@@ -93,7 +93,10 @@ public struct Sensory_Api_V1_Video_VideoModel {
   public var versions: [String] = []
 
   /// The technology backing this model
-  public var technology: Sensory_Api_Common_TechnologyType = .tssv
+  public var technology: Sensory_Api_Common_TechnologyType = .notSet
+
+  /// Indicates if liveness is supported by this model
+  public var isLivenessSupported: Bool = false
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -525,6 +528,7 @@ extension Sensory_Api_V1_Video_VideoModel: SwiftProtobuf.Message, SwiftProtobuf.
     4: .same(proto: "fixedObject"),
     5: .same(proto: "versions"),
     6: .same(proto: "technology"),
+    7: .same(proto: "isLivenessSupported"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -539,6 +543,7 @@ extension Sensory_Api_V1_Video_VideoModel: SwiftProtobuf.Message, SwiftProtobuf.
       case 4: try { try decoder.decodeSingularStringField(value: &self.fixedObject) }()
       case 5: try { try decoder.decodeRepeatedStringField(value: &self.versions) }()
       case 6: try { try decoder.decodeSingularEnumField(value: &self.technology) }()
+      case 7: try { try decoder.decodeSingularBoolField(value: &self.isLivenessSupported) }()
       default: break
       }
     }
@@ -560,8 +565,11 @@ extension Sensory_Api_V1_Video_VideoModel: SwiftProtobuf.Message, SwiftProtobuf.
     if !self.versions.isEmpty {
       try visitor.visitRepeatedStringField(value: self.versions, fieldNumber: 5)
     }
-    if self.technology != .tssv {
+    if self.technology != .notSet {
       try visitor.visitSingularEnumField(value: self.technology, fieldNumber: 6)
+    }
+    if self.isLivenessSupported != false {
+      try visitor.visitSingularBoolField(value: self.isLivenessSupported, fieldNumber: 7)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -573,6 +581,7 @@ extension Sensory_Api_V1_Video_VideoModel: SwiftProtobuf.Message, SwiftProtobuf.
     if lhs.fixedObject != rhs.fixedObject {return false}
     if lhs.versions != rhs.versions {return false}
     if lhs.technology != rhs.technology {return false}
+    if lhs.isLivenessSupported != rhs.isLivenessSupported {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

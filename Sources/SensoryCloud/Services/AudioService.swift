@@ -28,6 +28,12 @@ extension Sensory_Api_V1_Audio_AudioEventsClient: GrpcClient {
     }
 }
 
+extension Sensory_Api_V1_Audio_AudioTranscriptionsClient: GrpcClient {
+    convenience init(grpcChannel: GRPCChannel) {
+        self.init(channel: grpcChannel)
+    }
+}
+
 /// A collection of grpc service calls for using audio models through Sensory Cloud
 public class AudioService {
 
@@ -67,6 +73,9 @@ public class AudioService {
     ///   - sampleRate: Sample rate of model to validate
     ///   - userID: Unique user identifier
     ///   - description: User supplied description of the enrollment
+    ///   - isLivenessEnabled: Verifies liveness during the enrollment process
+    ///   - numUtterances: Sets how many utterances should be required for text-dependent enrollments, defaults to 4 if not specified. This parameter should be left `nil` for text-independent enrollments
+    ///   - enrollmentDuration: Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled. This parameter should be left `nil` for text-dependent enrollments
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
@@ -76,6 +85,9 @@ public class AudioService {
         sampleRate: Int32,
         userID: String,
         description: String = "",
+        isLivenessEnabled: Bool,
+        numUtterances: UInt32? = nil,
+        enrollmentDuration: Float? = nil,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_CreateEnrollmentRequest,
@@ -104,6 +116,12 @@ public class AudioService {
         config.userID = userID
         config.deviceID = deviceID
         config.description_p = description
+        config.isLivenessEnabled = isLivenessEnabled
+        if let utterances = numUtterances {
+            config.enrollmentNumUtterances = utterances
+        } else if let duration = enrollmentDuration {
+            config.enrollmentDuration = duration
+        }
 
         var request = Sensory_Api_V1_Audio_CreateEnrollmentRequest()
         request.config = config
@@ -119,12 +137,14 @@ public class AudioService {
     /// - Parameters:
     ///   - enrollmentID: Enrollment to authenticate against
     ///   - sampleRate: Sample rate of model to validate
+    ///   - isLivenessEnabled: Specifies if the authentication should also include a liveness check
     ///   - onStreamReceive: Handler function to handle response sent form the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func authenticate(
         enrollmentID: String,
         sampleRate: Int32,
+        isLivenessEnabled: Bool,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_AuthenticateResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_AuthenticateRequest,
@@ -134,6 +154,7 @@ public class AudioService {
             enrollmentID: enrollmentID,
             groupID: "",
             sampleRate: sampleRate,
+            isLivenessEnabled: isLivenessEnabled,
             onStreamReceive: onStreamReceive
         )
     }
@@ -144,12 +165,14 @@ public class AudioService {
     /// - Parameters:
     ///   - groupID: Enrollment group to authenticate against
     ///   - sampleRate: Sample rate of model to validate
+    ///   - isLivenessEnabled: Specifies if the authentication should also include a liveness check
     ///   - onStreamReceive: Handler function to handle response sent form the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func authenticate(
         groupID: String,
         sampleRate: Int32,
+        isLivenessEnabled: Bool,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_AuthenticateResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_AuthenticateRequest,
@@ -159,6 +182,7 @@ public class AudioService {
             enrollmentID: "",
             groupID: groupID,
             sampleRate: sampleRate,
+            isLivenessEnabled: isLivenessEnabled,
             onStreamReceive: onStreamReceive
         )
     }
@@ -212,6 +236,52 @@ public class AudioService {
         return call
     }
 
+    /// Opens a bidirectional stream to the server that provides a transcription of the provided audio data
+    ///
+    /// This call will automatically send the initial `AudioConfig` message to the server
+    /// - Parameters:
+    ///   - modelName: Name of model to validate
+    ///   - sampleRate: Sample rate of model to validate
+    ///   - userID: Unique user identifier
+    ///   - onStreamReceive: Handler function to handle response sent form the server
+    /// - Throws: `NetworkError` if an error occurs while processing the cached server url
+    /// - Returns: Bidirectional stream that can be used to send audio data to the server
+    public func transcribeAudio(
+        modelName: String,
+        sampleRate: Int32,
+        userID: String,
+        onStreamReceive: @escaping ((Sensory_Api_V1_Audio_TranscribeResponse) -> Void)
+    ) throws -> BidirectionalStreamingCall<
+        Sensory_Api_V1_Audio_TranscribeRequest,
+        Sensory_Api_V1_Audio_TranscribeResponse
+    > {
+        NSLog("Requesting to transcribe audio")
+
+        // Establish grpc streaming
+        let client: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol = try service.getClient()
+        let metadata = try service.getDefaultMetadata()
+        let call = client.transcribe(callOptions: metadata, handler: onStreamReceive)
+
+        // Send initial config message
+        var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
+        audioConfig.encoding = .linear16
+        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.audioChannelCount = 1
+        audioConfig.languageCode = Config.languageCode
+
+        var config = Sensory_Api_V1_Audio_TranscribeConfig()
+        config.audio = audioConfig
+        config.modelName = modelName
+        config.userID = userID
+
+        var request = Sensory_Api_V1_Audio_TranscribeRequest()
+        request.config = config
+
+        call.sendMessage(request, promise: nil)
+
+        return call
+    }
+
     /// Opens a bidirectional stream to the server for the purpose of authentication
     ///
     /// This call will automatically send the initial `AudioConfig` message to the server
@@ -219,6 +289,7 @@ public class AudioService {
     ///   - enrollmentID: Enrollment to authenticate against
     ///   - groupID: enrollment group ID to authenticate against, enrollmentID will overwrite groupID if both are passed in
     ///   - sampleRate: Sample rate of model to validate
+    ///   - isLivenessEnabled: Specifies if the authentication should include a liveness check
     ///   - onStreamReceive: Handler function to handle response sent form the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -226,6 +297,7 @@ public class AudioService {
         enrollmentID: String,
         groupID: String,
         sampleRate: Int32,
+        isLivenessEnabled: Bool,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_AuthenticateResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_AuthenticateRequest,
@@ -252,6 +324,7 @@ public class AudioService {
         } else {
             config.enrollmentGroupID = groupID
         }
+        config.isLivenessEnabled = isLivenessEnabled
 
         var request = Sensory_Api_V1_Audio_AuthenticateRequest()
         request.config = config

@@ -53,6 +53,8 @@ message VideoModel {
   repeated string versions = 5;
   // The technology backing this model
   common.TechnologyType technology = 6;
+  // Indicates if liveness is supported by this model
+  bool isLivenessSupported = 7;
 }
 
 // Request to get a list of the available models
@@ -125,8 +127,8 @@ message ValidateRecognitionRequest {
 message CreateEnrollmentResponse {
   // Percent Complete as values between 0 and 100
   int64 percentComplete = 1;
-    // Liveness check bit. This value with always be false if 'isLivenessEnabled' is set to false in the CreateEnrollmentConfig
-    bool isAlive = 2;
+  // Liveness check bit. This value with always be false if 'isLivenessEnabled' is set to false in the CreateEnrollmentConfig
+  bool isAlive = 2;
   // If enrollment is successful, this value will be the unique Enrollment ID
   string enrollmentId = 3;
   // Model used for enrollment

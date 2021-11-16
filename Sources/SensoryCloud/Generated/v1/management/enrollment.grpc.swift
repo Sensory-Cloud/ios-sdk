@@ -146,6 +146,8 @@ extension Sensory_Api_V1_Management_EnrollmentServiceClientProtocol {
 
   /// Deletes an enrollment from the database
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  /// A user may not delete their last enrollment, as this would lead to a situation where a user could
+  /// lock themselves out of the system forever.
   ///
   /// - Parameters:
   ///   - request: Request to send to DeleteEnrollment.

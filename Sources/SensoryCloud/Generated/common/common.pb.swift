@@ -91,11 +91,20 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
   /// Voice Wakeword
   case voiceEventWakeword // = 3
 
-  /// Voice Grammae Recognition such as LVCSR
+  /// Voice Grammar Recognition such as LVCSR
   case voiceTranscribeGrammar // = 4
 
   /// Voice Commands and Search recognition
   case voiceTranscribeCommandAndSearch // = 5
+
+  /// Voice activity detection
+  case voiceRecognitionActivityDetection // = 6
+
+  /// Voice feature extractor
+  case voiceFeatureExtractor // = 7
+
+  /// Voice digit recognizer for liveness
+  case voiceBiometricLivenessDigit // = 8
 
   /// Sound Event Auth (Enrollable)
   case soundEventEnrollable // = 100
@@ -137,6 +146,9 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case 3: self = .voiceEventWakeword
     case 4: self = .voiceTranscribeGrammar
     case 5: self = .voiceTranscribeCommandAndSearch
+    case 6: self = .voiceRecognitionActivityDetection
+    case 7: self = .voiceFeatureExtractor
+    case 8: self = .voiceBiometricLivenessDigit
     case 100: self = .soundEventEnrollable
     case 101: self = .soundEventRevalidation
     case 102: self = .soundEventFixed
@@ -158,6 +170,9 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case .voiceEventWakeword: return 3
     case .voiceTranscribeGrammar: return 4
     case .voiceTranscribeCommandAndSearch: return 5
+    case .voiceRecognitionActivityDetection: return 6
+    case .voiceFeatureExtractor: return 7
+    case .voiceBiometricLivenessDigit: return 8
     case .soundEventEnrollable: return 100
     case .soundEventRevalidation: return 101
     case .soundEventFixed: return 102
@@ -184,6 +199,9 @@ extension Sensory_Api_Common_ModelType: CaseIterable {
     .voiceEventWakeword,
     .voiceTranscribeGrammar,
     .voiceTranscribeCommandAndSearch,
+    .voiceRecognitionActivityDetection,
+    .voiceFeatureExtractor,
+    .voiceBiometricLivenessDigit,
     .soundEventEnrollable,
     .soundEventRevalidation,
     .soundEventFixed,
@@ -202,24 +220,28 @@ extension Sensory_Api_Common_ModelType: CaseIterable {
 public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
   public typealias RawValue = Int
 
+  /// Not Set type - used internally
+  case notSet // = 0
+
   /// Truly Secure Speaker Verification, an audio authentication and wakeword tool
-  case tssv // = 0
+  case tssv // = 1
 
   /// Truly Secure, a face identification and liveness suite
-  case ts // = 1
+  case ts // = 2
 
   /// Truly Natural, a wakeword and speech recognition tool
   case tnl // = 3
   case UNRECOGNIZED(Int)
 
   public init() {
-    self = .tssv
+    self = .notSet
   }
 
   public init?(rawValue: Int) {
     switch rawValue {
-    case 0: self = .tssv
-    case 1: self = .ts
+    case 0: self = .notSet
+    case 1: self = .tssv
+    case 2: self = .ts
     case 3: self = .tnl
     default: self = .UNRECOGNIZED(rawValue)
     }
@@ -227,8 +249,9 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
 
   public var rawValue: Int {
     switch self {
-    case .tssv: return 0
-    case .ts: return 1
+    case .notSet: return 0
+    case .tssv: return 1
+    case .ts: return 2
     case .tnl: return 3
     case .UNRECOGNIZED(let i): return i
     }
@@ -241,6 +264,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
 extension Sensory_Api_Common_TechnologyType: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   public static var allCases: [Sensory_Api_Common_TechnologyType] = [
+    .notSet,
     .tssv,
     .ts,
     .tnl,
@@ -356,6 +380,9 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
 
   /// Recognition usage event
   case recognition // = 1
+
+  /// Enrollment usage event
+  case enrollment // = 2
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -366,6 +393,7 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
     switch rawValue {
     case 0: self = .authentication
     case 1: self = .recognition
+    case 2: self = .enrollment
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -374,6 +402,7 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
     switch self {
     case .authentication: return 0
     case .recognition: return 1
+    case .enrollment: return 2
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -387,6 +416,7 @@ extension Sensory_Api_Common_UsageEventType: CaseIterable {
   public static var allCases: [Sensory_Api_Common_UsageEventType] = [
     .authentication,
     .recognition,
+    .enrollment,
   ]
 }
 
@@ -585,6 +615,9 @@ extension Sensory_Api_Common_ModelType: SwiftProtobuf._ProtoNameProviding {
     3: .same(proto: "VOICE_EVENT_WAKEWORD"),
     4: .same(proto: "VOICE_TRANSCRIBE_GRAMMAR"),
     5: .same(proto: "VOICE_TRANSCRIBE_COMMAND_AND_SEARCH"),
+    6: .same(proto: "VOICE_RECOGNITION_ACTIVITY_DETECTION"),
+    7: .same(proto: "VOICE_FEATURE_EXTRACTOR"),
+    8: .same(proto: "VOICE_BIOMETRIC_LIVENESS_DIGIT"),
     100: .same(proto: "SOUND_EVENT_ENROLLABLE"),
     101: .same(proto: "SOUND_EVENT_REVALIDATION"),
     102: .same(proto: "SOUND_EVENT_FIXED"),
@@ -599,8 +632,9 @@ extension Sensory_Api_Common_ModelType: SwiftProtobuf._ProtoNameProviding {
 
 extension Sensory_Api_Common_TechnologyType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "TSSV"),
-    1: .same(proto: "TS"),
+    0: .same(proto: "NOT_SET"),
+    1: .same(proto: "TSSV"),
+    2: .same(proto: "TS"),
     3: .same(proto: "TNL"),
   ]
 }
@@ -624,6 +658,7 @@ extension Sensory_Api_Common_UsageEventType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "AUTHENTICATION"),
     1: .same(proto: "RECOGNITION"),
+    2: .same(proto: "ENROLLMENT"),
   ]
 }
 

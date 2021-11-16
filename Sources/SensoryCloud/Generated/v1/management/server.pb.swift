@@ -153,16 +153,6 @@ public struct Sensory_Api_V1_Management_ServerConfig {
     set {_uniqueStorage()._featureFlags = newValue}
   }
 
-  /// Configuration for collecting prometheus metrucs
-  public var prometheus: Sensory_Api_V1_Management_PrometheusConfig {
-    get {return _storage._prometheus ?? Sensory_Api_V1_Management_PrometheusConfig()}
-    set {_uniqueStorage()._prometheus = newValue}
-  }
-  /// Returns true if `prometheus` has been explicitly set.
-  public var hasPrometheus: Bool {return _storage._prometheus != nil}
-  /// Clears the value of `prometheus`. Subsequent reads from it will return its default value.
-  public mutating func clearPrometheus() {_uniqueStorage()._prometheus = nil}
-
   /// Configuration for where/how to persist collected audio/video data
   public var dataPersistence: Sensory_Api_V1_Management_DataPersistenceConfig {
     get {return _storage._dataPersistence ?? Sensory_Api_V1_Management_DataPersistenceConfig()}
@@ -217,28 +207,18 @@ public struct Sensory_Api_V1_Management_ServerConfig {
   /// Clears the value of `deviceEnrollmentConfig`. Subsequent reads from it will return its default value.
   public mutating func clearDeviceEnrollmentConfig() {_uniqueStorage()._deviceEnrollmentConfig = nil}
 
+  /// URL to use for sentry error reporting
+  /// This value can be overwritten with the environmental variable "SENTRY_URL"
+  public var sentryURL: String {
+    get {return _storage._sentryURL}
+    set {_uniqueStorage()._sentryURL = newValue}
+  }
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
   fileprivate var _storage = _StorageClass.defaultInstance
-}
-
-/// Configurations for prometheus metrics
-public struct Sensory_Api_V1_Management_PrometheusConfig {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  /// URL to push metrics to
-  public var url: String = String()
-
-  /// Password for the prometheus pushgateway
-  public var password: String = String()
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  public init() {}
 }
 
 /// Configuration for where to save collected audio/vido data
@@ -662,7 +642,6 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
     1: .same(proto: "tenant"),
     2: .same(proto: "cluster"),
     3: .same(proto: "featureFlags"),
-    4: .same(proto: "prometheus"),
     5: .same(proto: "dataPersistence"),
     6: .same(proto: "oauthTokenIssuer"),
     7: .same(proto: "grpcPort"),
@@ -670,13 +649,13 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
     9: .same(proto: "tritonHost"),
     10: .same(proto: "databaseURL"),
     11: .same(proto: "deviceEnrollmentConfig"),
+    12: .same(proto: "sentryURL"),
   ]
 
   fileprivate class _StorageClass {
     var _tenant: Sensory_Api_V1_Management_TenantResponse? = nil
     var _cluster: Sensory_Api_V1_Management_ClusterResponse? = nil
     var _featureFlags: [Int32] = []
-    var _prometheus: Sensory_Api_V1_Management_PrometheusConfig? = nil
     var _dataPersistence: Sensory_Api_V1_Management_DataPersistenceConfig? = nil
     var _oauthTokenIssuer: String = String()
     var _grpcPort: String = String()
@@ -684,6 +663,7 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
     var _tritonHost: String = String()
     var _databaseURL: String = String()
     var _deviceEnrollmentConfig: Sensory_Api_V1_Management_DeviceEnrollmentConfig? = nil
+    var _sentryURL: String = String()
 
     static let defaultInstance = _StorageClass()
 
@@ -693,7 +673,6 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
       _tenant = source._tenant
       _cluster = source._cluster
       _featureFlags = source._featureFlags
-      _prometheus = source._prometheus
       _dataPersistence = source._dataPersistence
       _oauthTokenIssuer = source._oauthTokenIssuer
       _grpcPort = source._grpcPort
@@ -701,6 +680,7 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
       _tritonHost = source._tritonHost
       _databaseURL = source._databaseURL
       _deviceEnrollmentConfig = source._deviceEnrollmentConfig
+      _sentryURL = source._sentryURL
     }
   }
 
@@ -722,7 +702,6 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
         case 1: try { try decoder.decodeSingularMessageField(value: &_storage._tenant) }()
         case 2: try { try decoder.decodeSingularMessageField(value: &_storage._cluster) }()
         case 3: try { try decoder.decodeRepeatedInt32Field(value: &_storage._featureFlags) }()
-        case 4: try { try decoder.decodeSingularMessageField(value: &_storage._prometheus) }()
         case 5: try { try decoder.decodeSingularMessageField(value: &_storage._dataPersistence) }()
         case 6: try { try decoder.decodeSingularStringField(value: &_storage._oauthTokenIssuer) }()
         case 7: try { try decoder.decodeSingularStringField(value: &_storage._grpcPort) }()
@@ -730,6 +709,7 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
         case 9: try { try decoder.decodeSingularStringField(value: &_storage._tritonHost) }()
         case 10: try { try decoder.decodeSingularStringField(value: &_storage._databaseURL) }()
         case 11: try { try decoder.decodeSingularMessageField(value: &_storage._deviceEnrollmentConfig) }()
+        case 12: try { try decoder.decodeSingularStringField(value: &_storage._sentryURL) }()
         default: break
         }
       }
@@ -746,9 +726,6 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
       }
       if !_storage._featureFlags.isEmpty {
         try visitor.visitPackedInt32Field(value: _storage._featureFlags, fieldNumber: 3)
-      }
-      if let v = _storage._prometheus {
-        try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
       }
       if let v = _storage._dataPersistence {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
@@ -771,6 +748,9 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
       if let v = _storage._deviceEnrollmentConfig {
         try visitor.visitSingularMessageField(value: v, fieldNumber: 11)
       }
+      if !_storage._sentryURL.isEmpty {
+        try visitor.visitSingularStringField(value: _storage._sentryURL, fieldNumber: 12)
+      }
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -783,7 +763,6 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
         if _storage._tenant != rhs_storage._tenant {return false}
         if _storage._cluster != rhs_storage._cluster {return false}
         if _storage._featureFlags != rhs_storage._featureFlags {return false}
-        if _storage._prometheus != rhs_storage._prometheus {return false}
         if _storage._dataPersistence != rhs_storage._dataPersistence {return false}
         if _storage._oauthTokenIssuer != rhs_storage._oauthTokenIssuer {return false}
         if _storage._grpcPort != rhs_storage._grpcPort {return false}
@@ -791,48 +770,11 @@ extension Sensory_Api_V1_Management_ServerConfig: SwiftProtobuf.Message, SwiftPr
         if _storage._tritonHost != rhs_storage._tritonHost {return false}
         if _storage._databaseURL != rhs_storage._databaseURL {return false}
         if _storage._deviceEnrollmentConfig != rhs_storage._deviceEnrollmentConfig {return false}
+        if _storage._sentryURL != rhs_storage._sentryURL {return false}
         return true
       }
       if !storagesAreEqual {return false}
     }
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension Sensory_Api_V1_Management_PrometheusConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".PrometheusConfig"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "url"),
-    2: .same(proto: "password"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.url) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.password) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.url.isEmpty {
-      try visitor.visitSingularStringField(value: self.url, fieldNumber: 1)
-    }
-    if !self.password.isEmpty {
-      try visitor.visitSingularStringField(value: self.password, fieldNumber: 2)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Management_PrometheusConfig, rhs: Sensory_Api_V1_Management_PrometheusConfig) -> Bool {
-    if lhs.url != rhs.url {return false}
-    if lhs.password != rhs.password {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

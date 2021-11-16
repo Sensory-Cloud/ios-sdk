@@ -26,7 +26,7 @@ enum KeyType {
 // A type of model supported by this API
 // Note: if you change this enum, ensure to update schema.prisma ModelType
 enum ModelType {
-  // Voice Auth Text Dependent (Enrollable)
+// Voice Auth Text Dependent (Enrollable)
  VOICE_BIOMETRIC_TEXT_DEPENDENT = 0;
  // Voice Auth Text Independent (Enrollable)
  VOICE_BIOMETRIC_TEXT_INDEPENDENT = 1;
@@ -34,10 +34,16 @@ enum ModelType {
  VOICE_BIOMETRIC_WAKEWORD = 2;
  // Voice Wakeword
  VOICE_EVENT_WAKEWORD = 3;
- // Voice Grammae Recognition such as LVCSR
+ // Voice Grammar Recognition such as LVCSR
  VOICE_TRANSCRIBE_GRAMMAR = 4;
  // Voice Commands and Search recognition
  VOICE_TRANSCRIBE_COMMAND_AND_SEARCH = 5;
+ // Voice activity detection
+ VOICE_RECOGNITION_ACTIVITY_DETECTION = 6;
+ // Voice feature extractor
+ VOICE_FEATURE_EXTRACTOR = 7;
+ // Voice digit recognizer for liveness
+ VOICE_BIOMETRIC_LIVENESS_DIGIT = 8;
 
  // Sound Event Auth (Enrollable)
  SOUND_EVENT_ENROLLABLE = 100;
@@ -63,11 +69,14 @@ enum ModelType {
 
 // An enum denoting the type of Sensory technology employed
 enum TechnologyType {
+  // Not Set type - used internally
+  NOT_SET = 0;
+
   // Truly Secure Speaker Verification, an audio authentication and wakeword tool
-  TSSV = 0;
+  TSSV = 1;
 
   // Truly Secure, a face identification and liveness suite
-  TS = 1;
+  TS = 2;
 
   // Truly Natural, a wakeword and speech recognition tool
   TNL = 3;
@@ -109,6 +118,9 @@ enum UsageEventType {
 
   // Recognition usage event
   RECOGNITION = 1;
+
+  // Enrollment usage event
+  ENROLLMENT = 2;
 }
 
 // Response from a successful token request
