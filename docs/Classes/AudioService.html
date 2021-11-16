@@ -200,9 +200,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName10sampleRate6userID11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a1_u1_v1_c1_wF8ResponseVGSS_s5Int32VS2SyAPctKF"></a>
-                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:sampleRate:userID:description:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName10sampleRate6userID11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a1_u1_v1_c1_wF8ResponseVGSS_s5Int32VS2SyAPctKF">createEnrollment(modelName:<wbr>sampleRate:<wbr>userID:<wbr>description:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName10sampleRate6userID11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_s5Int32VS2SSbs6UInt32VSgSfSgyASctKF"></a>
+                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:sampleRate:userID:description:isLivenessEnabled:numUtterances:enrollmentDuration:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName10sampleRate6userID11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_s5Int32VS2SSbs6UInt32VSgSfSgyASctKF">createEnrollment(modelName:<wbr>sampleRate:<wbr>userID:<wbr>description:<wbr>isLivenessEnabled:<wbr>numUtterances:<wbr>enrollmentDuration:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -233,6 +233,9 @@
     <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
+    <span class="nv">numUtterances</span><span class="p">:</span> <span class="kt">UInt32</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">enrollmentDuration</span><span class="p">:</span> <span class="kt">Float</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentRequest</span><span class="p">,</span>
@@ -296,6 +299,42 @@
                             <tr>
                               <td>
                                 <code>
+                                <em>isLivenessEnabled</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Verifies liveness during the enrollment process</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>numUtterances</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sets how many utterances should be required for text-dependent enrollments, defaults to 4 if not specified. This parameter should be left <code>nil</code> for text-independent enrollments</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollmentDuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled. This parameter should be left <code>nil</code> for text-dependent enrollments</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
                                 <em>onStreamReceive</em>
                                 </code>
                               </td>
@@ -318,9 +357,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate12enrollmentID10sampleRate15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_q1_r1_c1_S8ResponseVGSS_s5Int32VyANctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(enrollmentID:sampleRate:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate12enrollmentID10sampleRate15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_q1_r1_c1_S8ResponseVGSS_s5Int32VyANctKF">authenticate(enrollmentID:<wbr>sampleRate:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate12enrollmentID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(enrollmentID:sampleRate:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate12enrollmentID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF">authenticate(enrollmentID:<wbr>sampleRate:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -345,6 +384,7 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">authenticate</span><span class="p">(</span>
     <span class="nv">enrollmentID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_AuthenticateRequest</span><span class="p">,</span>
@@ -384,6 +424,18 @@
                             <tr>
                               <td>
                                 <code>
+                                <em>isLivenessEnabled</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if the authentication should also include a liveness check</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
                                 <em>onStreamReceive</em>
                                 </code>
                               </td>
@@ -406,9 +458,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate7groupID10sampleRate15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_q1_r1_c1_S8ResponseVGSS_s5Int32VyANctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(groupID:sampleRate:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate7groupID10sampleRate15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_q1_r1_c1_S8ResponseVGSS_s5Int32VyANctKF">authenticate(groupID:<wbr>sampleRate:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate7groupID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(groupID:sampleRate:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate7groupID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF">authenticate(groupID:<wbr>sampleRate:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -433,6 +485,7 @@
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">authenticate</span><span class="p">(</span>
     <span class="nv">groupID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_AuthenticateRequest</span><span class="p">,</span>
@@ -466,6 +519,18 @@
                               <td>
                                 <div>
                                   <p>Sample rate of model to validate</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>isLivenessEnabled</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Specifies if the authentication should also include a liveness check</p>
                                 </div>
                               </td>
                             </tr>
@@ -580,6 +645,107 @@
                               <td>
                                 <div>
                                   <p>How sensitive the model should be to false accepts</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onStreamReceive</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Handler function to handle response sent form the server</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Bidirectional stream that can be used to send audio data to the server</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName10sampleRate6userID15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_s5Int32VSSyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:sampleRate:userID:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName10sampleRate6userID15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_s5Int32VSSyAOctKF">transcribeAudio(modelName:<wbr>sampleRate:<wbr>userID:<wbr>onStreamReceive:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Opens a bidirectional stream to the server that provides a transcription of the provided audio data</p>
+
+<p>This call will automatically send the initial <code>AudioConfig</code> message to the server</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/NetworkError.html">NetworkError</a></code> if an error occurs while processing the cached server url
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">transcribeAudio</span><span class="p">(</span>
+    <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_TranscribeResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
+    <span class="kt">Sensory_Api_V1_Audio_TranscribeRequest</span><span class="p">,</span>
+    <span class="kt">Sensory_Api_V1_Audio_TranscribeResponse</span>
+<span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>modelName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Name of model to validate</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sampleRate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sample rate of model to validate</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unique user identifier</p>
                                 </div>
                               </td>
                             </tr>

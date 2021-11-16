@@ -291,7 +291,7 @@ may be used to add enrollments to an enrollment group</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createEnrollmentGroup</span><span class="p">(</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">groupID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">groupID</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="kt">UUID</span><span class="p">()</span><span class="o">.</span><span class="n">uuidString</span><span class="p">,</span>
     <span class="nv">groupName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span>
@@ -323,7 +323,7 @@ may be used to add enrollments to an enrollment group</p>
                               </td>
                               <td>
                                 <div>
-                                  <p>Unique group identifier for the enrollment group</p>
+                                  <p>Unique group identifier for the enrollment group, if empty an id will be automatically generated</p>
                                 </div>
                               </td>
                             </tr>
@@ -589,134 +589,6 @@ The server will prevent users from deleting their last enrollment</p>
                       <div>
                         <h4>Return Value</h4>
                         <p>A future to be fulfilled with either the deleted enrollment group, or the network error that occurred</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:12SensoryCloud17ManagementServiceC12enrollDevice4name10credential8clientID0I6Secret7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_F8ResponseVGSS_S3StF"></a>
-                    <a name="//apple_ref/swift/Method/enrollDevice(name:credential:clientID:clientSecret:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC12enrollDevice4name10credential8clientID0I6Secret7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_F8ResponseVGSS_S3StF">enrollDevice(name:<wbr>credential:<wbr>clientID:<wbr>clientSecret:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Creates a new device enrollment</p>
-
-<p>The credential string authenticates that this device is allowed to enroll. Depending on the server configuration
-the credential string may be one of multiple values:</p>
-
-<ul>
-<li>An empty string if no authentication is configured on the server</li>
-<li>A shared secret (password)</li>
-<li>A signed JWT</li>
-</ul>
-
-<p><code><a href="../Classes/TokenManager.html">TokenManager</a></code> may be used for securely generating a clientID and clientSecret for this call</p>
-
-<p>This call will fail with <code><a href="../Enums/NetworkError.html#/s:12SensoryCloud12NetworkErrorO14notInitializedyA2CmF">NetworkError.notInitialized</a></code> if <code><a href="../Classes/Config.html#/s:12SensoryCloud6ConfigC8deviceIDSSSgvpZ">Config.deviceID</a></code> or <code><a href="../Classes/Config.html#/s:12SensoryCloud6ConfigC8tenantIDSSSgvpZ">Config.tenantID</a></code> has not been set</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">enrollDevice</span><span class="p">(</span>
-    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">credential</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">clientID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_DeviceResponse</span><span class="o">&gt;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>tenantID</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>TenantID to enroll the device into</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>name</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Name of the enrolling device</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>deviceID</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Unique identifier of the enrolling device</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>credential</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Credential string to authenticate that this device is allowed to enroll</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>clientID</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>ClientID to use for OAuth token generation</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>clientSecret</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Client Secret to use for OAuth token generation</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>A future to be fulfilled with either the enrolled device, or the network error that occurred</p>
                       </div>
                     </section>
                   </div>
