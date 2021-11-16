@@ -19,6 +19,8 @@ final class ManagementServiceTests: XCTestCase {
     override func setUp() {
         resetExpectation()
         mockService.reset()
+        Config.deviceID = nil
+        Config.tenantID = nil
     }
 
     func resetExpectation() {
@@ -347,6 +349,8 @@ final class ManagementServiceTests: XCTestCase {
         expectedResponse.deviceID = "Device ID"
         expectedResponse.name = "Device Name"
 
+        Config.deviceID = "Device ID"
+        Config.tenantID = "Tenant ID"
         var clientRequest = Sensory_Api_V1_Management_CreateGenericClientRequest()
         clientRequest.clientID = "client ID"
         clientRequest.secret = "client Secret"
@@ -371,9 +375,7 @@ final class ManagementServiceTests: XCTestCase {
         }
 
         let rsp = managementService.enrollDevice(
-            tenantID: "Tenant ID",
             name: "Device Name",
-            deviceID: "Device ID",
             credential: "Credential",
             clientID: "client ID",
             clientSecret: "client Secret"

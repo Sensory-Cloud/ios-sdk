@@ -12,6 +12,7 @@ final class ConfigTests: XCTestCase {
 
     override func setUp() {
         Config.cloudHost = nil
+        Config.jpegCompression = 0.5
     }
 
     func testSetCloudHost() throws {
@@ -40,5 +41,13 @@ final class ConfigTests: XCTestCase {
         Config.setInsecureCloudHost(host: "localhost")
         XCTAssertEqual(Config.cloudHost, expectedHost)
         XCTAssertEqual(Config.getCloudHost(), expectedHost)
+    }
+
+    func testJpegCompression() throws {
+        Config.jpegCompression = 1.5
+        XCTAssertEqual(1, Config.jpegCompression)
+
+        Config.jpegCompression = -5
+        XCTAssertEqual(0, Config.jpegCompression)
     }
 }

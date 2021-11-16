@@ -193,7 +193,6 @@ public class ManagementService {
     }
 
     // TODO: Move to OAuth Service
-    // TODO: tenantID/deviceID to config
     /// Creates a new device enrollment
     ///
     /// The credential string authenticates that this device is allowed to enroll. Depending on the server configuration
@@ -203,6 +202,9 @@ public class ManagementService {
     ///  - A signed JWT
     ///
     /// `TokenManager` may be used for securely generating a clientID and clientSecret for this call
+    ///
+    /// This call will fail with `NetworkError.notInitialized` if `Config.deviceID` or `Config.tenantID` has not been set
+    ///
     /// - Parameters:
     ///   - tenantID: TenantID to enroll the device into
     ///   - name: Name of the enrolling device
@@ -212,9 +214,7 @@ public class ManagementService {
     ///   - clientSecret: Client Secret to use for OAuth token generation
     /// - Returns: A future to be fulfilled with either the enrolled device, or the network error that occurred
     public func enrollDevice(
-        tenantID: String,
         name: String,
-        deviceID: String,
         credential: String,
         clientID: String,
         clientSecret: String
@@ -222,9 +222,12 @@ public class ManagementService {
         NSLog("Enrolling device: %@", name)
 
         do {
+            guard let deviceID = Config.deviceID, let tenantID = Config.tenantID else {
+                throw NetworkError.notInitialized
+            }
+
             let client: Sensory_Api_V1_Management_DeviceServiceClientProtocol = try service.getClient()
-            // TODO: config
-            let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(10)))
+            let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(Config.grpcTimeout)))
 
             var request = Sensory_Api_V1_Management_EnrollDeviceRequest()
             var clientRequest = Sensory_Api_V1_Management_CreateGenericClientRequest()

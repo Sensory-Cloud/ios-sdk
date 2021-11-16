@@ -65,17 +65,16 @@ public class VideoService {
     /// - Parameters:
     ///   - modelName: Name of model to create enrollment for
     ///   - userID: Unique user identifier
-    ///   - deviceID: Unique device identifier
     ///   - description: User supplied description of the enrollment
     ///   - isLivenessEnabled: Determines if a liveness check should be conducted as well as an enrollment
     ///   - livenessThreshold: Liveness threshold for the potential liveness check
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
+    /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
     /// - Returns: Bidirectional stream that can be used to send video data to the server
     public func createEnrollment(
         modelName: String,
         userID: String,
-        deviceID: String,
         description: String = "",
         isLivenessEnabled: Bool = false,
         livenessThreshold: Sensory_Api_V1_Video_RecognitionThreshold = .low,
@@ -85,6 +84,9 @@ public class VideoService {
         Sensory_Api_V1_Video_CreateEnrollmentResponse
     > {
         NSLog("Starting video enrollment stream")
+        guard let deviceID = Config.deviceID else {
+            throw NetworkError.notInitialized
+        }
 
         // Establish grpc streaming
         let client: Sensory_Api_V1_Video_VideoBiometricsClientProtocol = try service.getClient()

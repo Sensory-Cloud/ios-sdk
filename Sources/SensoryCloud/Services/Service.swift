@@ -79,7 +79,6 @@ public class Service {
         return clientProtocol
     }
 
-
     /// Creates a new grpc channel
     ///
     /// - Throws: NetworkError.notInitialized if a cloud host has not been set, or any error encountered while creating the grpc channel
@@ -103,8 +102,7 @@ public class Service {
         let token = try credentialProvider.getAccessToken()
         let headers: HPACKHeaders = ["authorization": "Bearer \(token)"]
         if isUnary {
-            // TODO: config
-            return CallOptions(customMetadata: headers, timeLimit: .timeout(.seconds(10)))
+            return CallOptions(customMetadata: headers, timeLimit: .timeout(.seconds(Config.grpcTimeout)))
         } else {
             return CallOptions(customMetadata: headers)
         }

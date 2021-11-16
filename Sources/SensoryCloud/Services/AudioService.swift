@@ -59,7 +59,6 @@ public class AudioService {
         }
     }
 
-    // TODO: - DeviceID config
     /// Opens a bidirectional stream to the server for the purpose of creating an audio enrollment
     ///
     /// This call will automatically send the initial `AudioConfig` message to the server
@@ -67,16 +66,15 @@ public class AudioService {
     ///   - modelName: Name of model to validate
     ///   - sampleRate: Sample rate of model to validate
     ///   - userID: Unique user identifier
-    ///   - deviceID: Unique device identifier
     ///   - description: User supplied description of the enrollment
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
+    /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func createEnrollment(
         modelName: String,
         sampleRate: Int32,
         userID: String,
-        deviceID: String,
         description: String = "",
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
@@ -84,6 +82,9 @@ public class AudioService {
         Sensory_Api_V1_Audio_CreateEnrollmentResponse
     > {
         NSLog("Starting audio enrollment stream")
+        guard let deviceID = Config.deviceID else {
+            throw NetworkError.notInitialized
+        }
 
         // Establish grpc streaming
         let client: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol = try service.getClient()
@@ -95,8 +96,7 @@ public class AudioService {
         audioConfig.encoding = .linear16
         audioConfig.sampleRateHertz = sampleRate
         audioConfig.audioChannelCount = 1
-        // TODO: - Config/parameter?
-        audioConfig.languageCode = "en-US"
+        audioConfig.languageCode = Config.languageCode
 
         var config = Sensory_Api_V1_Audio_CreateEnrollmentConfig()
         config.audio = audioConfig
@@ -196,7 +196,7 @@ public class AudioService {
         audioConfig.encoding = .linear16
         audioConfig.sampleRateHertz = sampleRate
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = "en-US"
+        audioConfig.languageCode = Config.languageCode
 
         var config = Sensory_Api_V1_Audio_ValidateEventConfig()
         config.audio = audioConfig
@@ -243,7 +243,7 @@ public class AudioService {
         audioConfig.encoding = .linear16
         audioConfig.sampleRateHertz = sampleRate
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = "en-US"
+        audioConfig.languageCode = Config.languageCode
 
         var config = Sensory_Api_V1_Audio_AuthenticateConfig()
         config.audio = audioConfig

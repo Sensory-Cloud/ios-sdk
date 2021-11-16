@@ -39,7 +39,7 @@ public class OAuthService {
             }
 
             let client = try getClient(host: host)
-            let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(10))) // TODO: configs
+            let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(Config.grpcTimeout)))
 
             var request = Sensory_Api_Oauth_TokenRequest()
             request.clientID = clientID

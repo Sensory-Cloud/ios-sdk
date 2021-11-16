@@ -21,7 +21,7 @@ public enum CameraPosition {
 public protocol VideoStreamDelegate: AnyObject {
     /// This will be called after a photo has been taken with the photo jpeg data
     func didTakePhoto(_ result: Data)
-    /// Thiw will be called when an error occurs while taking a photo
+    /// This will be called when an error occurs while taking a photo
     func takePhotoDidFail(_ error: Error)
 }
 
@@ -41,7 +41,6 @@ public class VideoStreamInteractor: NSObject {
 
     /// Shared instance
     public static var shared = VideoStreamInteractor()
-
 
     /// Requests permission to use the system camera
     ///
@@ -224,9 +223,11 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         // For some reason, the preview image comes w/ a 90 degree rotation
         // It's easiest to un-rotate the image at the end, but it makes the widths/heights confusing
 
+        let width = Config.photoWidth
+        let height = Config.photoHeight
+
         // First correct the aspect ratio of the image
-        // TODO: conig
-        let targetAspectRatio = Double(720)/Double(480)
+        let targetAspectRatio = Double(height)/Double(width)
         var croppedOpt: CGImage?
         if targetAspectRatio < Double(baseImage.width) / Double(baseImage.height) {
             // crop width to match aspect ratio
@@ -254,11 +255,10 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
 
         // Second, scale down the image to the proper size
-        // TODO: config
         guard let context = CGContext(
             data: nil,
-            width: 720,
-            height: 480,
+            width: height,
+            height: width,
             bitsPerComponent: cropped.bitsPerComponent,
             bytesPerRow: cropped.bytesPerRow,
             space: CGColorSpaceCreateDeviceRGB(),
@@ -267,8 +267,7 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
             NSLog("Could not get context")
             return nil
         }
-        // TODO: config
-        context.draw(cropped, in: CGRect(x: 0, y: 0, width: 720, height: 480))
+        context.draw(cropped, in: CGRect(x: 0, y: 0, width: height, height: width))
 
         guard let resized = context.makeImage() else {
             NSLog("Cant make image")
@@ -277,7 +276,6 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
 
         // Third, export as a jpeg
         let image = UIImage(cgImage: resized, scale: 0, orientation: .right)
-        // TODO: config
-        return image.jpegData(compressionQuality: 0.5)
+        return image.jpegData(compressionQuality: Config.jpegCompression)
     }
 }

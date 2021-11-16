@@ -23,6 +23,35 @@ public struct CloudHost: Equatable {
 public class Config {
 
     static var cloudHost: CloudHost?
+    /// Tenant ID to use during device enrollment
+    public static var tenantID: String?
+    /// Unique device identifier that model enrollments are associated to
+    public static var deviceID: String?
+
+    /// Sample rate to record audio at, defaults to 16kHz
+    public static var audioSampleRate: Float64 = 16000
+
+    /// Photo pixel height, defaults to 720 pixels
+    public static var photoHeight = 720
+    /// Photo pixel width, defaults to 480 pixels
+    public static var photoWidth = 480
+    /// Jpeg Compression factor used, a value between 0 and 1 where 0 is most compressed, and 1 is highest quality
+    public static var jpegCompression: Double = 0.5 {
+        didSet {
+            if jpegCompression > 1 {
+                jpegCompression = 1
+            }
+            if jpegCompression < 0 {
+                jpegCompression = 0
+            }
+        }
+    }
+
+    /// User's preferred language/region code (ex: en-US, used for audio enrollments. Defaults to the system Locale
+    public static var languageCode: String = "\(Locale.current.languageCode ?? "en")-\(Locale.current.regionCode ?? "US")"
+
+    /// Number of seconds to wait on a unary grpc call before timing out, defaults to 10 seconds.
+    public static var grpcTimeout: Int64 = 10
 
     /// Sets the cloud host for Sensory Cloud to use
     /// - Parameters:

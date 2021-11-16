@@ -18,6 +18,7 @@ final class VideoServiceTests: XCTestCase {
     override func setUp() {
         resetExpectations()
         mockService.reset()
+        Config.deviceID = nil
     }
 
     func resetExpectations() {
@@ -75,6 +76,7 @@ final class VideoServiceTests: XCTestCase {
         expectedResponse.isAlive = true
         expectedResponse.modelName = "Some Model"
 
+        Config.deviceID = "Device ID"
         var enrollmentConfig = Sensory_Api_V1_Video_CreateEnrollmentConfig()
         enrollmentConfig.modelName = "Some Model"
         enrollmentConfig.userID = "User ID"
@@ -101,7 +103,6 @@ final class VideoServiceTests: XCTestCase {
         _ = try videoService.createEnrollment(
             modelName: "Some Model",
             userID: "User ID",
-            deviceID: "Device ID",
             description: "Video Enrollment",
             isLivenessEnabled: true,
             livenessThreshold: .highest

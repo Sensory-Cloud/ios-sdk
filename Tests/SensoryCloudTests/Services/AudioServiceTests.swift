@@ -20,13 +20,14 @@ final class AudioServiceTests: XCTestCase {
         config.encoding = .linear16
         config.sampleRateHertz = 16000
         config.audioChannelCount = 1
-        config.languageCode = "en-US"
+        config.languageCode = Config.languageCode
         return config
     }
 
     override func setUp() {
         resetExpectation()
         mockService.reset()
+        Config.deviceID = nil
     }
 
     func resetExpectation() {
@@ -82,6 +83,7 @@ final class AudioServiceTests: XCTestCase {
         expectedResponse.audioEnergy = 0.5
         expectedResponse.percentComplete = 25
 
+        Config.deviceID = "Mock Device ID"
         var enrollmentConfig = Sensory_Api_V1_Audio_CreateEnrollmentConfig()
         enrollmentConfig.audio = mockAudioConfig
         enrollmentConfig.modelName = "Mock Model Name"
@@ -108,7 +110,6 @@ final class AudioServiceTests: XCTestCase {
             modelName: "Mock Model Name",
             sampleRate: 16000,
             userID: "Mock User ID",
-            deviceID: "Mock Device ID",
             description: "Mock Description"
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)

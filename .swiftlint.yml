@@ -1,5 +1,6 @@
 excluded:
   - Sources/SensoryCloud/Generated/*
+  - Tests/* 
 
 opt_in_rules:
   - force_unwrapping

@@ -149,8 +149,7 @@ public class AudioStreamInteractor {
         }
 
         var streamDescription = AudioStreamBasicDescription()
-        // TODO: config
-        streamDescription.mSampleRate = 16000
+        streamDescription.mSampleRate = Config.audioSampleRate
         streamDescription.mFormatID = kAudioFormatLinearPCM
         streamDescription.mFormatFlags = kAudioFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked
         streamDescription.mBytesPerPacket = 2
