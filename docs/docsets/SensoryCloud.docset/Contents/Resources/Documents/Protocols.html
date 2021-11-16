@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>Protocols  Reference</title>
+    <link rel="stylesheet" type="text/css" href="css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="js/jquery.min.js" defer></script>
+    <script src="js/jazzy.js" defer></script>
+    
+    <script src="js/lunr.min.js" defer></script>
+    <script src="js/typeahead.jquery.js" defer></script>
+    <script src="js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Section/Protocols" class="dashAnchor"></a>
+    <a title="Protocols  Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="index.html">SensoryCloud Docs</a> (99% documented)</p>
+        <div class="header-right">
+          <form role="search" action="search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="index.html">SensoryCloud Reference</a>
+        <img id="carat" src="img/carat.png" alt=""/>
+        Protocols  Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Classes/AudioService.html">AudioService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/AudioStreamInteractor.html">AudioStreamInteractor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Config.html">Config</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/ManagementService.html">ManagementService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/OAuthService.html">OAuthService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Service.html">Service</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/TokenManager.html">TokenManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/VideoService.html">VideoService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/VideoStreamInteractor.html">VideoStreamInteractor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Enums/AudioStreamError.html">AudioStreamError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/CameraPosition.html">CameraPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/KeychainError.html">KeychainError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/VideoStreamError.html">VideoStreamError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Extensions/OSStatus.html">OSStatus</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Protocols/AudioStreamDelegate.html">AudioStreamDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/CredentialProvider.html">CredentialProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Protocols/VideoStreamDelegate.html">VideoStreamDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Structs/AccessTokenCredentials.html">AccessTokenCredentials</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/CloudHost.html">CloudHost</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>Protocols</h1>
+            <p>The following protocols are available globally.</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud19AudioStreamDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/AudioStreamDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud19AudioStreamDelegateP">AudioStreamDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate class for receiving processed audio data</p>
+
+                        <a href="Protocols/AudioStreamDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">AudioStreamDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud19VideoStreamDelegateP"></a>
+                    <a name="//apple_ref/swift/Protocol/VideoStreamDelegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud19VideoStreamDelegateP">VideoStreamDelegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate class for receiving pictures from <code><a href="Classes/VideoStreamInteractor.html">VideoStreamInteractor</a></code></p>
+
+                        <a href="Protocols/VideoStreamDelegate.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">VideoStreamDelegate</span> <span class="p">:</span> <span class="kt">AnyObject</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud18CredentialProviderP"></a>
+                    <a name="//apple_ref/swift/Protocol/CredentialProvider" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud18CredentialProviderP">CredentialProvider</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Protocol for an object that can provide OAuth tokens to Sensory Cloud</p>
+
+<p><code><a href="Classes/TokenManager.html">TokenManager</a></code> already conforms to this protocol and is used by default if <code><a href="Classes/Service.html#/s:12SensoryCloud7ServiceC18credentialProviderAA010CredentialE0_pvp">Service.credentialProvider</a></code> is not changed
+Clients may use their own token management if they desire. These token managers would be responsible for:</p>
+
+<ul>
+<li>Generating their own clientIDs and client secrets
+
+<ul>
+<li>clientIDs should be a UUID</li>
+<li>client secrets should be at least 10 hexadecimal characters that are generated in a cryptographically secure way</li>
+</ul></li>
+<li>Storing these credentials as well as any requested access tokens in a secure way (i.e. Apple Keychain)</li>
+<li>Requesting new access tokens and refreshing the access token when they expire
+
+<ul>
+<li><code><a href="Classes/OAuthService.html">OAuthService</a></code> provides the grpc calls to request new tokens</li>
+</ul></li>
+<li>Setting <code><a href="Classes/Service.html#/s:12SensoryCloud7ServiceC18credentialProviderAA010CredentialE0_pvp">Service.credentialProvider</a></code> with their token management solution</li>
+</ul>
+
+                        <a href="Protocols/CredentialProvider.html" class="slightly-smaller">See more</a>
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CredentialProvider</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-11-16)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

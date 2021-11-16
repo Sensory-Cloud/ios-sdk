@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>ManagementService Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/ManagementService" class="dashAnchor"></a>
+    <a title="ManagementService Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SensoryCloud Docs</a> (99% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SensoryCloud Reference</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        ManagementService Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AudioService.html">AudioService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AudioStreamInteractor.html">AudioStreamInteractor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Config.html">Config</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ManagementService.html">ManagementService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OAuthService.html">OAuthService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Service.html">Service</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TokenManager.html">TokenManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VideoService.html">VideoService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VideoStreamInteractor.html">VideoStreamInteractor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AudioStreamError.html">AudioStreamError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CameraPosition.html">CameraPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeychainError.html">KeychainError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/VideoStreamError.html">VideoStreamError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/OSStatus.html">OSStatus</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioStreamDelegate.html">AudioStreamDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CredentialProvider.html">CredentialProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VideoStreamDelegate.html">VideoStreamDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AccessTokenCredentials.html">AccessTokenCredentials</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CloudHost.html">CloudHost</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>ManagementService</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">ManagementService</span></code></pre>
+
+                </div>
+              </div>
+            <p>A collection of grpc service calls for managing existing enrollments and enrollment groups</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceCACycfc"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceCACycfc">init()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Initializes a new instance of <code>ManagementService</code></p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC14getEnrollments3for7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c4_GetF8ResponseVGSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/getEnrollments(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC14getEnrollments3for7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c4_GetF8ResponseVGSS_tF">getEnrollments(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fetches a list of the current enrollments for the given userID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getEnrollments</span><span class="p">(</span><span class="k">for</span> <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_GetEnrollmentsResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>userID to fetch enrollments for</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either a list of enrollments, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC19getEnrollmentGroups3for7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c4_GetfG8ResponseVGSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/getEnrollmentGroups(for:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC19getEnrollmentGroups3for7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c4_GetfG8ResponseVGSS_tF">getEnrollmentGroups(for:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fetches a list of the current enrollment groups owned by a given userID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getEnrollmentGroups</span><span class="p">(</span><span class="k">for</span> <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_GetEnrollmentGroupsResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>userID to fetch enrollment groups for</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either a list of enrollment groups, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC21createEnrollmentGroup6userID05groupI00J4Name11description05modelK07NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_fG8ResponseVGSS_S4StF"></a>
+                    <a name="//apple_ref/swift/Method/createEnrollmentGroup(userID:groupID:groupName:description:modelName:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC21createEnrollmentGroup6userID05groupI00J4Name11description05modelK07NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_fG8ResponseVGSS_S4StF">createEnrollmentGroup(userID:<wbr>groupID:<wbr>groupName:<wbr>description:<wbr>modelName:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a new group of enrollments that can be used for group authentication</p>
+
+<p>Enrollment groups are initially created without any associated enrollments <code>appendEnrollmentGroup()</code>
+may be used to add enrollments to an enrollment group</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createEnrollmentGroup</span><span class="p">(</span>
+    <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">groupID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">groupName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_EnrollmentGroupResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>userID of the user that owns the enrollment group</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unique group identifier for the enrollment group</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Friendly display name to use for the enrollment group</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>description</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Description of the enrollment group</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>modelName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The name of the model that all enrollments in this group will use</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either the newly created enrollment group, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC21appendEnrollmentGroup7groupId11enrollments7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_fG8ResponseVGSS_SaySSGtF"></a>
+                    <a name="//apple_ref/swift/Method/appendEnrollmentGroup(groupId:enrollments:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC21appendEnrollmentGroup7groupId11enrollments7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_fG8ResponseVGSS_SaySSGtF">appendEnrollmentGroup(groupId:<wbr>enrollments:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Appends enrollments to an existing enrollment group</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">appendEnrollmentGroup</span><span class="p">(</span>
+    <span class="nv">groupId</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">enrollments</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_EnrollmentGroupResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>groupId</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>GroupID of the enrollment group to append enrollments to</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollments</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A list of enrollment ids to append to the enrollment group</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either the updated enrollment group, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC16deleteEnrollment4with7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_F8ResponseVGSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/deleteEnrollment(with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC16deleteEnrollment4with7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_F8ResponseVGSS_tF">deleteEnrollment(with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requests the deletion of an enrollment</p>
+
+<p>The server will prevent users from deleting their last enrollment</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">deleteEnrollment</span><span class="p">(</span><span class="n">with</span> <span class="nv">enrollmentID</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_EnrollmentResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollmentID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>enrollmentID for the enrollment to delete</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either the deleted enrollment, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC17deleteEnrollments4with7NIOCore15EventLoopFutureCySayAA0a8_Api_V1_C19_EnrollmentResponseVGGSaySSG_tF"></a>
+                    <a name="//apple_ref/swift/Method/deleteEnrollments(with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC17deleteEnrollments4with7NIOCore15EventLoopFutureCySayAA0a8_Api_V1_C19_EnrollmentResponseVGGSaySSG_tF">deleteEnrollments(with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requests the deletion of multiple enrollments</p>
+
+<p>If an error occurs during the deletion process, already completed deletions will not be rolled back
+The server will prevent users from deleting their last enrollment</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">deleteEnrollments</span><span class="p">(</span><span class="n">with</span> <span class="nv">ids</span><span class="p">:</span> <span class="p">[</span><span class="kt">String</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="p">[</span><span class="kt">Sensory_Api_V1_Management_EnrollmentResponse</span><span class="p">]</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>ids</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>List of enrollment ids to delete from the server</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future that will either contain a list of all server responses, or the first error to occur.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC21deleteEnrollmentGroup4with7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_fG8ResponseVGSS_tF"></a>
+                    <a name="//apple_ref/swift/Method/deleteEnrollmentGroup(with:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC21deleteEnrollmentGroup4with7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_fG8ResponseVGSS_tF">deleteEnrollmentGroup(with:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requests the deletion of enrollment groups</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">deleteEnrollmentGroup</span><span class="p">(</span><span class="n">with</span> <span class="nv">id</span><span class="p">:</span> <span class="kt">String</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_EnrollmentGroupResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>id</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>group ID to delete</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either the deleted enrollment group, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud17ManagementServiceC12enrollDevice4name10credential8clientID0I6Secret7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_F8ResponseVGSS_S3StF"></a>
+                    <a name="//apple_ref/swift/Method/enrollDevice(name:credential:clientID:clientSecret:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud17ManagementServiceC12enrollDevice4name10credential8clientID0I6Secret7NIOCore15EventLoopFutureCyAA0a8_Api_V1_c1_F8ResponseVGSS_S3StF">enrollDevice(name:<wbr>credential:<wbr>clientID:<wbr>clientSecret:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Creates a new device enrollment</p>
+
+<p>The credential string authenticates that this device is allowed to enroll. Depending on the server configuration
+the credential string may be one of multiple values:</p>
+
+<ul>
+<li>An empty string if no authentication is configured on the server</li>
+<li>A shared secret (password)</li>
+<li>A signed JWT</li>
+</ul>
+
+<p><code><a href="../Classes/TokenManager.html">TokenManager</a></code> may be used for securely generating a clientID and clientSecret for this call</p>
+
+<p>This call will fail with <code><a href="../Enums/NetworkError.html#/s:12SensoryCloud12NetworkErrorO14notInitializedyA2CmF">NetworkError.notInitialized</a></code> if <code><a href="../Classes/Config.html#/s:12SensoryCloud6ConfigC8deviceIDSSSgvpZ">Config.deviceID</a></code> or <code><a href="../Classes/Config.html#/s:12SensoryCloud6ConfigC8tenantIDSSSgvpZ">Config.tenantID</a></code> has not been set</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">enrollDevice</span><span class="p">(</span>
+    <span class="nv">name</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">credential</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">clientID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">clientSecret</span><span class="p">:</span> <span class="kt">String</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_V1_Management_DeviceResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>tenantID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>TenantID to enroll the device into</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>name</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Name of the enrolling device</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>deviceID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unique identifier of the enrolling device</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>credential</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Credential string to authenticate that this device is allowed to enroll</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>ClientID to use for OAuth token generation</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>clientSecret</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Client Secret to use for OAuth token generation</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either the enrolled device, or the network error that occurred</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-11-16)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>

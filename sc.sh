@@ -69,6 +69,17 @@ case "$1" in
     exit 0;
     ;;
 
+  "doc"|"d")
+    jazzy \
+       --module SensoryCloud \
+       --exclude=/*/Generated* \
+       --swift-build-tool xcodebuild \
+       --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'id=7517DB8B-28F4-42C5-A844-AA5E2554786E'
+# TODO: proper destination selection
+#        --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'platform=iOS Simulator,name=iPhone 8,OS=15.0'
+    exit 0;
+    ;;
+
   "help"|"h")
     print_helper
     exit 0;

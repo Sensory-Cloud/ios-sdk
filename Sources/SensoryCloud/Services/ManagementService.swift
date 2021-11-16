@@ -75,21 +75,20 @@ public class ManagementService {
         }
     }
 
-    // TODO: make group ID internal?
     /// Creates a new group of enrollments that can be used for group authentication
     ///
     /// Enrollment groups are initially created without any associated enrollments `appendEnrollmentGroup()`
     /// may be used to add enrollments to an enrollment group
     /// - Parameters:
     ///   - userID: userID of the user that owns the enrollment group
-    ///   - groupID: Unique group identifier for the enrollment group
+    ///   - groupID: Unique group identifier for the enrollment group, if empty an id will be automatically generated
     ///   - groupName: Friendly display name to use for the enrollment group
     ///   - description: Description of the enrollment group
     ///   - modelName: The name of the model that all enrollments in this group will use
     /// - Returns: A future to be fulfilled with either the newly created enrollment group, or the network error that occurred
     public func createEnrollmentGroup(
         userID: String,
-        groupID: String,
+        groupID: String = UUID().uuidString,
         groupName: String,
         description: String,
         modelName: String
@@ -187,58 +186,6 @@ public class ManagementService {
             var request = Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest()
             request.id = id
             return client.deleteEnrollmentGroup(request, callOptions: metadata).response
-        } catch {
-            return service.group.next().makeFailedFuture(error)
-        }
-    }
-
-    // TODO: Move to OAuth Service
-    /// Creates a new device enrollment
-    ///
-    /// The credential string authenticates that this device is allowed to enroll. Depending on the server configuration
-    /// the credential string may be one of multiple values:
-    ///  - An empty string if no authentication is configured on the server
-    ///  - A shared secret (password)
-    ///  - A signed JWT
-    ///
-    /// `TokenManager` may be used for securely generating a clientID and clientSecret for this call
-    ///
-    /// This call will fail with `NetworkError.notInitialized` if `Config.deviceID` or `Config.tenantID` has not been set
-    ///
-    /// - Parameters:
-    ///   - tenantID: TenantID to enroll the device into
-    ///   - name: Name of the enrolling device
-    ///   - deviceID: Unique identifier of the enrolling device
-    ///   - credential: Credential string to authenticate that this device is allowed to enroll
-    ///   - clientID: ClientID to use for OAuth token generation
-    ///   - clientSecret: Client Secret to use for OAuth token generation
-    /// - Returns: A future to be fulfilled with either the enrolled device, or the network error that occurred
-    public func enrollDevice(
-        name: String,
-        credential: String,
-        clientID: String,
-        clientSecret: String
-    ) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse> {
-        NSLog("Enrolling device: %@", name)
-
-        do {
-            guard let deviceID = Config.deviceID, let tenantID = Config.tenantID else {
-                throw NetworkError.notInitialized
-            }
-
-            let client: Sensory_Api_V1_Management_DeviceServiceClientProtocol = try service.getClient()
-            let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(Config.grpcTimeout)))
-
-            var request = Sensory_Api_V1_Management_EnrollDeviceRequest()
-            var clientRequest = Sensory_Api_V1_Management_CreateGenericClientRequest()
-            clientRequest.clientID = clientID
-            clientRequest.secret = clientSecret
-            request.name = name
-            request.deviceID = deviceID
-            request.tenantID = tenantID
-            request.client = clientRequest
-            request.credential = credential
-            return client.enrollDevice(request, callOptions: defaultTimeout).response
         } catch {
             return service.group.next().makeFailedFuture(error)
         }
