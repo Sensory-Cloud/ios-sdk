@@ -74,8 +74,10 @@ public class AudioService {
     ///   - userID: Unique user identifier
     ///   - description: User supplied description of the enrollment
     ///   - isLivenessEnabled: Verifies liveness during the enrollment process
-    ///   - numUtterances: Sets how many utterances should be required for text-dependent enrollments, defaults to 4 if not specified. This parameter should be left `nil` for text-independent enrollments
-    ///   - enrollmentDuration: Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled. This parameter should be left `nil` for text-dependent enrollments
+    ///   - numUtterances: Sets how many utterances should be required for text-dependent enrollments, defaults to 4 if not specified.
+    ///                    This parameter should be left `nil` for text-independent enrollments
+    ///   - enrollmentDuration: Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled.
+    ///                         This parameter should be left `nil` for text-dependent enrollments
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set

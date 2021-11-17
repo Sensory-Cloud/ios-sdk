@@ -38,7 +38,7 @@ public class Service {
         "\(Sensory_Api_V1_Management_DeviceServiceClientProtocol.self)": Sensory_Api_V1_Management_DeviceServiceClient.self,
         "\(Sensory_Api_V1_Audio_AudioModelsClientProtocol.self)": Sensory_Api_V1_Audio_AudioModelsClient.self,
         "\(Sensory_Api_V1_Audio_AudioBiometricsClientProtocol.self)": Sensory_Api_V1_Audio_AudioBiometricsClient.self,
-        "\(Sensory_Api_V1_Audio_AudioEventsClientProtocol.self)": Sensory_Api_V1_Audio_AudioBiometricsClient.self,
+        "\(Sensory_Api_V1_Audio_AudioEventsClientProtocol.self)": Sensory_Api_V1_Audio_AudioEventsClient.self,
         "\(Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol.self)":
             Sensory_Api_V1_Audio_AudioTranscriptionsClient.self,
         "\(Sensory_Api_V1_Video_VideoModelsClientProtocol.self)": Sensory_Api_V1_Video_VideoModelsClient.self,

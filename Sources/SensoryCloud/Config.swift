@@ -15,6 +15,12 @@ public struct CloudHost: Equatable {
     public var port: Int
     /// Says if the cloud host is setup for secure communication
     public var isSecure: Bool
+
+    public init(_ host: String, _ port: Int, _ isSecure: Bool) {
+        self.host = host
+        self.port = port
+        self.isSecure = isSecure
+    }
 }
 
 /// Static class that provides configuration endpoints for Sensory Cloud
@@ -58,7 +64,7 @@ public class Config {
     ///   - host: Cloud host to use
     ///   - port: Optional port, port 443 is used by default
     public static func setCloudHost(host: String, port: Int = 443) {
-        cloudHost = CloudHost(host: host, port: port, isSecure: true)
+        cloudHost = CloudHost(host, port, true)
     }
 
     /// Sets an insecure host for Sensory Cloud to use
@@ -68,7 +74,7 @@ public class Config {
     ///   - host: Cloud host to use
     ///   - port: optional port, port 443 is used by default
     public static func setInsecureCloudHost(host: String, port: Int = 443) {
-        cloudHost = CloudHost(host: host, port: port, isSecure: false)
+        cloudHost = CloudHost(host, port, false)
     }
 
     /// Returns the currently configured cloud host, or `nil` if a host has not been configured yet
