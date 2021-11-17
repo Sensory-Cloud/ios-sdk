@@ -9,9 +9,10 @@ USAGE="Usage: ./sc.sh [COMMAND]"
 COMMANDS="
     Commands:\n
     lint | l\t\t Lint Source Files\n
-    build | b\t\t Build Swift Package\n
     test | t\t\t Run Unit Tests\n
+    testpretty | tp\t Run Unit Tests using xcpretty output\n
     genproto | gp\t\t Generate Proto Files\n
+    doc | d\t\t Generate Documentation\n
     help | h\t\t Display This Help Message\n
 "
 
@@ -60,7 +61,20 @@ case "$1" in
     ;;
 
   "test"|"t")
-    echo "TODO"
+    xcodebuild \
+      -scheme SensoryCloud \
+      -sdk iphoneos \
+      -destination 'platform=iOS Simulator,name=iPhone 8' \
+      test
+    exit 0;
+    ;;
+
+  "testpretty"|"tp")
+    xcodebuild \
+      -scheme SensoryCloud \
+      -sdk iphoneos \
+      -destination 'platform=iOS Simulator,name=iPhone 8' \
+      test | xcpretty
     exit 0;
     ;;
 
@@ -74,9 +88,7 @@ case "$1" in
        --module SensoryCloud \
        --exclude=/*/Generated* \
        --swift-build-tool xcodebuild \
-       --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'id=7517DB8B-28F4-42C5-A844-AA5E2554786E'
-# TODO: proper destination selection
-#        --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'platform=iOS Simulator,name=iPhone 8,OS=15.0'
+       --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'name=iPhone 8'
     exit 0;
     ;;
 
