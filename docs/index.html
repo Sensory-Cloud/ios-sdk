@@ -16,7 +16,7 @@
     <a title="SensoryCloud  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">SensoryCloud Docs</a> (99% documented)</p>
+        <p><a href="index.html">SensoryCloud Docs</a> (98% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -125,14 +125,96 @@
         <section>
           <section class="section">
             
-            <h1 id='sensorycloud' class='heading'>SensoryCloud</h1>
+            <h1 id='sensory-cloud-ios-sdk' class='heading'>Sensory Cloud iOS SDK</h1>
+<h2 id='integration' class='heading'>Integration</h2>
 
-<p>A description of this package.</p>
+<p>The Sensory Cloud iOS SDK is distributed via Swift Package Manager. From Xcode 11 it is possible to <a href="https://help.apple.com/xcode/mac/current/#/devb83d64851">add Swift Package dependencies to Xcode projects</a> and link targets to products of those packages; this is the easiest way to integrate Sensory Cloud with an existing <code>xcodeproj</code>.</p>
+<h2 id='code-structure' class='heading'>Code Structure</h2>
+
+<p>Sensory Cloud&rsquo;s iOS SDK allows for a fast and easy integreation into Sensory Cloud. This SDK is divided into four major sections</p>
+
+<ul>
+<li>Services</li>
+<li>Token Manager</li>
+<li>Interactors</li>
+<li>Config</li>
+</ul>
+
+<p>This README covers the high level functions of each section.  More detailed code level documentation can be found under the <code>docs</code> folder.</p>
+<h3 id='services' class='heading'>Services</h3>
+
+<p>Sensory Cloud uses grpc for its client server communication. All of the <code><a href="Classes/Service.html">Service</a></code> classes within the sdk (Ex: <code><a href="Classes/AudioService.html">AudioService</a></code>) serve as wrappers around grpc calls. </p>
+<h3 id='token-manager' class='heading'>Token Manager</h3>
+
+<p>The <code><a href="Classes/TokenManager.html">TokenManager</a></code> class is a helper class that provides automatic OAuth token management for Sensory Cloud. <code><a href="Classes/TokenManager.html">TokenManager</a></code> takes care of requesting and refreshing OAuth tokens, storing OAuth tokens and credentials securly within Apple Keychain, and providing tokens to grpc services. While it is recommended to use <code><a href="Classes/TokenManager.html">TokenManager</a></code> for OAuth token management, you can see the documentation for <code>Credential Provider</code> for information on how to provide your own token management.</p>
+<h3 id='interactors' class='heading'>Interactors</h3>
+
+<p>Sensory Cloud includes two interactors, <code><a href="Classes/VideoStreamInteractor.html">VideoStreamInteractor</a></code> and <code><a href="Classes/AudioStreamInteractor.html">AudioStreamInteractor</a></code>. These are helper classes that manage getting Audio and Video data from the on device camera and microphone. Client apps are free to use their own implementation for getting audio or video data. Reguardless, client apps still need to request permission for their app to use the camera and microphone. This is done by adding purpose strings to the app&rsquo;s <code>Info.plist</code> file for the keys <code>NSCameraUsageDescription</code> and <code>NSMicrophoneUsageDescription</code>.</p>
+<h3 id='config' class='heading'>Config</h3>
+
+<p>The static <code><a href="Classes/Config.html">Config</a></code> class provides a place for the client app to configure certain aspects of how Sensory Cloud functions. There are a few configurations that <em>must</em> be set before making any service calls. </p>
+
+<ul>
+<li><code>Config.SetCloudHost()</code> sets the cloud host that the Sensory Cloud SDK will reach out to</li>
+<li><code>Config.TenantID</code> sets the tenantID of the Sensory Cloud instance to use</li>
+<li><code>Config.DeviceID</code> is a unique identifier for the current device. This should not change after the device has logged into Sensory Cloud</li>
+</ul>
+
+<p>More configurations exist under the <code><a href="Classes/Config.html">Config</a></code> class, but all other configurations have sutible default values and only need te be set if the default behavior is not desired.</p>
+
+<p><code><a href="Classes/Config.html">Config</a></code> does not save anything on device. All configurations <em>must</em> be set every time the app launches.</p>
+
+<hr>
+<h2 id='grpc' class='heading'>gRPC</h2>
+
+<p>gRPC is &ldquo;what REST should have been&rdquo;. gRPC is a modern open source high performance Remote Procedure Call (RPC) framework that can run in any environment. It can efficiently connect servers and clients in a more efficient and controlled manner.</p>
+
+<p><a href="https://grpc.io/docs/what-is-grpc/introduction/">Introduction to gRPC</a></p>
+<h2 id='helper-script' class='heading'>Helper Script</h2>
+
+<p><code>sc.sh</code> is a helper script that contians many of the common scripting tasks required during development. As a client app, you shouldn&rsquo;t have to manually call <code>sc.sh</code></p>
+<h3 id='linting' class='heading'>Linting</h3>
+
+<p>The Sensory Cloud SDK can be linted with the command:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>./sc.sh lint
+</code></pre>
+
+<p>Linting is done using <a href="https://github.com/realm/SwiftLint">swiftlint</a> which may need to be manually installed on the system.</p>
+<h3 id='testing' class='heading'>Testing</h3>
+
+<p>The Sensory Cloud unit tests can be run manually on the command line with:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>./sc.sh <span class="nb">test</span>
+</code></pre>
+<h3 id='protobuf-file-generation' class='heading'>Protobuf File Generation</h3>
+
+<p>gRPC and protobuf swift files can be automatically generated from the base <code>.proto</code> files with the command:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>./sc.sh genproto
+</code></pre>
+
+<p>This requires that <code>swfit-grpc</code> and other associated libraries are installed on the system. All of these dependencies can be installed via <a href="https://brew.sh/">homebrew</a>:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>brew <span class="nb">install </span>protobuf
+<span class="nv">$ </span>brew <span class="nb">install </span>swift-protobuf
+<span class="nv">$ </span>brew <span class="nb">install </span>grpc-swift
+</code></pre>
+<h3 id='documentation' class='heading'>Documentation</h3>
+
+<p>The documentation files will need to be re-generated after updating any of the code files. This can be done with the command:</p>
+<pre class="highlight shell"><code><span class="nv">$ </span>./sc.sh doc
+</code></pre>
+
+<p>This generation is done using <a href="https://github.com/realm/jazzy">Jazzy</a> which may need to be manually installed on the system.</p>
+
+<hr>
+<h2 id='maintainers' class='heading'>Maintainers</h2>
+
+<ul>
+<li>Owner - Niles Hacking (<a href="mailto:nhacking@sensoryinc.com">nhacking@sensoryinc.com</a>)</li>
+</ul>
 
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-11-16)</p>
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-11-17)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

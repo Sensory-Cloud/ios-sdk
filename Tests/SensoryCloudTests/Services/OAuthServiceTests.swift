@@ -146,7 +146,7 @@ final class OAuthServiceTests: XCTestCase {
 
     func testGetClient() throws {
         let oauthService = OAuthService()
-        _ = try oauthService.getOAuthClient(host: CloudHost(host: "mockHost", port: 443, isSecure: true))
+        _ = try oauthService.getOAuthClient(host: CloudHost("mockHost", 443, true))
     }
 }
 

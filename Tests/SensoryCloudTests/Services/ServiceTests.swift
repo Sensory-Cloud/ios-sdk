@@ -57,7 +57,7 @@ final class ServiceTests: XCTestCase {
 
         let _: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
         XCTAssertEqual(service.cachedClients.count, 1)
-        XCTAssertEqual(service.cacheHost, CloudHost(host: "host", port: 443, isSecure: true))
+        XCTAssertEqual(service.cacheHost, CloudHost("host", 443, true))
 
         // Ensure cache is being used
         let _: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
