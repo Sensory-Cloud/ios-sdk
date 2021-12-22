@@ -8,8 +8,8 @@ option java_multiple_files = true;
 option java_package = "io.sensory.api.v1.management";
 option java_outer_classname = "SensoryApiV1ManagementDeviceProto";
 
+import "common/common.proto";
 import "validate/validate.proto";
-import "v1/management/client.proto";
 
 // Service to manage Devices in the database
 service DeviceService {
@@ -30,7 +30,7 @@ message EnrollDeviceRequest {
   // Unique Tenant ID as UUID
   string tenantId = 3 [(validate.rules).string.uuid = true];
   // OAuth client-specific request details
-  CreateGenericClientRequest client = 4 [(validate.rules).message.required = true];
+  common.GenericClient client = 4 [(validate.rules).message.required = true];
   // If required, the credential to be validated by the server upon enrollment.
   // Possible values are a shared secret or signed JWT.
   string credential = 5;

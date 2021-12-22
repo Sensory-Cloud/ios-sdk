@@ -20,13 +20,14 @@ service AudioModels {
 
 // Handles all audio-related biometrics
 service AudioBiometrics {
-  // Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse
-  // as the audio is processed.
+  // Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse as the audio is processed.
+  // CreateEnrollment only supports biometric-enabled models
   // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   rpc CreateEnrollment(stream CreateEnrollmentRequest) returns (stream CreateEnrollmentResponse) {}
 
   // Authenticates a user with a stream of audio against an existing enrollment.
   // Streams an AuthenticateResponse as the audio is processed.
+  // Authenticate only supports biometric-enabled models
   // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   rpc Authenticate(stream AuthenticateRequest) returns (stream AuthenticateResponse) {}
 }
@@ -37,7 +38,19 @@ service AudioEvents {
   // Streams a ValidateEventResponse as the audio is processed.
   // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   rpc ValidateEvent(stream ValidateEventRequest) returns (stream ValidateEventResponse) {}
+
+  // Enrolls a sound or voice. Streams a CreateEnrollmentResponse as the audio is processed.
+  // CreateEnrollment supports all enrollable models
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc CreateEnrolledEvent(stream CreateEnrolledEventRequest) returns (stream CreateEnrollmentResponse) {}
+
+  // Authenticates a sound or voice. Streams a ValidateEventResponse as the audio is processed.
+  // ValidateEnrolledEvent supports all enrollable models
+  // Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  rpc ValidateEnrolledEvent(stream ValidateEnrolledEventRequest) returns (stream ValidateEnrolledEventResponse) {}
 }
+
+
 
 // Handles all audio transcriptions
 service AudioTranscriptions {
@@ -69,6 +82,35 @@ message AudioModel {
   common.TechnologyType technology = 7;
   // Indicates if liveness is supported by this model
   bool isLivenessSupported = 8;
+}
+
+enum AudioPostProcessingAction {
+  // Default value to perform no action
+  NOT_SET = 0;
+  // Request the audio engine to flush its buffers.
+  FLUSH = 1;
+  // Request the audio engine reset itself.
+  RESET = 2;
+}
+
+// Action that can be passed along with any audio data. This message instructs the audio engine to
+// perfrom some kind of action after the data is processed.
+message AudioRequestPostProcessingAction {
+  // ID that can be set by the client. If a flush or reset is requested,
+  // this ID will be returned to the client upon a successful flush or reset.
+  string actionId = 1;
+
+  // The specific action that is being requested.
+  AudioPostProcessingAction action = 2 [(validate.rules).enum.defined_only = true];
+}
+
+// Metadata that can be passed along with any audio response indicating
+message AudioResponsePostProcessingAction {
+  // ID that was optionally set by the client with the metadata request.
+  string actionId = 1;
+
+  // The specific action that was completed.
+  AudioPostProcessingAction action = 2 [(validate.rules).enum.defined_only = true];
 }
 
 // Response containing the models currently available
@@ -146,6 +188,57 @@ message ValidateEventRequest {
     // `ValidateEventConfig`.
     bytes audioContent = 2;
   }
+
+  // Message used to instruct the audio recognition engine to flush or reset.
+  AudioRequestPostProcessingAction postProcessingAction = 10;
+}
+
+// The top-level message sent by the client for the `CreateEnrolledEvent` method.
+// Multiple `CreateEnrolledEventRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `audioContent`.
+// All subsequent messages must contain `audioContent` and
+// must not contain a `config` message.
+message CreateEnrolledEventRequest {
+  // The streaming request, which is either a config or audio content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `CreateEnrolledEventRequest` message must contain a
+    // `config`  message.
+    CreateEnrollmentEventConfig config = 1;
+
+    // The audio data to be recognized. Sequential chunks of audio data are sent
+    // in sequential `CreateEnrolledEventRequest` messages. The first
+    // `CreateEnrolledEventRequest` message must not contain `audioContent` data
+    // and all subsequent `CreateEnrolledEventRequest` messages must contain
+    // `audioContent` data. The audio bytes must be encoded as specified in
+    // `AudioConfig`.
+    bytes audioContent = 2;
+  }
+}
+
+// The top-level message sent by the client for the `ValidateEnrolledEvent` method.
+// Multiple `ValidateEnrolledEventRequest` messages are sent in a stream. The first message
+// must contain a `config` message and must not contain `audioContent`.
+// All subsequent messages must contain `audioContent` and
+// must not contain a `config` message.
+message ValidateEnrolledEventRequest {
+  // The streaming request, which is either a config or audio content.
+  oneof streamingRequest {
+    option (validate.required) = true;
+    // Provides information that specifies how to process the
+    // request. The first `ValidateEnrolledEventRequest` message must contain a
+    // `config`  message.
+    ValidateEnrolledEventConfig config = 1;
+
+    // The audio data to be recognized. Sequential chunks of audio data are sent
+    // in sequential `ValidateEnrolledEventRequest` messages. The first
+    // `ValidateEnrolledEventRequest` message must not contain `audioContent` data
+    // and all subsequent `ValidateEnrolledEventRequest` messages must contain
+    // `audioContent` data. The audio bytes must be encoded as specified in
+    // `ValidateEnrolledEventConfig`.
+    bytes audioContent = 2;
+  }
 }
 
 // The top-level message sent by the client for the `Transcribe` method.
@@ -170,6 +263,9 @@ message TranscribeRequest {
     // `TranscribeConfig`.
     bytes audioContent = 2;
   }
+
+  // Message used to instruct the audio recognition engine to flush or reset.
+  AudioRequestPostProcessingAction postProcessingAction = 10;
 }
 
 // Response to an enrollment request
@@ -223,6 +319,25 @@ message ValidateEventResponse {
   string resultId = 3;
   // The score of the event between -100 to +100. Smaller values typically indicate an invalid sound while larger values would generally indicate a detected sound.
   float score = 4;
+  // If a post processing audio action was requested, this will be populated with the specific
+  // action that was completed along with the actionId optionally set by the client.
+  AudioResponsePostProcessingAction postProcessingAction = 10;
+}
+
+// Response from a ValidateEventRequest
+message ValidateEnrolledEventResponse {
+  // Relative energy of the processed audio as a value between 0 and 1
+  float audioEnergy = 1;
+  // Success / Failure bit
+  bool success = 2;
+  // The enrollmentID of the authenticated user
+  // Useful when evaluating enrollment groups
+  string enrollmentId = 3;
+  // The userID of the authenticated user
+  // Useful when evaluating enrollment groups
+  string userId = 4;
+  // Model prompt instructs the user to say something during authentication
+  string modelPrompt = 5;
 }
 
 // Response from a TranscribeRequest
@@ -231,6 +346,11 @@ message TranscribeResponse {
   float audioEnergy = 1;
   // Text of the current transcript
   string transcript = 2;
+  // Indicates if the returned transcript is an intermediate result
+  bool isPartialResult = 3;
+  // If a post processing audio action was requested, this will be populated with the specific
+  // action that was completed along with the actionId optionally set by the client.
+  AudioResponsePostProcessingAction postProcessingAction = 10;
 }
 
 // Provides information for an audio-based enrollment
@@ -267,6 +387,10 @@ message CreateEnrollmentConfig {
     // The default value is 12.5 seconds without liveness and 8 seconds with liveness.
     float enrollmentDuration = 8 [(validate.rules).float = {lte: 15, gte: 0}];
   }
+
+  // Reference Id allows clients to assign their own identifier to enrollments for various purposes
+  // such as tying an audio and video enrollment together.
+  string referenceId = 9 [(validate.rules).string = {max_len: 127}];
 }
 
 // Provides information for an audio-based authentication
@@ -329,6 +453,57 @@ message ValidateEventConfig {
 
   // The unique user Identifer
   string userId = 3 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // The model sensitivity
+  ThresholdSensitivity sensitivity = 4 [(validate.rules).enum.defined_only = true];
+}
+
+message CreateEnrollmentEventConfig {
+  // Required. Provides information that specifies how to
+  // process the request.
+  AudioConfig audio = 1 [(validate.rules).message.required = true];
+
+  // The unique user Identifer. This value should be a unique email address or username known by the user.
+  string userId = 2 [(validate.rules).string = {min_len: 1, max_len: 127}];
+
+  // Name of background model to be enrolled in
+  // Background models can be retrieved from the GetModels() gRPC call
+  string modelName = 3 [(validate.rules).string = {min_len: 1, max_len: 255}];
+
+  // Description of the enrollment as entered by the user.
+  // Max length is 1023 characters
+  string description = 4 [(validate.rules).string.max_len = 1023];
+
+  // Optional: Controls the allowed length of enrollment. Longer enrollments are generally more accurate, but take more time to perform.
+  // For text-independent enrollments, enrollmentDuration may be set. For any other enrollment, enrollmentNumUtterances may be set.
+  oneof enrollLength {
+    // The number of times a specific phrase should be uttered during an enrollment.
+    // The default value is 4.
+    uint32 enrollmentNumUtterances = 5 [(validate.rules).uint32 = {lte: 10, gte: 0}];
+    // The allowed length of text-independent enrollments (such as digit liveness)
+    // The default value is 12.5 seconds without liveness and 8 seconds with liveness.
+    float enrollmentDuration = 6 [(validate.rules).float = {lte: 15, gte: 0}];
+  }
+
+  // Reference Id allows clients to assign their own identifier to enrollments for various purposes
+  // such as tying an audio and video enrollment together.
+  string referenceId = 7 [(validate.rules).string = {max_len: 127}];
+}
+
+// Provides information for an audio-based event validation
+message ValidateEnrolledEventConfig {
+  // Required. Provides information that specifies how to
+  // process the request.
+  AudioConfig audio = 1 [(validate.rules).message.required = true];
+
+  // An identifier for what to authenticate against, either an individual enrollment or a group of enrollments
+  oneof authId {
+    option (validate.required) = true;
+    // Unique identifier created at enrollment
+    string enrollmentId = 2 [(validate.rules).string.uuid = true];
+    // Unique identifier for an enrollment group
+    string enrollmentGroupId = 3;
+  }
 
   // The model sensitivity
   ThresholdSensitivity sensitivity = 4 [(validate.rules).enum.defined_only = true];

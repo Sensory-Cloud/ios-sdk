@@ -158,8 +158,8 @@ extension Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
     return "sensory.api.v1.audio.AudioBiometrics"
   }
 
-  /// Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse
-  /// as the audio is processed.
+  /// Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse as the audio is processed.
+  /// CreateEnrollment only supports biometric-enabled models
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   ///
   /// Callers should use the `send` method on the returned object to send messages
@@ -183,6 +183,7 @@ extension Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
 
   /// Authenticates a user with a stream of audio against an existing enrollment.
   /// Streams an AuthenticateResponse as the audio is processed.
+  /// Authenticate only supports biometric-enabled models
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   ///
   /// Callers should use the `send` method on the returned object to send messages
@@ -317,6 +318,16 @@ public protocol Sensory_Api_V1_Audio_AudioEventsClientProtocol: GRPCClient {
     callOptions: CallOptions?,
     handler: @escaping (Sensory_Api_V1_Audio_ValidateEventResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse>
+
+  func createEnrolledEvent(
+    callOptions: CallOptions?,
+    handler: @escaping (Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void
+  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>
+
+  func validateEnrolledEvent(
+    callOptions: CallOptions?,
+    handler: @escaping (Sensory_Api_V1_Audio_ValidateEnrolledEventResponse) -> Void
+  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>
 }
 
 extension Sensory_Api_V1_Audio_AudioEventsClientProtocol {
@@ -346,12 +357,64 @@ extension Sensory_Api_V1_Audio_AudioEventsClientProtocol {
       handler: handler
     )
   }
+
+  /// Enrolls a sound or voice. Streams a CreateEnrollmentResponse as the audio is processed.
+  /// CreateEnrollment supports all enrollable models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// Callers should use the `send` method on the returned object to send messages
+  /// to the server. The caller should send an `.end` after the final message has been sent.
+  ///
+  /// - Parameters:
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
+  public func createEnrolledEvent(
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void
+  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
+    return self.makeBidirectionalStreamingCall(
+      path: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent",
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? [],
+      handler: handler
+    )
+  }
+
+  /// Authenticates a sound or voice. Streams a ValidateEventResponse as the audio is processed.
+  /// ValidateEnrolledEvent supports all enrollable models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// Callers should use the `send` method on the returned object to send messages
+  /// to the server. The caller should send an `.end` after the final message has been sent.
+  ///
+  /// - Parameters:
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
+  public func validateEnrolledEvent(
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Sensory_Api_V1_Audio_ValidateEnrolledEventResponse) -> Void
+  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> {
+    return self.makeBidirectionalStreamingCall(
+      path: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent",
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? [],
+      handler: handler
+    )
+  }
 }
 
 public protocol Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol {
 
   /// - Returns: Interceptors to use when invoking 'validateEvent'.
   func makeValidateEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'createEnrolledEvent'.
+  func makeCreateEnrolledEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'validateEnrolledEvent'.
+  func makeValidateEnrolledEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>]
 }
 
 public final class Sensory_Api_V1_Audio_AudioEventsClient: Sensory_Api_V1_Audio_AudioEventsClientProtocol {
@@ -418,6 +481,56 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
   /// Returns true if there are response streams enqueued for 'ValidateEvent'
   public var hasValidateEventResponsesRemaining: Bool {
     return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioEvents/ValidateEvent")
+  }
+
+  /// Make a streaming response for the CreateEnrolledEvent RPC. This must be called
+  /// before calling 'createEnrolledEvent'. See also 'FakeStreamingResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeCreateEnrolledEventResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>) -> () = { _ in }
+  ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
+    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent", requestHandler: requestHandler)
+  }
+
+  public func enqueueCreateEnrolledEventResponses(
+    _ responses: [Sensory_Api_V1_Audio_CreateEnrollmentResponse],
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeCreateEnrolledEventResponseStream(requestHandler)
+    // These are the only operation on the stream; try! is fine.
+    responses.forEach { try! stream.sendMessage($0) }
+    try! stream.sendEnd()
+  }
+
+  /// Returns true if there are response streams enqueued for 'CreateEnrolledEvent'
+  public var hasCreateEnrolledEventResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent")
+  }
+
+  /// Make a streaming response for the ValidateEnrolledEvent RPC. This must be called
+  /// before calling 'validateEnrolledEvent'. See also 'FakeStreamingResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeValidateEnrolledEventResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>) -> () = { _ in }
+  ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> {
+    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent", requestHandler: requestHandler)
+  }
+
+  public func enqueueValidateEnrolledEventResponses(
+    _ responses: [Sensory_Api_V1_Audio_ValidateEnrolledEventResponse],
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeValidateEnrolledEventResponseStream(requestHandler)
+    // These are the only operation on the stream; try! is fine.
+    responses.forEach { try! stream.sendMessage($0) }
+    try! stream.sendEnd()
+  }
+
+  /// Returns true if there are response streams enqueued for 'ValidateEnrolledEvent'
+  public var hasValidateEnrolledEventResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent")
   }
 }
 

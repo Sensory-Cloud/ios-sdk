@@ -155,7 +155,7 @@ final class AudioServiceTests: XCTestCase {
         }
 
         _ = try audioService.authenticate(
-            enrollmentID: "Mock Enrollment",
+            enrollment: .enrollmentID("Mock Enrollment"),
             sampleRate: 16000,
             isLivenessEnabled: false
         ) { [weak self] response in
@@ -196,7 +196,7 @@ final class AudioServiceTests: XCTestCase {
         }
 
         _ = try audioService.authenticate(
-            groupID: "Mock Enrollment Group",
+            enrollment: .enrollmentGroupID("Mock Enrollment Group"),
             sampleRate: 16000,
             isLivenessEnabled: true
         ) { [weak self] response in
@@ -245,6 +245,92 @@ final class AudioServiceTests: XCTestCase {
             sampleRate: 16000,
             userID: "Some User",
             sensitivity: .medium
+        ) { [weak self] response in
+            XCTAssertEqual(expectedResponse, response)
+            self?.expectResponse.fulfill()
+        }
+        try mockStream.sendMessage(expectedResponse)
+
+        wait(for: [expectResponse, expectRequest, expectRequestMetadata], timeout: 1)
+    }
+
+    func testCreateEnrolledEvent() throws {
+        let mockClient = Sensory_Api_V1_Audio_AudioEventsTestClient()
+        mockService.setClient(forType: Sensory_Api_V1_Audio_AudioEventsClientProtocol.self, client: mockClient)
+        let audioService = AudioService(service: mockService)
+
+        var expectedResponse = Sensory_Api_V1_Audio_CreateEnrollmentResponse()
+        expectedResponse.audioEnergy = 0.5
+        expectedResponse.percentComplete = 25
+
+        Config.deviceID = "Mock Device ID"
+        var enrollmentConfig = Sensory_Api_V1_Audio_CreateEnrollmentEventConfig()
+        enrollmentConfig.audio = mockAudioConfig
+        enrollmentConfig.modelName = "Mock Model Name"
+        enrollmentConfig.userID = "Mock User ID"
+        enrollmentConfig.description_p = "Mock Description"
+        var expectedRequest = Sensory_Api_V1_Audio_CreateEnrolledEventRequest()
+        expectedRequest.config = enrollmentConfig
+
+        let mockStream = mockClient.makeCreateEnrolledEventResponseStream() { [weak self] part in
+            switch part {
+            case .metadata(let headers):
+                XCTAssertEqual(self?.mockService.defaultStreamHeaders, headers)
+                self?.expectRequestMetadata.fulfill()
+            case .message(let message):
+                XCTAssertEqual(expectedRequest, message)
+                self?.expectRequest.fulfill()
+            case .end:
+                XCTFail("AudioService should not directly end the stream")
+            }
+        }
+
+        _ = try audioService.streamCreateEnrolledEvent(
+            modelName: "Mock Model Name",
+            sampleRate: 16000,
+            userID: "Mock User ID",
+            description: "Mock Description"
+        ) { [weak self] response in
+            XCTAssertEqual(expectedResponse, response)
+            self?.expectResponse.fulfill()
+        }
+        try mockStream.sendMessage(expectedResponse)
+
+        wait(for: [expectResponse, expectRequest, expectRequestMetadata], timeout: 1)
+    }
+
+    func testValidateEnrolledEvent() throws {
+        let mockClient = Sensory_Api_V1_Audio_AudioEventsTestClient()
+        mockService.setClient(forType: Sensory_Api_V1_Audio_AudioEventsClientProtocol.self, client: mockClient)
+        let audioService = AudioService(service: mockService)
+
+        var expectedResponse = Sensory_Api_V1_Audio_ValidateEnrolledEventResponse()
+        expectedResponse.audioEnergy = 0.5
+
+        var authConfig = Sensory_Api_V1_Audio_ValidateEnrolledEventConfig()
+        authConfig.audio = mockAudioConfig
+        authConfig.enrollmentID = "Mock Enrollment"
+        authConfig.sensitivity = .highest
+        var expectedRequest = Sensory_Api_V1_Audio_ValidateEnrolledEventRequest()
+        expectedRequest.config = authConfig
+
+        let mockStream = mockClient.makeValidateEnrolledEventResponseStream() { [weak self] part in
+            switch part {
+            case .metadata(let headers):
+                XCTAssertEqual(self?.mockService.defaultStreamHeaders, headers)
+                self?.expectRequestMetadata.fulfill()
+            case .message(let message):
+                XCTAssertEqual(expectedRequest, message)
+                self?.expectRequest.fulfill()
+            case .end:
+                XCTFail("AudioService should not directly end the stream")
+            }
+        }
+
+        _ = try audioService.streamValidateEnrolledEvent(
+            enrollment: .enrollmentID("Mock Enrollment"),
+            sampleRate: 16000,
+            sensitivity: .highest
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)
             self?.expectResponse.fulfill()

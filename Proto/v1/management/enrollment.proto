@@ -82,6 +82,8 @@ message EnrollmentResponse {
   string deviceName = 11;
   // Indicates if liveness was evaluated during the enrollment
   bool didEnrollWithLiveness = 12;
+  // Client-assigned referenceId for external use
+  string referenceId = 13;
 }
 
 // A response containing a list of enrollment groups

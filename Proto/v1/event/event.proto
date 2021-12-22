@@ -29,7 +29,7 @@ message UsageEvent {
   // The UTC timestamp
   google.protobuf.Timestamp timestamp = 1 [(validate.rules).timestamp.required = true];
   // The duration of the event in milliseconds
-  int64 duration = 2  [(validate.rules).int64.gt = 0];
+  int64 duration = 2  [(validate.rules).int64.gte = 0];
   // UUID representing the unique event
   string id = 3 [(validate.rules).string.uuid = true];
   // OAuth ClientID related to the event

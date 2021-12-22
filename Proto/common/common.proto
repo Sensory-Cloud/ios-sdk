@@ -80,6 +80,9 @@ enum TechnologyType {
 
   // Truly Natural, a wakeword and speech recognition tool
   TNL = 3;
+
+  // Speech to Text, a large scale neural speech recognition tool
+  STT = 4;
 }
 
 // Every type of compression that is supported
@@ -188,4 +191,13 @@ message MemorySummary {
   uint64 memFree = 2;
   // total memory available by the system
   uint64 memAvailable = 3;
+}
+
+// Request to create a generic client. Client type should be inferred by usage.
+// This data should be stored securely on the client endpoint.
+message GenericClient {
+  // Unique Client ID as UUID
+  string clientId = 1 [(validate.rules).string.uuid = true];
+  // Strong secret value (min length of 10)
+  string secret = 2 [(validate.rules).string.min_len = 10];
 }

@@ -135,6 +135,8 @@ message CreateEnrollmentResponse {
   string modelName = 4;
   // Model version used for enrollment
   string modelVersion = 5;
+  // Score of the enrollment. Currently only used for error messages.
+  float score = 6;
 }
 
 // Response to an authentication request
@@ -182,6 +184,10 @@ message CreateEnrollmentConfig {
 
   // Information about how the video data will be compressed.
   common.CompressionConfiguration compression = 7;
+
+  // Reference Id allows clients to assign their own identifier to enrollments for various purposes
+  // such as tying an audio and video enrollment together.
+  string referenceId = 8 [(validate.rules).string = {max_len: 127}];
 }
 
 // Provides information for an image-based authentication

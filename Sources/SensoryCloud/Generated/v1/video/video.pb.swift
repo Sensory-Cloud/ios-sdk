@@ -350,6 +350,9 @@ public struct Sensory_Api_V1_Video_CreateEnrollmentResponse {
   /// Model version used for enrollment
   public var modelVersion: String = String()
 
+  /// Score of the enrollment. Currently only used for error messages.
+  public var score: Float = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -440,6 +443,10 @@ public struct Sensory_Api_V1_Video_CreateEnrollmentConfig {
   public var hasCompression: Bool {return self._compression != nil}
   /// Clears the value of `compression`. Subsequent reads from it will return its default value.
   public mutating func clearCompression() {self._compression = nil}
+
+  /// Reference Id allows clients to assign their own identifier to enrollments for various purposes
+  /// such as tying an audio and video enrollment together.
+  public var referenceID: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -838,6 +845,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     3: .same(proto: "enrollmentId"),
     4: .same(proto: "modelName"),
     5: .same(proto: "modelVersion"),
+    6: .same(proto: "score"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -851,6 +859,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
       case 3: try { try decoder.decodeSingularStringField(value: &self.enrollmentID) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
       case 5: try { try decoder.decodeSingularStringField(value: &self.modelVersion) }()
+      case 6: try { try decoder.decodeSingularFloatField(value: &self.score) }()
       default: break
       }
     }
@@ -872,6 +881,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if !self.modelVersion.isEmpty {
       try visitor.visitSingularStringField(value: self.modelVersion, fieldNumber: 5)
     }
+    if self.score != 0 {
+      try visitor.visitSingularFloatField(value: self.score, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -881,6 +893,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if lhs.enrollmentID != rhs.enrollmentID {return false}
     if lhs.modelName != rhs.modelName {return false}
     if lhs.modelVersion != rhs.modelVersion {return false}
+    if lhs.score != rhs.score {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -984,6 +997,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     5: .same(proto: "isLivenessEnabled"),
     6: .same(proto: "livenessThreshold"),
     7: .same(proto: "compression"),
+    8: .same(proto: "referenceId"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -999,6 +1013,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
       case 5: try { try decoder.decodeSingularBoolField(value: &self.isLivenessEnabled) }()
       case 6: try { try decoder.decodeSingularEnumField(value: &self.livenessThreshold) }()
       case 7: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
+      case 8: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
       default: break
       }
     }
@@ -1026,6 +1041,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if let v = self._compression {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
     }
+    if !self.referenceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1037,6 +1055,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if lhs.isLivenessEnabled != rhs.isLivenessEnabled {return false}
     if lhs.livenessThreshold != rhs.livenessThreshold {return false}
     if lhs._compression != rhs._compression {return false}
+    if lhs.referenceID != rhs.referenceID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -37,7 +37,7 @@ final class OAuthServiceTests: XCTestCase {
         Config.deviceID = "Device ID"
         Config.tenantID = "Tenant ID"
         Config.setCloudHost(host: "Some Host", port: 123)
-        var clientRequest = Sensory_Api_V1_Management_CreateGenericClientRequest()
+        var clientRequest = Sensory_Api_Common_GenericClient()
         clientRequest.clientID = "client ID"
         clientRequest.secret = "client Secret"
         var expectedRequest = Sensory_Api_V1_Management_EnrollDeviceRequest()

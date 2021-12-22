@@ -39,8 +39,8 @@ public struct Sensory_Api_V1_Management_EnrollDeviceRequest {
   public var tenantID: String = String()
 
   /// OAuth client-specific request details
-  public var client: Sensory_Api_V1_Management_CreateGenericClientRequest {
-    get {return _client ?? Sensory_Api_V1_Management_CreateGenericClientRequest()}
+  public var client: Sensory_Api_Common_GenericClient {
+    get {return _client ?? Sensory_Api_Common_GenericClient()}
     set {_client = newValue}
   }
   /// Returns true if `client` has been explicitly set.
@@ -56,7 +56,7 @@ public struct Sensory_Api_V1_Management_EnrollDeviceRequest {
 
   public init() {}
 
-  fileprivate var _client: Sensory_Api_V1_Management_CreateGenericClientRequest? = nil
+  fileprivate var _client: Sensory_Api_Common_GenericClient? = nil
 }
 
 /// A response containing information about a device

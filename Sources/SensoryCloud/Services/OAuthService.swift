@@ -60,7 +60,7 @@ public class OAuthService {
             let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(Config.grpcTimeout)))
 
             var request = Sensory_Api_V1_Management_EnrollDeviceRequest()
-            var clientRequest = Sensory_Api_V1_Management_CreateGenericClientRequest()
+            var clientRequest = Sensory_Api_Common_GenericClient()
             clientRequest.clientID = clientID
             clientRequest.secret = clientSecret
             request.name = name

@@ -33,7 +33,7 @@ fi
 gen_proto() {
 
   mkdir -p "Sources/SensoryCloud/Generated"
-  for x in $(find ./Proto -iname "*.proto");
+  for x in $(find ./proto -iname "*.proto");
   do
     
     if [[ "$x" == *'validate.proto' ]]; then
@@ -41,7 +41,7 @@ gen_proto() {
     fi
 
     protoc \
-      --proto_path="./Proto" \
+      --proto_path="./proto" \
       --swift_opt="Visibility=Public" \
       --swift_out="./Sources/SensoryCloud/Generated" \
       --grpc-swift_opt="Visibility=Public" \

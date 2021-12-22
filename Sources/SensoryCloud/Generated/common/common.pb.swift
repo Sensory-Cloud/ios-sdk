@@ -231,6 +231,9 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
 
   /// Truly Natural, a wakeword and speech recognition tool
   case tnl // = 3
+
+  /// Speech to Text, a large scale neural speech recognition tool
+  case stt // = 4
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -243,6 +246,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case 1: self = .tssv
     case 2: self = .ts
     case 3: self = .tnl
+    case 4: self = .stt
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -253,6 +257,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case .tssv: return 1
     case .ts: return 2
     case .tnl: return 3
+    case .stt: return 4
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -268,6 +273,7 @@ extension Sensory_Api_Common_TechnologyType: CaseIterable {
     .tssv,
     .ts,
     .tnl,
+    .stt,
   ]
 }
 
@@ -595,6 +601,24 @@ public struct Sensory_Api_Common_MemorySummary {
   public init() {}
 }
 
+/// Request to create a generic client. Client type should be inferred by usage.
+/// This data should be stored securely on the client endpoint.
+public struct Sensory_Api_Common_GenericClient {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Unique Client ID as UUID
+  public var clientID: String = String()
+
+  /// Strong secret value (min length of 10)
+  public var secret: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.common"
@@ -636,6 +660,7 @@ extension Sensory_Api_Common_TechnologyType: SwiftProtobuf._ProtoNameProviding {
     1: .same(proto: "TSSV"),
     2: .same(proto: "TS"),
     3: .same(proto: "TNL"),
+    4: .same(proto: "STT"),
   ]
 }
 
@@ -1001,6 +1026,44 @@ extension Sensory_Api_Common_MemorySummary: SwiftProtobuf.Message, SwiftProtobuf
     if lhs.memTotal != rhs.memTotal {return false}
     if lhs.memFree != rhs.memFree {return false}
     if lhs.memAvailable != rhs.memAvailable {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_GenericClient: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GenericClient"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "clientId"),
+    2: .same(proto: "secret"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.clientID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.secret) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.clientID.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientID, fieldNumber: 1)
+    }
+    if !self.secret.isEmpty {
+      try visitor.visitSingularStringField(value: self.secret, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_GenericClient, rhs: Sensory_Api_Common_GenericClient) -> Bool {
+    if lhs.clientID != rhs.clientID {return false}
+    if lhs.secret != rhs.secret {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
