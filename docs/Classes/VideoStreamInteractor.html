@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <title>VideoStreamInteractor Class Reference</title>
+    <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
+    <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
+    <meta charset='utf-8'>
+    <script src="../js/jquery.min.js" defer></script>
+    <script src="../js/jazzy.js" defer></script>
+    
+    <script src="../js/lunr.min.js" defer></script>
+    <script src="../js/typeahead.jquery.js" defer></script>
+    <script src="../js/jazzy.search.js" defer></script>
+  </head>
+  <body>
+    <a name="//apple_ref/swift/Class/VideoStreamInteractor" class="dashAnchor"></a>
+    <a title="VideoStreamInteractor Class Reference"></a>
+    <header>
+      <div class="content-wrapper">
+        <p><a href="../index.html">SensoryCloud Docs</a> (98% documented)</p>
+        <div class="header-right">
+          <form role="search" action="../search.json">
+            <input type="text" placeholder="Search documentation" data-typeahead>
+          </form>
+        </div>
+      </div>
+    </header>
+    <div class="content-wrapper">
+      <p id="breadcrumbs">
+        <a href="../index.html">SensoryCloud Reference</a>
+        <img id="carat" src="../img/carat.png" alt=""/>
+        VideoStreamInteractor Class Reference
+      </p>
+    </div>
+    <div class="content-wrapper">
+      <nav class="sidebar">
+        <ul class="nav-groups">
+          <li class="nav-group-name">
+            <a href="../Classes.html">Classes</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Classes/AudioService.html">AudioService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/AudioStreamInteractor.html">AudioStreamInteractor</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Config.html">Config</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/ManagementService.html">ManagementService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/OAuthService.html">OAuthService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/Service.html">Service</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/TokenManager.html">TokenManager</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VideoService.html">VideoService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Classes/VideoStreamInteractor.html">VideoStreamInteractor</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Enums.html">Enumerations</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Enums/AudioStreamError.html">AudioStreamError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/CameraPosition.html">CameraPosition</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/KeychainError.html">KeychainError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/NetworkError.html">NetworkError</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Enums/VideoStreamError.html">VideoStreamError</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Extensions.html">Extensions</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Extensions/OSStatus.html">OSStatus</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Protocols.html">Protocols</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Protocols/AudioStreamDelegate.html">AudioStreamDelegate</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/CredentialProvider.html">CredentialProvider</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Protocols/VideoStreamDelegate.html">VideoStreamDelegate</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="../Structs.html">Structures</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="../Structs/AccessTokenCredentials.html">AccessTokenCredentials</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="../Structs/CloudHost.html">CloudHost</a>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+      <article class="main-content">
+        <section>
+          <section class="section">
+            <h1>VideoStreamInteractor</h1>
+              <div class="declaration">
+                <div class="language">
+                  
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">VideoStreamInteractor</span> <span class="p">:</span> <span class="kt">NSObject</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">VideoStreamInteractor</span><span class="p">:</span> <span class="kt">AVCaptureVideoDataOutputSampleBufferDelegate</span></code></pre>
+
+                </div>
+              </div>
+            <p>Class for getting picture data from the on device camera</p>
+
+          </section>
+          <section class="section task-group-section">
+            <div class="task-group">
+              <ul>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC7sessionSo16AVCaptureSessionCvp"></a>
+                    <a name="//apple_ref/swift/Property/session" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC7sessionSo16AVCaptureSessionCvp">session</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p><code>AVCaptureSession</code>  being used, this may be used for showing a photo preview layer to the user</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">let</span> <span class="nv">session</span><span class="p">:</span> <span class="kt">AVCaptureSession</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC8delegateAA0cD8Delegate_pSgvp"></a>
+                    <a name="//apple_ref/swift/Property/delegate" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC8delegateAA0cD8Delegate_pSgvp">delegate</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Delegate to receive processed photo data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">weak</span> <span class="k">var</span> <span class="nv">delegate</span><span class="p">:</span> <span class="kt"><a href="../Protocols/VideoStreamDelegate.html">VideoStreamDelegate</a></span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC6sharedACvpZ"></a>
+                    <a name="//apple_ref/swift/Variable/shared" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC6sharedACvpZ">shared</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Shared instance</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">static</span> <span class="k">var</span> <span class="nv">shared</span><span class="p">:</span> <span class="kt">VideoStreamInteractor</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC17requestPermission10completionyySb_s5Error_pSgtcSg_tF"></a>
+                    <a name="//apple_ref/swift/Method/requestPermission(completion:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC17requestPermission10completionyySb_s5Error_pSgtcSg_tF">requestPermission(completion:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requests permission to use the system camera</p>
+
+<p>The app must contain a purpose string in the <code>Info.plist</code> file with the key <code>NSCameraUsageDescription</code> for the system to allow camera permissions
+This function will also configure the camera recording and thus <em>must</em> be called every time the app launches before attempting to record any video data</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">requestPermission</span><span class="p">(</span><span class="nv">completion</span><span class="p">:</span> <span class="p">((</span><span class="kt">Bool</span><span class="p">,</span> <span class="kt">Error</span><span class="p">?)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>completion</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Completion block to be called after permissions have been granted/denied by the system</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>Bool</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>A boolean indicating if camera permissions are allowed</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>Error</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>An error if one occurred while setting up configurations for video recording</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC14startRecordingyyKF"></a>
+                    <a name="//apple_ref/swift/Method/startRecording()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC14startRecordingyyKF">startRecording()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Starts the video recording</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/VideoStreamError.html#/s:12SensoryCloud16VideoStreamErrorO13notConfiguredyA2CmF">VideoStreamError.notConfigured</a></code> if configuration has not occurred yet. Call <code>requestPermissions</code> to configure the <code>VideoStreamInteractor</code>
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">startRecording</span><span class="p">()</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC13stopRecordingyyF"></a>
+                    <a name="//apple_ref/swift/Method/stopRecording()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC13stopRecordingyyF">stopRecording()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Stops video recording</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">stopRecording</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC9setCamera2toyAA0G8PositionO_tKF"></a>
+                    <a name="//apple_ref/swift/Method/setCamera(to:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC9setCamera2toyAA0G8PositionO_tKF">setCamera(to:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sets the current camera to either the forward or backwards facing camera</p>
+
+<p>By default the forward facing camera is used
+This may be called while the interactor is recording without causing any errors</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">setCamera</span><span class="p">(</span><span class="n">to</span> <span class="nv">position</span><span class="p">:</span> <span class="kt"><a href="../Enums/CameraPosition.html">CameraPosition</a></span><span class="p">)</span> <span class="k">throws</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>position</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Camera position to use</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud21VideoStreamInteractorC9takePhotoyyF"></a>
+                    <a name="//apple_ref/swift/Method/takePhoto()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud21VideoStreamInteractorC9takePhotoyyF">takePhoto()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Requests for a photo to be taken</p>
+
+<p>Results are returned via the <code><a href="../Protocols/VideoStreamDelegate.html">VideoStreamDelegate</a></code>
+If this function is called multiple times in rapid succession, <code><a href="../Protocols/VideoStreamDelegate.html">VideoStreamDelegate</a></code> will only be called with a result once</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">takePhoto</span><span class="p">()</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/c:@CM@SensoryCloud@objc(cs)VideoStreamInteractor(im)captureOutput:didOutputSampleBuffer:fromConnection:"></a>
+                    <a name="//apple_ref/swift/Method/captureOutput(_:didOutput:from:)" class="dashAnchor"></a>
+                    <a class="token" href="#/c:@CM@SensoryCloud@objc(cs)VideoStreamInteractor(im)captureOutput:didOutputSampleBuffer:fromConnection:">captureOutput(_:<wbr>didOutput:<wbr>from:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Undocumented</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">captureOutput</span><span class="p">(</span><span class="n">_</span> <span class="nv">output</span><span class="p">:</span> <span class="kt">AVCaptureOutput</span><span class="p">,</span> <span class="n">didOutput</span> <span class="nv">sampleBuffer</span><span class="p">:</span> <span class="kt">CMSampleBuffer</span><span class="p">,</span> <span class="n">from</span> <span class="nv">connection</span><span class="p">:</span> <span class="kt">AVCaptureConnection</span><span class="p">)</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </section>
+        </section>
+        <section id="footer">
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-12-22)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+        </section>
+      </article>
+    </div>
+  </body>
+</html>
