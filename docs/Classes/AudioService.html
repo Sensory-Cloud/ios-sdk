@@ -77,6 +77,9 @@
                 <a href="../Enums/CameraPosition.html">CameraPosition</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/KeychainError.html">KeychainError</a>
               </li>
               <li class="nav-group-task">
@@ -359,9 +362,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate12enrollmentID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(enrollmentID:sampleRate:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate12enrollmentID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF">authenticate(enrollmentID:<wbr>sampleRate:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate10enrollment10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_s5Int32VSbyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(enrollment:sampleRate:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate10enrollment10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_s5Int32VSbyAOctKF">authenticate(enrollment:<wbr>sampleRate:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -369,7 +372,7 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Opens a bidirectional stream to the server for the purpose of authentication against an audio enrollment</p>
+                        <p>Opens a bidirectional stream to the server for the purpose of authentication</p>
 
 <p>This call will automatically send the initial <code>AudioConfig</code> message to the server</p>
 <div class="aside aside-throws">
@@ -384,7 +387,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">authenticate</span><span class="p">(</span>
-    <span class="nv">enrollmentID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
     <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
@@ -402,12 +405,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>enrollmentID</em>
+                                <em>enrollment</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>Enrollment to authenticate against</p>
+                                  <p>enrollment or enrollment group to authenticate against</p>
                                 </div>
                               </td>
                             </tr>
@@ -431,7 +434,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Specifies if the authentication should also include a liveness check</p>
+                                  <p>Specifies if the authentication should include a liveness check</p>
                                 </div>
                               </td>
                             </tr>
@@ -443,108 +446,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Handler function to handle response sent form the server</p>
-                                </div>
-                              </td>
-                            </tr>
-                          </tbody>
-                        </table>
-                      </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>Bidirectional stream that can be used to send audio data to the server</p>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate7groupID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(groupID:sampleRate:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate7groupID10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_s5Int32VSbyAOctKF">authenticate(groupID:<wbr>sampleRate:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Opens a bidirectional stream to the server for the purpose of authentication against an audio enrollment group</p>
-
-<p>This call will automatically send the initial <code>AudioConfig</code> message to the server</p>
-<div class="aside aside-throws">
-    <p class="aside-title">Throws</p>
-    <code><a href="../Enums/NetworkError.html">NetworkError</a></code> if an error occurs while processing the cached server url
-
-</div>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">authenticate</span><span class="p">(</span>
-    <span class="nv">groupID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
-    <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
-    <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
-<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
-    <span class="kt">Sensory_Api_V1_Audio_AuthenticateRequest</span><span class="p">,</span>
-    <span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span>
-<span class="o">&gt;</span></code></pre>
-
-                        </div>
-                      </div>
-                      <div>
-                        <h4>Parameters</h4>
-                        <table class="graybox">
-                          <tbody>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>groupID</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Enrollment group to authenticate against</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>sampleRate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Sample rate of model to validate</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>isLivenessEnabled</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Specifies if the authentication should also include a liveness check</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>onStreamReceive</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Handler function to handle response sent form the server</p>
+                                  <p>Handler function to handle response sent from the server</p>
                                 </div>
                               </td>
                             </tr>
@@ -658,7 +560,222 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Handler function to handle response sent form the server</p>
+                                  <p>Handler function to handle response sent from the server</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Bidirectional stream that can be used to send audio data to the server</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName10sampleRate6userID11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_s5Int32VS2SyAPctKF"></a>
+                    <a name="//apple_ref/swift/Method/streamCreateEnrolledEvent(modelName:sampleRate:userID:description:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName10sampleRate6userID11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_s5Int32VS2SyAPctKF">streamCreateEnrolledEvent(modelName:<wbr>sampleRate:<wbr>userID:<wbr>description:<wbr>onStreamReceive:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Opens a bidirectional stream for the purpose of creating an enrolled audio event</p>
+
+<p>This call will automatically send the initial <code>AudioConfig</code> message to the server</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/NetworkError.html">NetworkError</a></code> if an error occurs while processing the cached server url
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">streamCreateEnrolledEvent</span><span class="p">(</span>
+    <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
+    <span class="kt">Sensory_Api_V1_Audio_CreateEnrolledEventRequest</span><span class="p">,</span>
+    <span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentResponse</span>
+<span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>modelName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Name of model to enroll against</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sampleRate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sample rate of the model</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>userID</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Unique user identifier</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>description</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>User supplied description of the enrollment</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onStreamReceive</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Handler function to handle responses sent from the server</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>Bidirectional stream that can be used to send audio data to the server</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment10sampleRate11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_s5Int32VAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/streamValidateEnrolledEvent(enrollment:sampleRate:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment10sampleRate11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_s5Int32VAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF">streamValidateEnrolledEvent(enrollment:<wbr>sampleRate:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Opens a bidirectional stream for the purpose of validating against an enrolled audio event</p>
+
+<p>This call will automatically send the initial <code>AudioConfig</code> message to the server</p>
+<div class="aside aside-throws">
+    <p class="aside-title">Throws</p>
+    <code><a href="../Enums/NetworkError.html">NetworkError</a></code> if an error occurs while processing the cached server url
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">streamValidateEnrolledEvent</span><span class="p">(</span>
+    <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
+    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">sensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span><span class="p">,</span>
+    <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_ValidateEnrolledEventResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
+    <span class="kt">Sensory_Api_V1_Audio_ValidateEnrolledEventRequest</span><span class="p">,</span>
+    <span class="kt">Sensory_Api_V1_Audio_ValidateEnrolledEventResponse</span>
+<span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollment</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>enrollment or enrollment group to validate against</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sampleRate</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Sample rate of the model</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>sensitivity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>How sensitive the model should be to false accepts</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onStreamReceive</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Handler function to handle responses sent from the server</p>
                                 </div>
                               </td>
                             </tr>
@@ -759,7 +876,7 @@
                               </td>
                               <td>
                                 <div>
-                                  <p>Handler function to handle response sent form the server</p>
+                                  <p>Handler function to handle response sent from the server</p>
                                 </div>
                               </td>
                             </tr>
@@ -778,7 +895,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-11-17)</p>
+          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-12-22)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

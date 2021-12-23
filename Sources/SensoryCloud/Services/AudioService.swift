@@ -252,7 +252,7 @@ public class AudioService {
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
-    func streamCreateEnrolledEvent(
+    public func streamCreateEnrolledEvent(
         modelName: String,
         sampleRate: Int32,
         userID: String,
@@ -298,7 +298,7 @@ public class AudioService {
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
-    func streamValidateEnrolledEvent(
+    public func streamValidateEnrolledEvent(
         enrollment: EnrollmentIdentifier,
         sampleRate: Int32,
         sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity,

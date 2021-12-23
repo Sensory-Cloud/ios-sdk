@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>AudioStreamError Enumeration Reference</title>
+    <title>EnrollmentIdentifier Enumeration Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Enum/AudioStreamError" class="dashAnchor"></a>
-    <a title="AudioStreamError Enumeration Reference"></a>
+    <a name="//apple_ref/swift/Enum/EnrollmentIdentifier" class="dashAnchor"></a>
+    <a title="EnrollmentIdentifier Enumeration Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">SensoryCloud Docs</a> (98% documented)</p>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">SensoryCloud Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        AudioStreamError Enumeration Reference
+        EnrollmentIdentifier Enumeration Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -128,15 +128,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>AudioStreamError</h1>
+            <h1>EnrollmentIdentifier</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AudioStreamError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">EnrollmentIdentifier</span></code></pre>
 
                 </div>
               </div>
-            <p>Various errors that may occur while configuring the <code><a href="../Classes/AudioStreamInteractor.html">AudioStreamInteractor</a></code> for recording</p>
+            <p>Represents either an enrollment ID or an enrollment group ID to authenticate against</p>
 
           </section>
           <section class="section task-group-section">
@@ -145,9 +145,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud16AudioStreamErrorO17failedToConfigureyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/failedToConfigure" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud16AudioStreamErrorO17failedToConfigureyA2CmF">failedToConfigure</a>
+                    <a name="/s:12SensoryCloud20EnrollmentIdentifierO12enrollmentIDyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/enrollmentID(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud20EnrollmentIdentifierO12enrollmentIDyACSScACmF">enrollmentID(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -155,14 +155,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Audio configuration failed</p>
+                        <p>Represents an enrollment ID</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">failedToConfigure</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">enrollmentID</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
@@ -172,9 +172,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud16AudioStreamErrorO012failedToFindC9ComponentyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/failedToFindAudioComponent" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud16AudioStreamErrorO012failedToFindC9ComponentyA2CmF">failedToFindAudioComponent</a>
+                    <a name="/s:12SensoryCloud20EnrollmentIdentifierO17enrollmentGroupIDyACSScACmF"></a>
+                    <a name="//apple_ref/swift/Element/enrollmentGroupID(_:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud20EnrollmentIdentifierO17enrollmentGroupIDyACSScACmF">enrollmentGroupID(_:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -182,68 +182,14 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>An audio component could not be found on the device</p>
+                        <p>Represents an enrollment group ID</p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">failedToFindAudioComponent</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:12SensoryCloud16AudioStreamErrorO26failedToFindMicrophoneUnityA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/failedToFindMicrophoneUnit" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud16AudioStreamErrorO26failedToFindMicrophoneUnityA2CmF">failedToFindMicrophoneUnit</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>A microphone unit could not be found on the device</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">failedToFindMicrophoneUnit</span></code></pre>
-
-                        </div>
-                      </div>
-                    </section>
-                  </div>
-                </li>
-                <li class="item">
-                  <div>
-                    <code>
-                    <a name="/s:12SensoryCloud16AudioStreamErrorO13notConfiguredyA2CmF"></a>
-                    <a name="//apple_ref/swift/Element/notConfigured" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud16AudioStreamErrorO13notConfiguredyA2CmF">notConfigured</a>
-                    </code>
-                  </div>
-                  <div class="height-container">
-                    <div class="pointer-container"></div>
-                    <section class="section">
-                      <div class="pointer"></div>
-                      <div class="abstract">
-                        <p>Thrown when <code>startRecording</code> is called before configuration has occurred. Configuration occurs when <code>RequestPermission</code> is called.</p>
-
-                      </div>
-                      <div class="declaration">
-                        <h4>Declaration</h4>
-                        <div class="language">
-                          <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">notConfigured</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="nf">enrollmentGroupID</span><span class="p">(</span><span class="kt">String</span><span class="p">)</span></code></pre>
 
                         </div>
                       </div>
