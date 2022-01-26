@@ -383,6 +383,14 @@ public struct Sensory_Api_V1_Video_AuthenticateResponse {
   /// Clears the value of `token`. Subsequent reads from it will return its default value.
   public mutating func clearToken() {self._token = nil}
 
+  /// The userID of the authenticated user
+  /// Useful when evaluating enrollment groups
+  public var userID: String = String()
+
+  /// The enrollment ID of the authenticated enrollment
+  /// Useful when evaluating enrollment groups
+  public var enrollmentID: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -461,8 +469,26 @@ public struct Sensory_Api_V1_Video_AuthenticateConfig {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// The unique enrollment Identifer
-  public var enrollmentID: String = String()
+  /// An identifier for what to authenticate against, either an individual enrollment or a group of enrollments
+  public var authID: Sensory_Api_V1_Video_AuthenticateConfig.OneOf_AuthID? = nil
+
+  /// Unique identifier created at enrollment
+  public var enrollmentID: String {
+    get {
+      if case .enrollmentID(let v)? = authID {return v}
+      return String()
+    }
+    set {authID = .enrollmentID(newValue)}
+  }
+
+  /// Unique identifier for an enrollment group
+  public var enrollmentGroupID: String {
+    get {
+      if case .enrollmentGroupID(let v)? = authID {return v}
+      return String()
+    }
+    set {authID = .enrollmentGroupID(newValue)}
+  }
 
   /// Enable a liveness check on the image, which will further improve the security of authentication at the expense of a slightly slower response.
   public var isLivenessEnabled: Bool = false
@@ -486,6 +512,33 @@ public struct Sensory_Api_V1_Video_AuthenticateConfig {
   public var doIncludeToken: Bool = false
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  /// An identifier for what to authenticate against, either an individual enrollment or a group of enrollments
+  public enum OneOf_AuthID: Equatable {
+    /// Unique identifier created at enrollment
+    case enrollmentID(String)
+    /// Unique identifier for an enrollment group
+    case enrollmentGroupID(String)
+
+  #if !swift(>=4.1)
+    public static func ==(lhs: Sensory_Api_V1_Video_AuthenticateConfig.OneOf_AuthID, rhs: Sensory_Api_V1_Video_AuthenticateConfig.OneOf_AuthID) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch (lhs, rhs) {
+      case (.enrollmentID, .enrollmentID): return {
+        guard case .enrollmentID(let l) = lhs, case .enrollmentID(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.enrollmentGroupID, .enrollmentGroupID): return {
+        guard case .enrollmentGroupID(let l) = lhs, case .enrollmentGroupID(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      default: return false
+      }
+    }
+  #endif
+  }
 
   public init() {}
 
@@ -906,6 +959,8 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     2: .same(proto: "score"),
     3: .same(proto: "isAlive"),
     4: .same(proto: "token"),
+    5: .same(proto: "userId"),
+    6: .same(proto: "enrollmentId"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -918,6 +973,8 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
       case 2: try { try decoder.decodeSingularFloatField(value: &self.score) }()
       case 3: try { try decoder.decodeSingularBoolField(value: &self.isAlive) }()
       case 4: try { try decoder.decodeSingularMessageField(value: &self._token) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.userID) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.enrollmentID) }()
       default: break
       }
     }
@@ -936,6 +993,12 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     if let v = self._token {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
     }
+    if !self.userID.isEmpty {
+      try visitor.visitSingularStringField(value: self.userID, fieldNumber: 5)
+    }
+    if !self.enrollmentID.isEmpty {
+      try visitor.visitSingularStringField(value: self.enrollmentID, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -944,6 +1007,8 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     if lhs.score != rhs.score {return false}
     if lhs.isAlive != rhs.isAlive {return false}
     if lhs._token != rhs._token {return false}
+    if lhs.userID != rhs.userID {return false}
+    if lhs.enrollmentID != rhs.enrollmentID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1065,10 +1130,11 @@ extension Sensory_Api_V1_Video_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
   public static let protoMessageName: String = _protobuf_package + ".AuthenticateConfig"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "enrollmentId"),
-    2: .same(proto: "isLivenessEnabled"),
-    3: .same(proto: "livenessThreshold"),
-    4: .same(proto: "compression"),
-    5: .same(proto: "doIncludeToken"),
+    2: .same(proto: "enrollmentGroupId"),
+    3: .same(proto: "isLivenessEnabled"),
+    4: .same(proto: "livenessThreshold"),
+    5: .same(proto: "compression"),
+    6: .same(proto: "doIncludeToken"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1077,37 +1143,63 @@ extension Sensory_Api_V1_Video_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.enrollmentID) }()
-      case 2: try { try decoder.decodeSingularBoolField(value: &self.isLivenessEnabled) }()
-      case 3: try { try decoder.decodeSingularEnumField(value: &self.livenessThreshold) }()
-      case 4: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
-      case 5: try { try decoder.decodeSingularBoolField(value: &self.doIncludeToken) }()
+      case 1: try {
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
+        if let v = v {
+          if self.authID != nil {try decoder.handleConflictingOneOf()}
+          self.authID = .enrollmentID(v)
+        }
+      }()
+      case 2: try {
+        var v: String?
+        try decoder.decodeSingularStringField(value: &v)
+        if let v = v {
+          if self.authID != nil {try decoder.handleConflictingOneOf()}
+          self.authID = .enrollmentGroupID(v)
+        }
+      }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.isLivenessEnabled) }()
+      case 4: try { try decoder.decodeSingularEnumField(value: &self.livenessThreshold) }()
+      case 5: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
+      case 6: try { try decoder.decodeSingularBoolField(value: &self.doIncludeToken) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.enrollmentID.isEmpty {
-      try visitor.visitSingularStringField(value: self.enrollmentID, fieldNumber: 1)
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every case branch when no optimizations are
+    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    switch self.authID {
+    case .enrollmentID?: try {
+      guard case .enrollmentID(let v)? = self.authID else { preconditionFailure() }
+      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
+    }()
+    case .enrollmentGroupID?: try {
+      guard case .enrollmentGroupID(let v)? = self.authID else { preconditionFailure() }
+      try visitor.visitSingularStringField(value: v, fieldNumber: 2)
+    }()
+    case nil: break
     }
     if self.isLivenessEnabled != false {
-      try visitor.visitSingularBoolField(value: self.isLivenessEnabled, fieldNumber: 2)
+      try visitor.visitSingularBoolField(value: self.isLivenessEnabled, fieldNumber: 3)
     }
     if self.livenessThreshold != .low {
-      try visitor.visitSingularEnumField(value: self.livenessThreshold, fieldNumber: 3)
+      try visitor.visitSingularEnumField(value: self.livenessThreshold, fieldNumber: 4)
     }
     if let v = self._compression {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
     }
     if self.doIncludeToken != false {
-      try visitor.visitSingularBoolField(value: self.doIncludeToken, fieldNumber: 5)
+      try visitor.visitSingularBoolField(value: self.doIncludeToken, fieldNumber: 6)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Sensory_Api_V1_Video_AuthenticateConfig, rhs: Sensory_Api_V1_Video_AuthenticateConfig) -> Bool {
-    if lhs.enrollmentID != rhs.enrollmentID {return false}
+    if lhs.authID != rhs.authID {return false}
     if lhs.isLivenessEnabled != rhs.isLivenessEnabled {return false}
     if lhs.livenessThreshold != rhs.livenessThreshold {return false}
     if lhs._compression != rhs._compression {return false}

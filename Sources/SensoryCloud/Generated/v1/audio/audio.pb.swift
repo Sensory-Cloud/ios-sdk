@@ -781,7 +781,7 @@ public struct Sensory_Api_V1_Audio_AuthenticateResponse {
   /// Useful when evaluating enrollment groups
   public var userID: String = String()
 
-  /// The enrollmentID of the authenticated user
+  /// The enrollmentID of the authenticated enrollment
   /// Useful when evaluating enrollment groups
   public var enrollmentID: String = String()
 
