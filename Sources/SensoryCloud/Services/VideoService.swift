@@ -114,14 +114,14 @@ public class VideoService {
     ///
     /// This call will automatically send the initial `VideoConfig` message to the server
     /// - Parameters:
-    ///   - enrollmentID: Enrollment to authenticate against
+    ///   - enrollment: enrollment or enrollment group to authenticate against
     ///   - isLivenessEnabled: Determines if a liveness check should be conducted as well as an enrollment
     ///   - livenessThreshold: Liveness threshold for the potential liveness check
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func authenticate(
-        enrollmentID: String,
+        enrollment: EnrollmentIdentifier,
         isLivenessEnabled: Bool = false,
         livenessThreshold: Sensory_Api_V1_Video_RecognitionThreshold = .low,
         onStreamReceive: @escaping ((Sensory_Api_V1_Video_AuthenticateResponse) -> Void)
@@ -138,7 +138,12 @@ public class VideoService {
 
         // Send initial config message
         var config = Sensory_Api_V1_Video_AuthenticateConfig()
-        config.enrollmentID = enrollmentID
+        switch enrollment {
+        case .enrollmentID(let enrollmentID):
+            config.enrollmentID = enrollmentID
+        case .enrollmentGroupID(let groupID):
+            config.enrollmentGroupID = groupID
+        }
         config.isLivenessEnabled = isLivenessEnabled
         config.livenessThreshold = livenessThreshold
 
