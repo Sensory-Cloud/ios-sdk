@@ -131,6 +131,20 @@ public class TokenManager {
         }
     }
 
+    /// Renews the credentials stored in TokenManager. This should be called once the device key has expired
+    ///
+    /// - Parameter credential: The credential configured on the Sensory Cloud server
+    /// - Returns: An error if one occurs during the renewal
+    public func renewDeviceCredential(credential: String) -> Error? {
+        do {
+            let clientID = try keychain.getString(id: KeychainTag.clientID)
+            _ = try service.renewDeviceCredential(clientID: clientID, credential: credential).wait()
+            return nil
+        } catch {
+            return error
+        }
+    }
+
     /// Fetches a new access token from a remote server
     private func fetchNewAccessToken() throws -> String {
         let clientID = try keychain.getString(id: KeychainTag.clientID)

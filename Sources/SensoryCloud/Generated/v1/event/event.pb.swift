@@ -66,6 +66,18 @@ public struct Sensory_Api_V1_Event_UsageEvent {
   /// The specific route (endpoint) that was accessed
   public var route: String = String()
 
+  /// The technologies that were used
+  public var technologies: [Sensory_Api_Common_TechnologyType] = []
+
+  /// The models that were used
+  public var models: [String] = []
+
+  /// The duration audio processed in milliseconds
+  public var audioDurationMs: Int64 = 0
+
+  /// The number of video frames processed
+  public var videoFrameCount: Int64 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -129,6 +141,10 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
     4: .same(proto: "clientId"),
     5: .same(proto: "type"),
     6: .same(proto: "route"),
+    7: .same(proto: "technologies"),
+    8: .same(proto: "models"),
+    9: .same(proto: "audioDurationMs"),
+    10: .same(proto: "videoFrameCount"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -143,6 +159,10 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
       case 4: try { try decoder.decodeSingularStringField(value: &self.clientID) }()
       case 5: try { try decoder.decodeSingularEnumField(value: &self.type) }()
       case 6: try { try decoder.decodeSingularStringField(value: &self.route) }()
+      case 7: try { try decoder.decodeRepeatedEnumField(value: &self.technologies) }()
+      case 8: try { try decoder.decodeRepeatedStringField(value: &self.models) }()
+      case 9: try { try decoder.decodeSingularInt64Field(value: &self.audioDurationMs) }()
+      case 10: try { try decoder.decodeSingularInt64Field(value: &self.videoFrameCount) }()
       default: break
       }
     }
@@ -167,6 +187,18 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
     if !self.route.isEmpty {
       try visitor.visitSingularStringField(value: self.route, fieldNumber: 6)
     }
+    if !self.technologies.isEmpty {
+      try visitor.visitPackedEnumField(value: self.technologies, fieldNumber: 7)
+    }
+    if !self.models.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.models, fieldNumber: 8)
+    }
+    if self.audioDurationMs != 0 {
+      try visitor.visitSingularInt64Field(value: self.audioDurationMs, fieldNumber: 9)
+    }
+    if self.videoFrameCount != 0 {
+      try visitor.visitSingularInt64Field(value: self.videoFrameCount, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -177,6 +209,10 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
     if lhs.clientID != rhs.clientID {return false}
     if lhs.type != rhs.type {return false}
     if lhs.route != rhs.route {return false}
+    if lhs.technologies != rhs.technologies {return false}
+    if lhs.models != rhs.models {return false}
+    if lhs.audioDurationMs != rhs.audioDurationMs {return false}
+    if lhs.videoFrameCount != rhs.videoFrameCount {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

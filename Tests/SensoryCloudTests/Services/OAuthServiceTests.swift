@@ -148,6 +148,51 @@ final class OAuthServiceTests: XCTestCase {
         let oauthService = OAuthService()
         _ = try oauthService.getOAuthClient(host: CloudHost("mockHost", 443, true))
     }
+
+    func testRenewDeviceCredential() throws {
+        let mockClient = Sensory_Api_V1_Management_DeviceServiceTestClient()
+        let oauthService = OAuthServiceMockClient()
+        oauthService.mockEnrollmentClient = mockClient
+
+        Config.deviceID = "Device ID"
+        Config.tenantID = "Tenant ID"
+        Config.setCloudHost(host: "Some Host", port: 123)
+        
+        var expectedResponse = Sensory_Api_V1_Management_DeviceResponse()
+        expectedResponse.deviceID = "Device ID"
+        expectedResponse.name = "Device Name"
+
+        var expectedRequest = Sensory_Api_V1_Management_RenewDeviceCredentialRequest()
+        expectedRequest.deviceID = "Device ID"
+        expectedRequest.clientID = "Client ID"
+        expectedRequest.tenantID = "Tenant ID"
+        expectedRequest.credential = "credential"
+
+        let mockStream = mockClient.makeRenewDeviceCredentialResponseStream { [weak self] part in
+            switch part {
+            case .metadata(let headers):
+                XCTAssert(headers.isEmpty, "Standard auth header should not be sent")
+                self?.expectRequestMetadata.fulfill()
+            case .message(let message):
+                XCTAssertEqual(expectedRequest, message)
+                self?.expectRequest.fulfill()
+            case .end:
+                break
+            }
+        }
+
+        let rsp = oauthService.renewDeviceCredential(clientID: "Client ID", credential: "credential")
+        try mockStream.sendMessage(expectedResponse)
+        rsp.whenSuccess { [weak self] response in
+            XCTAssertEqual(expectedResponse, response)
+            self?.expectResponse.fulfill()
+        }
+        rsp.whenFailure { error in
+            XCTFail("Call should be successful: \(error.localizedDescription)")
+        }
+
+        wait(for: [expectResponse, expectRequest, expectRequestMetadata], timeout: 1)
+    }
 }
 
 /// A "mock" for OAuth service that allows for injecting a mock client without overwriting any other behavior

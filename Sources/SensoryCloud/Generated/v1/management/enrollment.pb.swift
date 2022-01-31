@@ -118,6 +118,9 @@ public struct Sensory_Api_V1_Management_EnrollmentResponse {
   /// Indicates if liveness was evaluated during the enrollment
   public var didEnrollWithLiveness: Bool = false
 
+  /// Client-assigned referenceId for external use
+  public var referenceID: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -362,6 +365,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     10: .same(proto: "compression"),
     11: .same(proto: "deviceName"),
     12: .same(proto: "didEnrollWithLiveness"),
+    13: .same(proto: "referenceId"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -382,6 +386,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
       case 10: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
       case 11: try { try decoder.decodeSingularStringField(value: &self.deviceName) }()
       case 12: try { try decoder.decodeSingularBoolField(value: &self.didEnrollWithLiveness) }()
+      case 13: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
       default: break
       }
     }
@@ -424,6 +429,9 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if self.didEnrollWithLiveness != false {
       try visitor.visitSingularBoolField(value: self.didEnrollWithLiveness, fieldNumber: 12)
     }
+    if !self.referenceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 13)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -440,6 +448,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if lhs._compression != rhs._compression {return false}
     if lhs.deviceName != rhs.deviceName {return false}
     if lhs.didEnrollWithLiveness != rhs.didEnrollWithLiveness {return false}
+    if lhs.referenceID != rhs.referenceID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

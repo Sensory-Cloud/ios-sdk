@@ -99,6 +99,32 @@ public class OAuthService {
         }
     }
 
+    /// Renews the server credentials for the associated clientID. `TokenManager.renewDeviceCredential` should be called instead if the default TokenManager is being used
+    ///
+    /// - Parameters:
+    ///   - clientID: Client ID of the associated credential
+    ///   - credential: The credential configured on the Sensory Cloud Server
+    /// - Returns: Future to be fulfilled with either the enrolled device, or the network error that occurred
+    public func renewDeviceCredential(clientID: String, credential: String) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse> {
+        do {
+            guard let deviceID = Config.deviceID, let tenantID = Config.tenantID, let host = Config.getCloudHost() else {
+                throw NetworkError.notInitialized
+            }
+
+            let client = try getEnrollmentClient(host: host)
+            let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(Config.grpcTimeout)))
+
+            var request = Sensory_Api_V1_Management_RenewDeviceCredentialRequest()
+            request.deviceID = deviceID
+            request.clientID = clientID
+            request.tenantID = tenantID
+            request.credential = credential
+            return client.renewDeviceCredential(request, callOptions: defaultTimeout).response
+        } catch {
+            return group.next().makeFailedFuture(error)
+        }
+    }
+
     /// Fetches the grpc client class, `Service.getClient()` is not used to prevent a circular dependency between `Service` and `TokenManager`
     func getOAuthClient(host: CloudHost) throws -> Sensory_Api_Oauth_OauthServiceClientProtocol {
         let channel = try GRPCChannelPool.with(
