@@ -203,9 +203,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a1_x1_y1_c1_zF8ResponseVGSS_S2SSbAA0a1_x1_y1_c12_RecognitionP0OyAQctKF"></a>
-                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:description:isLivenessEnabled:livenessThreshold:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a1_x1_y1_c1_zF8ResponseVGSS_S2SSbAA0a1_x1_y1_c12_RecognitionP0OyAQctKF">createEnrollment(modelName:<wbr>userID:<wbr>description:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold21numLiveFramesRequired15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSbAA0a8_Api_V1_c12_RecognitionP0Os5Int32VyARctKF"></a>
+                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:description:isLivenessEnabled:livenessThreshold:numLiveFramesRequired:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold21numLiveFramesRequired15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSbAA0a8_Api_V1_c12_RecognitionP0Os5Int32VyARctKF">createEnrollment(modelName:<wbr>userID:<wbr>description:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>numLiveFramesRequired:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -237,6 +237,7 @@
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">livenessThreshold</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Video_RecognitionThreshold</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
+    <span class="nv">numLiveFramesRequired</span><span class="p">:</span> <span class="kt">Int32</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Video_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Video_CreateEnrollmentRequest</span><span class="p">,</span>
@@ -312,6 +313,19 @@
                             <tr>
                               <td>
                                 <code>
+                                <em>numLiveFramesRequired</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The number of frames that need to pass the liveness check for a successful enrollment (if liveness is enabled).
+A value of 0 means that *all * frames need to pass the liveness check</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
                                 <em>onStreamReceive</em>
                                 </code>
                               </td>
@@ -334,9 +348,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12VideoServiceC12authenticate12enrollmentID17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_SbAA0a1_t1_u1_c12_RecognitionL0OyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(enrollmentID:isLivenessEnabled:livenessThreshold:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC12authenticate12enrollmentID17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGSS_SbAA0a1_t1_u1_c12_RecognitionL0OyAOctKF">authenticate(enrollmentID:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12VideoServiceC12authenticate10enrollment17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SbAA0a1_s1_t1_c12_RecognitionK0OyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(enrollment:isLivenessEnabled:livenessThreshold:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC12authenticate10enrollment17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SbAA0a1_s1_t1_c12_RecognitionK0OyAOctKF">authenticate(enrollment:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -359,7 +373,7 @@
                         <div class="language">
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">authenticate</span><span class="p">(</span>
-    <span class="nv">enrollmentID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">livenessThreshold</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Video_RecognitionThreshold</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Video_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
@@ -377,12 +391,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>enrollmentID</em>
+                                <em>enrollment</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>Enrollment to authenticate against</p>
+                                  <p>enrollment or enrollment group to authenticate against</p>
                                 </div>
                               </td>
                             </tr>
@@ -538,7 +552,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2021 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2021-12-22)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-01-31)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
