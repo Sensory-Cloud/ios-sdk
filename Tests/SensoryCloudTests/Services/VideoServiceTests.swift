@@ -84,6 +84,7 @@ final class VideoServiceTests: XCTestCase {
         enrollmentConfig.description_p = "Video Enrollment"
         enrollmentConfig.isLivenessEnabled = true
         enrollmentConfig.livenessThreshold = .highest
+        enrollmentConfig.numLivenessFramesRequired = 3
         var expectedRequest = Sensory_Api_V1_Video_CreateEnrollmentRequest()
         expectedRequest.config = enrollmentConfig
 
@@ -105,7 +106,8 @@ final class VideoServiceTests: XCTestCase {
             userID: "User ID",
             description: "Video Enrollment",
             isLivenessEnabled: true,
-            livenessThreshold: .highest
+            livenessThreshold: .highest,
+            numLiveFramesRequired: 3
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)
             self?.expectResponse.fulfill()
@@ -146,7 +148,7 @@ final class VideoServiceTests: XCTestCase {
         }
 
         _ = try videoService.authenticate(
-            enrollmentID: "Enrollment",
+            enrollment: .enrollmentID("Enrollment"),
             isLivenessEnabled: true,
             livenessThreshold: .low
         ) { [weak self] response in

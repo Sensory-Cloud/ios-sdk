@@ -59,6 +59,31 @@ public struct Sensory_Api_V1_Management_EnrollDeviceRequest {
   fileprivate var _client: Sensory_Api_Common_GenericClient? = nil
 }
 
+/// Request to renew a device's credential
+public struct Sensory_Api_V1_Management_RenewDeviceCredentialRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
+  /// A typical value would be a hardware serial number.
+  public var deviceID: String = String()
+
+  /// Unique Client ID as UUID
+  public var clientID: String = String()
+
+  /// Unique Tenant ID as UUID
+  public var tenantID: String = String()
+
+  /// The credential to be validated by the server upon enrollment.
+  /// Possible values are a shared secret or signed JWT.
+  public var credential: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// A response containing information about a device
 public struct Sensory_Api_V1_Management_DeviceResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -141,6 +166,56 @@ extension Sensory_Api_V1_Management_EnrollDeviceRequest: SwiftProtobuf.Message, 
     if lhs.deviceID != rhs.deviceID {return false}
     if lhs.tenantID != rhs.tenantID {return false}
     if lhs._client != rhs._client {return false}
+    if lhs.credential != rhs.credential {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_RenewDeviceCredentialRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".RenewDeviceCredentialRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "deviceId"),
+    2: .same(proto: "clientId"),
+    3: .same(proto: "tenantId"),
+    4: .same(proto: "credential"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.clientID) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
+      case 4: try { try decoder.decodeSingularStringField(value: &self.credential) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.deviceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 1)
+    }
+    if !self.clientID.isEmpty {
+      try visitor.visitSingularStringField(value: self.clientID, fieldNumber: 2)
+    }
+    if !self.tenantID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tenantID, fieldNumber: 3)
+    }
+    if !self.credential.isEmpty {
+      try visitor.visitSingularStringField(value: self.credential, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_RenewDeviceCredentialRequest, rhs: Sensory_Api_V1_Management_RenewDeviceCredentialRequest) -> Bool {
+    if lhs.deviceID != rhs.deviceID {return false}
+    if lhs.clientID != rhs.clientID {return false}
+    if lhs.tenantID != rhs.tenantID {return false}
     if lhs.credential != rhs.credential {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true

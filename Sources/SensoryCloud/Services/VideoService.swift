@@ -68,6 +68,8 @@ public class VideoService {
     ///   - description: User supplied description of the enrollment
     ///   - isLivenessEnabled: Determines if a liveness check should be conducted as well as an enrollment
     ///   - livenessThreshold: Liveness threshold for the potential liveness check
+    ///   - numLiveFramesRequired: The number of frames that need to pass the liveness check for a successful enrollment (if liveness is enabled).
+    ///         A value of 0 means that *all * frames need to pass the liveness check
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
@@ -78,6 +80,7 @@ public class VideoService {
         description: String = "",
         isLivenessEnabled: Bool = false,
         livenessThreshold: Sensory_Api_V1_Video_RecognitionThreshold = .low,
+        numLiveFramesRequired: Int32 = 0,
         onStreamReceive: @escaping ((Sensory_Api_V1_Video_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Video_CreateEnrollmentRequest,
@@ -101,6 +104,7 @@ public class VideoService {
         config.description_p = description
         config.isLivenessEnabled = isLivenessEnabled
         config.livenessThreshold = livenessThreshold
+        config.numLivenessFramesRequired = numLiveFramesRequired
 
         var request = Sensory_Api_V1_Video_CreateEnrollmentRequest()
         request.config = config

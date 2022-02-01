@@ -37,6 +37,11 @@ public protocol Sensory_Api_V1_Management_DeviceServiceClientProtocol: GRPCClien
     callOptions: CallOptions?
   ) -> UnaryCall<Sensory_Api_V1_Management_EnrollDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>
 
+  func renewDeviceCredential(
+    _ request: Sensory_Api_V1_Management_RenewDeviceCredentialRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Management_RenewDeviceCredentialRequest, Sensory_Api_V1_Management_DeviceResponse>
+
   func getWhoAmI(
     _ request: Sensory_Api_V1_Management_DeviceGetWhoAmIRequest,
     callOptions: CallOptions?
@@ -66,6 +71,25 @@ extension Sensory_Api_V1_Management_DeviceServiceClientProtocol {
     )
   }
 
+  /// Renew a device's credential, which links the device to a key in the database.
+  /// This endpoint can be used to assign a new credential to a device if the old credential has expired.
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to RenewDeviceCredential.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func renewDeviceCredential(
+    _ request: Sensory_Api_V1_Management_RenewDeviceCredentialRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Management_RenewDeviceCredentialRequest, Sensory_Api_V1_Management_DeviceResponse> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.management.DeviceService/RenewDeviceCredential",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeRenewDeviceCredentialInterceptors() ?? []
+    )
+  }
+
   /// Allows a device to fetch information about itself
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   ///
@@ -90,6 +114,9 @@ public protocol Sensory_Api_V1_Management_DeviceServiceClientInterceptorFactoryP
 
   /// - Returns: Interceptors to use when invoking 'enrollDevice'.
   func makeEnrollDeviceInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_EnrollDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'renewDeviceCredential'.
+  func makeRenewDeviceCredentialInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_RenewDeviceCredentialRequest, Sensory_Api_V1_Management_DeviceResponse>]
 
   /// - Returns: Interceptors to use when invoking 'getWhoAmI'.
   func makeGetWhoAmIInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_DeviceGetWhoAmIRequest, Sensory_Api_V1_Management_DeviceResponse>]
@@ -158,6 +185,30 @@ public final class Sensory_Api_V1_Management_DeviceServiceTestClient: Sensory_Ap
   /// Returns true if there are response streams enqueued for 'EnrollDevice'
   public var hasEnrollDeviceResponsesRemaining: Bool {
     return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.DeviceService/EnrollDevice")
+  }
+
+  /// Make a unary response for the RenewDeviceCredential RPC. This must be called
+  /// before calling 'renewDeviceCredential'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeRenewDeviceCredentialResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_RenewDeviceCredentialRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_RenewDeviceCredentialRequest, Sensory_Api_V1_Management_DeviceResponse> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.management.DeviceService/RenewDeviceCredential", requestHandler: requestHandler)
+  }
+
+  public func enqueueRenewDeviceCredentialResponse(
+    _ response: Sensory_Api_V1_Management_DeviceResponse,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_RenewDeviceCredentialRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeRenewDeviceCredentialResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'RenewDeviceCredential'
+  public var hasRenewDeviceCredentialResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.DeviceService/RenewDeviceCredential")
   }
 
   /// Make a unary response for the GetWhoAmI RPC. This must be called

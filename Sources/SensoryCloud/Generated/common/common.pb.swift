@@ -231,6 +231,9 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
 
   /// Truly Natural, a wakeword and speech recognition tool
   case tnl // = 3
+
+  /// Speech to Text, a large scale neural speech recognition tool
+  case stt // = 4
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -243,6 +246,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case 1: self = .tssv
     case 2: self = .ts
     case 3: self = .tnl
+    case 4: self = .stt
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -253,6 +257,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case .tssv: return 1
     case .ts: return 2
     case .tnl: return 3
+    case .stt: return 4
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -268,6 +273,7 @@ extension Sensory_Api_Common_TechnologyType: CaseIterable {
     .tssv,
     .ts,
     .tnl,
+    .stt,
   ]
 }
 
@@ -654,6 +660,7 @@ extension Sensory_Api_Common_TechnologyType: SwiftProtobuf._ProtoNameProviding {
     1: .same(proto: "TSSV"),
     2: .same(proto: "TS"),
     3: .same(proto: "TNL"),
+    4: .same(proto: "STT"),
   ]
 }
 

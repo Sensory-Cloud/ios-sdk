@@ -456,6 +456,10 @@ public struct Sensory_Api_V1_Video_CreateEnrollmentConfig {
   /// such as tying an audio and video enrollment together.
   public var referenceID: String = String()
 
+  /// If isLivenessEnabled is true, this determines how many frames need to pass the liveness check before the enrollment can be successful
+  /// A value of 0 means that all enrollment frames must pass the liveness check.
+  public var numLivenessFramesRequired: Int32 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1063,6 +1067,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     6: .same(proto: "livenessThreshold"),
     7: .same(proto: "compression"),
     8: .same(proto: "referenceId"),
+    9: .same(proto: "numLivenessFramesRequired"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1079,6 +1084,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
       case 6: try { try decoder.decodeSingularEnumField(value: &self.livenessThreshold) }()
       case 7: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
       case 8: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
+      case 9: try { try decoder.decodeSingularInt32Field(value: &self.numLivenessFramesRequired) }()
       default: break
       }
     }
@@ -1109,6 +1115,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if !self.referenceID.isEmpty {
       try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 8)
     }
+    if self.numLivenessFramesRequired != 0 {
+      try visitor.visitSingularInt32Field(value: self.numLivenessFramesRequired, fieldNumber: 9)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1121,6 +1130,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if lhs.livenessThreshold != rhs.livenessThreshold {return false}
     if lhs._compression != rhs._compression {return false}
     if lhs.referenceID != rhs.referenceID {return false}
+    if lhs.numLivenessFramesRequired != rhs.numLivenessFramesRequired {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -196,6 +196,9 @@ public struct Sensory_Api_V1_File_FileCompleteCatalogRequest {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// Optional tenantId to retrieve tenant-specific models in addition to the complete catalog
+  public var tenantID: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -253,6 +256,9 @@ public struct Sensory_Api_V1_File_FileInfo {
 
   /// The md5 file hash
   public var hash: String = String()
+
+  /// Optional tenantID associated with this file
+  public var tenantID: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -468,18 +474,31 @@ extension Sensory_Api_V1_File_FileCatalogRequest: SwiftProtobuf.Message, SwiftPr
 
 extension Sensory_Api_V1_File_FileCompleteCatalogRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".FileCompleteCatalogRequest"
-  public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "tenantId"),
+  ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let _ = try decoder.nextFieldNumber() {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
+      default: break
+      }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.tenantID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tenantID, fieldNumber: 1)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Sensory_Api_V1_File_FileCompleteCatalogRequest, rhs: Sensory_Api_V1_File_FileCompleteCatalogRequest) -> Bool {
+    if lhs.tenantID != rhs.tenantID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -563,6 +582,7 @@ extension Sensory_Api_V1_File_FileInfo: SwiftProtobuf.Message, SwiftProtobuf._Me
     3: .same(proto: "size"),
     4: .same(proto: "contentType"),
     5: .same(proto: "hash"),
+    6: .same(proto: "tenantId"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -576,6 +596,7 @@ extension Sensory_Api_V1_File_FileInfo: SwiftProtobuf.Message, SwiftProtobuf._Me
       case 3: try { try decoder.decodeSingularInt64Field(value: &self.size) }()
       case 4: try { try decoder.decodeSingularStringField(value: &self.contentType) }()
       case 5: try { try decoder.decodeSingularStringField(value: &self.hash) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
       default: break
       }
     }
@@ -597,6 +618,9 @@ extension Sensory_Api_V1_File_FileInfo: SwiftProtobuf.Message, SwiftProtobuf._Me
     if !self.hash.isEmpty {
       try visitor.visitSingularStringField(value: self.hash, fieldNumber: 5)
     }
+    if !self.tenantID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tenantID, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -606,6 +630,7 @@ extension Sensory_Api_V1_File_FileInfo: SwiftProtobuf.Message, SwiftProtobuf._Me
     if lhs.size != rhs.size {return false}
     if lhs.contentType != rhs.contentType {return false}
     if lhs.hash != rhs.hash {return false}
+    if lhs.tenantID != rhs.tenantID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

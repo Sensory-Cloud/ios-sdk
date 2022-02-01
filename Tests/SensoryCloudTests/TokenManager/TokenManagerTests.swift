@@ -116,4 +116,35 @@ final class TokenManagerTests: XCTestCase {
         XCTAssertNil(manager.deleteCredentials())
         XCTAssertFalse(manager.hasSavedCredentials())
     }
+
+    func testRenewDeviceCredentials() throws {
+        let manager = TokenManager(service: mockService, keychain: mockKeychain)
+
+        // Happy path
+        try mockKeychain.save(id: TokenManager.KeychainTag.clientID, string: "clientID")
+
+        var expectedResponse = Sensory_Api_V1_Management_DeviceResponse()
+        expectedResponse.deviceID = "DeviceID"
+        expectedResponse.name = "Name"
+        mockService.renewResponse = expectedResponse
+
+        var rsp = manager.renewDeviceCredential(credential: "credential")
+
+        XCTAssertNil(rsp, "renew device credential should not error")
+        XCTAssertEqual("clientID", mockService.clientID)
+        XCTAssertEqual("credential", mockService.credential)
+
+        // missing client ID in keychain
+        mockKeychain.reset()
+
+        rsp = manager.renewDeviceCredential(credential: "credential")
+        XCTAssertNotNil(rsp, "renew device credential should not error when clientID is missing")
+
+        // error from OAuth service
+        try mockKeychain.save(id: TokenManager.KeychainTag.clientID, string: "clientID")
+        mockService.reset()
+
+        rsp = manager.renewDeviceCredential(credential: "credential")
+        XCTAssertNotNil(rsp, "renew device credential should not error when OAuth service errors")
+    }
 }
