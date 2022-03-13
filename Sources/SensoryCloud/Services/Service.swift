@@ -34,6 +34,7 @@ public class Service {
 
     /// Static mapping from client protocol types to the implementing client class
     private let clientTypeDict: [String: GrpcClient.Type] = [
+        "\(Sensory_Api_Health_HealthServiceClientProtocol.self)": Sensory_Api_Health_HealthServiceClient.self,
         "\(Sensory_Api_V1_Management_EnrollmentServiceClientProtocol.self)": Sensory_Api_V1_Management_EnrollmentServiceClient.self,
         "\(Sensory_Api_V1_Management_DeviceServiceClientProtocol.self)": Sensory_Api_V1_Management_DeviceServiceClient.self,
         "\(Sensory_Api_V1_Audio_AudioModelsClientProtocol.self)": Sensory_Api_V1_Audio_AudioModelsClient.self,
