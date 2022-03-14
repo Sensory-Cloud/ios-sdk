@@ -172,6 +172,16 @@ public struct Sensory_Api_Oauth_PublicKeyResponse {
   public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_Oauth_TokenRequest: @unchecked Sendable {}
+extension Sensory_Api_Oauth_SignTokenRequest: @unchecked Sendable {}
+extension Sensory_Api_Oauth_SignTokenRequest.TokenScope: @unchecked Sendable {}
+extension Sensory_Api_Oauth_WhoAmIRequest: @unchecked Sendable {}
+extension Sensory_Api_Oauth_WhoAmIResponse: @unchecked Sendable {}
+extension Sensory_Api_Oauth_PublicKeyRequest: @unchecked Sendable {}
+extension Sensory_Api_Oauth_PublicKeyResponse: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.oauth"

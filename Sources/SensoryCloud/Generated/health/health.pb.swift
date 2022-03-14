@@ -33,6 +33,10 @@ public struct Sensory_Api_Health_HealthRequest {
   public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_Health_HealthRequest: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.health"

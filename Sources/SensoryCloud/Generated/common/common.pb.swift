@@ -619,6 +619,23 @@ public struct Sensory_Api_Common_GenericClient {
   public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_Common_KeyType: @unchecked Sendable {}
+extension Sensory_Api_Common_ModelType: @unchecked Sendable {}
+extension Sensory_Api_Common_TechnologyType: @unchecked Sendable {}
+extension Sensory_Api_Common_CompressionType: @unchecked Sendable {}
+extension Sensory_Api_Common_ClientType: @unchecked Sendable {}
+extension Sensory_Api_Common_UsageEventType: @unchecked Sendable {}
+extension Sensory_Api_Common_CompressionConfiguration: @unchecked Sendable {}
+extension Sensory_Api_Common_TokenResponse: @unchecked Sendable {}
+extension Sensory_Api_Common_ServiceHealth: @unchecked Sendable {}
+extension Sensory_Api_Common_ServerHealthResponse: @unchecked Sendable {}
+extension Sensory_Api_Common_SystemSummary: @unchecked Sendable {}
+extension Sensory_Api_Common_CpuSummary: @unchecked Sendable {}
+extension Sensory_Api_Common_MemorySummary: @unchecked Sendable {}
+extension Sensory_Api_Common_GenericClient: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.common"
@@ -884,12 +901,16 @@ extension Sensory_Api_Common_SystemSummary: SwiftProtobuf.Message, SwiftProtobuf
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._cpu {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._cpu {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
-    if let v = self._memory {
+    } }()
+    try { if let v = self._memory {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 

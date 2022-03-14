@@ -61,6 +61,21 @@ public protocol Sensory_Api_V1_Management_EnrollmentServiceClientProtocol: GRPCC
     _ request: Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest,
     callOptions: CallOptions?
   ) -> UnaryCall<Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>
+
+  func updateEnrollment(
+    _ request: Sensory_Api_V1_Management_UpdateEnrollmentRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Management_UpdateEnrollmentRequest, Sensory_Api_V1_Management_EnrollmentResponse>
+
+  func updateEnrollmentGroup(
+    _ request: Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>
+
+  func removeEnrollmentsFromGroup(
+    _ request: Sensory_Api_V1_Management_RemoveEnrollmentsRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Management_RemoveEnrollmentsRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>
 }
 
 extension Sensory_Api_V1_Management_EnrollmentServiceClientProtocol {
@@ -183,6 +198,63 @@ extension Sensory_Api_V1_Management_EnrollmentServiceClientProtocol {
       interceptors: self.interceptors?.makeDeleteEnrollmentGroupInterceptors() ?? []
     )
   }
+
+  /// Updates the name of an enrollment
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to UpdateEnrollment.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func updateEnrollment(
+    _ request: Sensory_Api_V1_Management_UpdateEnrollmentRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Management_UpdateEnrollmentRequest, Sensory_Api_V1_Management_EnrollmentResponse> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollment",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  /// Updates the name of an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to UpdateEnrollmentGroup.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func updateEnrollmentGroup(
+    _ request: Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollmentGroup",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeUpdateEnrollmentGroupInterceptors() ?? []
+    )
+  }
+
+  /// Removes a list of enrollments from an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to RemoveEnrollmentsFromGroup.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func removeEnrollmentsFromGroup(
+    _ request: Sensory_Api_V1_Management_RemoveEnrollmentsRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Management_RemoveEnrollmentsRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.management.EnrollmentService/RemoveEnrollmentsFromGroup",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeRemoveEnrollmentsFromGroupInterceptors() ?? []
+    )
+  }
 }
 
 public protocol Sensory_Api_V1_Management_EnrollmentServiceClientInterceptorFactoryProtocol {
@@ -204,6 +276,15 @@ public protocol Sensory_Api_V1_Management_EnrollmentServiceClientInterceptorFact
 
   /// - Returns: Interceptors to use when invoking 'deleteEnrollmentGroup'.
   func makeDeleteEnrollmentGroupInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'updateEnrollment'.
+  func makeUpdateEnrollmentInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_UpdateEnrollmentRequest, Sensory_Api_V1_Management_EnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'updateEnrollmentGroup'.
+  func makeUpdateEnrollmentGroupInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'removeEnrollmentsFromGroup'.
+  func makeRemoveEnrollmentsFromGroupInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_RemoveEnrollmentsRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
 }
 
 public final class Sensory_Api_V1_Management_EnrollmentServiceClient: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol {
@@ -389,6 +470,78 @@ public final class Sensory_Api_V1_Management_EnrollmentServiceTestClient: Sensor
   /// Returns true if there are response streams enqueued for 'DeleteEnrollmentGroup'
   public var hasDeleteEnrollmentGroupResponsesRemaining: Bool {
     return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.EnrollmentService/DeleteEnrollmentGroup")
+  }
+
+  /// Make a unary response for the UpdateEnrollment RPC. This must be called
+  /// before calling 'updateEnrollment'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeUpdateEnrollmentResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_UpdateEnrollmentRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_UpdateEnrollmentRequest, Sensory_Api_V1_Management_EnrollmentResponse> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollment", requestHandler: requestHandler)
+  }
+
+  public func enqueueUpdateEnrollmentResponse(
+    _ response: Sensory_Api_V1_Management_EnrollmentResponse,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_UpdateEnrollmentRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeUpdateEnrollmentResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'UpdateEnrollment'
+  public var hasUpdateEnrollmentResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollment")
+  }
+
+  /// Make a unary response for the UpdateEnrollmentGroup RPC. This must be called
+  /// before calling 'updateEnrollmentGroup'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeUpdateEnrollmentGroupResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollmentGroup", requestHandler: requestHandler)
+  }
+
+  public func enqueueUpdateEnrollmentGroupResponse(
+    _ response: Sensory_Api_V1_Management_EnrollmentGroupResponse,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeUpdateEnrollmentGroupResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'UpdateEnrollmentGroup'
+  public var hasUpdateEnrollmentGroupResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollmentGroup")
+  }
+
+  /// Make a unary response for the RemoveEnrollmentsFromGroup RPC. This must be called
+  /// before calling 'removeEnrollmentsFromGroup'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeRemoveEnrollmentsFromGroupResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_RemoveEnrollmentsRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_RemoveEnrollmentsRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.management.EnrollmentService/RemoveEnrollmentsFromGroup", requestHandler: requestHandler)
+  }
+
+  public func enqueueRemoveEnrollmentsFromGroupResponse(
+    _ response: Sensory_Api_V1_Management_EnrollmentGroupResponse,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_RemoveEnrollmentsRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeRemoveEnrollmentsFromGroupResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'RemoveEnrollmentsFromGroup'
+  public var hasRemoveEnrollmentsFromGroupResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.EnrollmentService/RemoveEnrollmentsFromGroup")
   }
 }
 

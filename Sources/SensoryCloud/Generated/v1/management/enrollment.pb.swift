@@ -276,6 +276,72 @@ public struct Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest {
   public init() {}
 }
 
+/// A request to update the description of an enrollment
+public struct Sensory_Api_V1_Management_UpdateEnrollmentRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The enrollment ID
+  public var id: String = String()
+
+  /// New description of the enrollment
+  public var description_p: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// A request to update the name of an enrollment group
+public struct Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Enrollment Group ID
+  public var id: String = String()
+
+  /// New name of the enrollment group
+  public var name: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Request to remove enrollments from an enrollment group
+public struct Sensory_Api_V1_Management_RemoveEnrollmentsRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Enrollment group ID to append enrollments to
+  public var groupID: String = String()
+
+  /// List of enrollment IDS to append
+  public var enrollmentIds: [String] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_V1_Management_GetEnrollmentsRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_GetEnrollmentsResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_EnrollmentResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_GetEnrollmentGroupsResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_EnrollmentGroupResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_CreateEnrollmentGroupRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_AppendEnrollmentGroupRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_DeleteEnrollmentRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_UpdateEnrollmentRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_RemoveEnrollmentsRequest: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.v1.management"
@@ -393,15 +459,19 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.id.isEmpty {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
-    if let v = self._createdAt {
+    try { if let v = self._createdAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._updatedAt {
+    } }()
+    try { if let v = self._updatedAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.description_p.isEmpty {
       try visitor.visitSingularStringField(value: self.description_p, fieldNumber: 4)
     }
@@ -420,9 +490,9 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 9)
     }
-    if let v = self._compression {
+    try { if let v = self._compression {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }
+    } }()
     if !self.deviceName.isEmpty {
       try visitor.visitSingularStringField(value: self.deviceName, fieldNumber: 11)
     }
@@ -523,15 +593,19 @@ extension Sensory_Api_V1_Management_EnrollmentGroupResponse: SwiftProtobuf.Messa
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.id.isEmpty {
       try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
     }
-    if let v = self._createdAt {
+    try { if let v = self._createdAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }
-    if let v = self._updatedAt {
+    } }()
+    try { if let v = self._updatedAt {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.name.isEmpty {
       try visitor.visitSingularStringField(value: self.name, fieldNumber: 4)
     }
@@ -731,6 +805,120 @@ extension Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest: SwiftProtobuf.
 
   public static func ==(lhs: Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest, rhs: Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest) -> Bool {
     if lhs.id != rhs.id {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_UpdateEnrollmentRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".UpdateEnrollmentRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "description"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.description_p) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.id.isEmpty {
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
+    }
+    if !self.description_p.isEmpty {
+      try visitor.visitSingularStringField(value: self.description_p, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_UpdateEnrollmentRequest, rhs: Sensory_Api_V1_Management_UpdateEnrollmentRequest) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.description_p != rhs.description_p {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".UpdateEnrollmentGroupRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "name"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.id.isEmpty {
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
+    }
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, rhs: Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.name != rhs.name {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_RemoveEnrollmentsRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".RemoveEnrollmentsRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "groupId"),
+    2: .same(proto: "enrollmentIds"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.groupID) }()
+      case 2: try { try decoder.decodeRepeatedStringField(value: &self.enrollmentIds) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.groupID.isEmpty {
+      try visitor.visitSingularStringField(value: self.groupID, fieldNumber: 1)
+    }
+    if !self.enrollmentIds.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.enrollmentIds, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_RemoveEnrollmentsRequest, rhs: Sensory_Api_V1_Management_RemoveEnrollmentsRequest) -> Bool {
+    if lhs.groupID != rhs.groupID {return false}
+    if lhs.enrollmentIds != rhs.enrollmentIds {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

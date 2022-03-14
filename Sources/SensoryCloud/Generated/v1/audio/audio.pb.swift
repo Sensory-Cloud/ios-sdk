@@ -1448,6 +1448,46 @@ extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: CaseIterable {
 
 #endif  // swift(>=4.2)
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_V1_Audio_AudioPostProcessingAction: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ThresholdSensitivity: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_GetModelsRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AudioModel: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AudioRequestPostProcessingAction: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AudioResponsePostProcessingAction: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_GetModelsResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AuthenticateRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AuthenticateRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEventRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEventRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrolledEventRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrolledEventRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEnrolledEventRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEnrolledEventRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_TranscribeRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_TranscribeRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AuthenticateResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEventResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEnrolledEventResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_TranscribeResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentConfig.OneOf_EnrollLength: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AuthenticateConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AuthenticateConfig.OneOf_AuthID: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AuthenticateConfig.ThresholdSecurity: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEventConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig.OneOf_EnrollLength: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig.OneOf_AuthID: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_TranscribeConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AudioConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.v1.audio"
@@ -1712,8 +1752,9 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentRequest: SwiftProtobuf.Message, S
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -1776,8 +1817,9 @@ extension Sensory_Api_V1_Audio_AuthenticateRequest: SwiftProtobuf.Message, Swift
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -1842,8 +1884,9 @@ extension Sensory_Api_V1_Audio_ValidateEventRequest: SwiftProtobuf.Message, Swif
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -1855,9 +1898,9 @@ extension Sensory_Api_V1_Audio_ValidateEventRequest: SwiftProtobuf.Message, Swif
     }()
     case nil: break
     }
-    if let v = self._postProcessingAction {
+    try { if let v = self._postProcessingAction {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1910,8 +1953,9 @@ extension Sensory_Api_V1_Audio_CreateEnrolledEventRequest: SwiftProtobuf.Message
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -1974,8 +2018,9 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventRequest: SwiftProtobuf.Messa
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -2040,8 +2085,9 @@ extension Sensory_Api_V1_Audio_TranscribeRequest: SwiftProtobuf.Message, SwiftPr
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -2053,9 +2099,9 @@ extension Sensory_Api_V1_Audio_TranscribeRequest: SwiftProtobuf.Message, SwiftPr
     }()
     case nil: break
     }
-    if let v = self._postProcessingAction {
+    try { if let v = self._postProcessingAction {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2166,15 +2212,19 @@ extension Sensory_Api_V1_Audio_AuthenticateResponse: SwiftProtobuf.Message, Swif
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.audioEnergy != 0 {
       try visitor.visitSingularFloatField(value: self.audioEnergy, fieldNumber: 1)
     }
     if self.success != false {
       try visitor.visitSingularBoolField(value: self.success, fieldNumber: 2)
     }
-    if let v = self._token {
+    try { if let v = self._token {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    }
+    } }()
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 4)
     }
@@ -2230,6 +2280,10 @@ extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, Swi
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.audioEnergy != 0 {
       try visitor.visitSingularFloatField(value: self.audioEnergy, fieldNumber: 1)
     }
@@ -2242,9 +2296,9 @@ extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, Swi
     if self.score != 0 {
       try visitor.visitSingularFloatField(value: self.score, fieldNumber: 4)
     }
-    if let v = self._postProcessingAction {
+    try { if let v = self._postProcessingAction {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2340,6 +2394,10 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.audioEnergy != 0 {
       try visitor.visitSingularFloatField(value: self.audioEnergy, fieldNumber: 1)
     }
@@ -2349,9 +2407,9 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
     if self.isPartialResult != false {
       try visitor.visitSingularBoolField(value: self.isPartialResult, fieldNumber: 3)
     }
-    if let v = self._postProcessingAction {
+    try { if let v = self._postProcessingAction {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    }
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2414,9 +2472,13 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._audio {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 2)
     }
@@ -2432,9 +2494,6 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if self.isLivenessEnabled != false {
       try visitor.visitSingularBoolField(value: self.isLivenessEnabled, fieldNumber: 6)
     }
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.enrollLength {
     case .enrollmentNumUtterances?: try {
       guard case .enrollmentNumUtterances(let v)? = self.enrollLength else { preconditionFailure() }
@@ -2511,12 +2570,13 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._audio {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
     switch self.authID {
     case .enrollmentID?: try {
       guard case .enrollmentID(let v)? = self.authID else { preconditionFailure() }
@@ -2587,9 +2647,13 @@ extension Sensory_Api_V1_Audio_ValidateEventConfig: SwiftProtobuf.Message, Swift
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._audio {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.modelName.isEmpty {
       try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 2)
     }
@@ -2657,9 +2721,13 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: SwiftProtobuf.Messag
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._audio {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 2)
     }
@@ -2669,9 +2737,6 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: SwiftProtobuf.Messag
     if !self.description_p.isEmpty {
       try visitor.visitSingularStringField(value: self.description_p, fieldNumber: 4)
     }
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
     switch self.enrollLength {
     case .enrollmentNumUtterances?: try {
       guard case .enrollmentNumUtterances(let v)? = self.enrollLength else { preconditionFailure() }
@@ -2740,12 +2805,13 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: SwiftProtobuf.Messag
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._audio {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
     switch self.authID {
     case .enrollmentID?: try {
       guard case .enrollmentID(let v)? = self.authID else { preconditionFailure() }
@@ -2795,9 +2861,13 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._audio {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if !self.modelName.isEmpty {
       try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 2)
     }

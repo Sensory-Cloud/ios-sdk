@@ -96,6 +96,12 @@ public struct Sensory_Api_V1_Event_PublishUsageEventsResponse {
   public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_V1_Event_PublishUsageEventsRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Event_UsageEvent: @unchecked Sendable {}
+extension Sensory_Api_V1_Event_PublishUsageEventsResponse: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.v1.event"
@@ -169,9 +175,13 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if let v = self._timestamp {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._timestamp {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }
+    } }()
     if self.duration != 0 {
       try visitor.visitSingularInt64Field(value: self.duration, fieldNumber: 2)
     }

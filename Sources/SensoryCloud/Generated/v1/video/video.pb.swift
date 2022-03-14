@@ -570,6 +570,26 @@ public struct Sensory_Api_V1_Video_ValidateRecognitionConfig {
   public init() {}
 }
 
+#if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_V1_Video_RecognitionThreshold: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_VideoModel: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_GetModelsRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_GetModelsResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_CreateEnrollmentRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_CreateEnrollmentRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_AuthenticateRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_AuthenticateRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_ValidateRecognitionRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_ValidateRecognitionRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_CreateEnrollmentResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_AuthenticateResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_LivenessRecognitionResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_CreateEnrollmentConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_AuthenticateConfig: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_AuthenticateConfig.OneOf_AuthID: @unchecked Sendable {}
+extension Sensory_Api_V1_Video_ValidateRecognitionConfig: @unchecked Sendable {}
+#endif  // swift(>=5.5) && canImport(_Concurrency)
+
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.v1.video"
@@ -743,8 +763,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentRequest: SwiftProtobuf.Message, S
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -807,8 +828,9 @@ extension Sensory_Api_V1_Video_AuthenticateRequest: SwiftProtobuf.Message, Swift
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -871,8 +893,9 @@ extension Sensory_Api_V1_Video_ValidateRecognitionRequest: SwiftProtobuf.Message
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.streamingRequest {
     case .config?: try {
       guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
@@ -985,6 +1008,10 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.success != false {
       try visitor.visitSingularBoolField(value: self.success, fieldNumber: 1)
     }
@@ -994,9 +1021,9 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     if self.isAlive != false {
       try visitor.visitSingularBoolField(value: self.isAlive, fieldNumber: 3)
     }
-    if let v = self._token {
+    try { if let v = self._token {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
-    }
+    } }()
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 5)
     }
@@ -1091,6 +1118,10 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 1)
     }
@@ -1109,9 +1140,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if self.livenessThreshold != .low {
       try visitor.visitSingularEnumField(value: self.livenessThreshold, fieldNumber: 6)
     }
-    if let v = self._compression {
+    try { if let v = self._compression {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
-    }
+    } }()
     if !self.referenceID.isEmpty {
       try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 8)
     }
@@ -1180,8 +1211,9 @@ extension Sensory_Api_V1_Video_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
     // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every case branch when no optimizations are
-    // enabled. https://github.com/apple/swift-protobuf/issues/1034
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     switch self.authID {
     case .enrollmentID?: try {
       guard case .enrollmentID(let v)? = self.authID else { preconditionFailure() }
@@ -1199,9 +1231,9 @@ extension Sensory_Api_V1_Video_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     if self.livenessThreshold != .low {
       try visitor.visitSingularEnumField(value: self.livenessThreshold, fieldNumber: 4)
     }
-    if let v = self._compression {
+    try { if let v = self._compression {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 5)
-    }
+    } }()
     if self.doIncludeToken != false {
       try visitor.visitSingularBoolField(value: self.doIncludeToken, fieldNumber: 6)
     }
