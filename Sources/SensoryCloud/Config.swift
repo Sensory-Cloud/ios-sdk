@@ -34,8 +34,8 @@ public class Config {
     /// Unique device identifier that model enrollments are associated to
     public static var deviceID: String?
 
-    /// Sample rate to record audio at, defaults to 16kHz
-    public static var audioSampleRate: Float64 = 16000
+    /// Supported sample rate for audio models (16kHz)
+    public static let audioSampleRate: Float64 = 16000
 
     /// Photo pixel height, defaults to 720 pixels
     public static var photoHeight = 720

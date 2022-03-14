@@ -111,7 +111,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.createEnrollment(
             modelName: "Mock Model Name",
-            sampleRate: 16000,
             userID: "Mock User ID",
             description: "Mock Description",
             isLivenessEnabled: true,
@@ -156,7 +155,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.authenticate(
             enrollment: .enrollmentID("Mock Enrollment"),
-            sampleRate: 16000,
             isLivenessEnabled: false
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)
@@ -197,7 +195,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.authenticate(
             enrollment: .enrollmentGroupID("Mock Enrollment Group"),
-            sampleRate: 16000,
             isLivenessEnabled: true
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)
@@ -242,7 +239,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.validateTrigger(
             modelName: "Trigger Model",
-            sampleRate: 16000,
             userID: "Some User",
             sensitivity: .medium
         ) { [weak self] response in
@@ -287,7 +283,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.streamCreateEnrolledEvent(
             modelName: "Mock Model Name",
-            sampleRate: 16000,
             userID: "Mock User ID",
             description: "Mock Description"
         ) { [weak self] response in
@@ -329,7 +324,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.streamValidateEnrolledEvent(
             enrollment: .enrollmentID("Mock Enrollment"),
-            sampleRate: 16000,
             sensitivity: .highest
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)
@@ -371,7 +365,6 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.transcribeAudio(
             modelName: "Transcript Model",
-            sampleRate: 16000,
             userID: "Some User"
         ) { [weak self] response in
             XCTAssertEqual(expectedResponse, response)

@@ -35,7 +35,6 @@ public class HealthService {
     /// - Returns: A future to be fulfilled with either the server health, or a network error if one occurred
     public func getHealth() -> EventLoopFuture<Sensory_Api_Common_ServerHealthResponse> {
         do {
-            // TODO: update service
             let client: Sensory_Api_Health_HealthServiceClientProtocol = try service.getClient()
             let defaultTimeout = CallOptions(timeLimit: .timeout(.seconds(Config.grpcTimeout)))
 

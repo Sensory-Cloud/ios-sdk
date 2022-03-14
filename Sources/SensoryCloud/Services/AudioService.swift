@@ -78,8 +78,8 @@ public class AudioService {
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
     ///   - modelName: Name of model to validate
-    ///   - sampleRate: Sample rate of model to validate
     ///   - userID: Unique user identifier
+    ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - description: User supplied description of the enrollment
     ///   - isLivenessEnabled: Verifies liveness during the enrollment process
     ///   - numUtterances: Sets how many utterances should be required for text-dependent enrollments, defaults to 4 if not specified.
@@ -92,8 +92,8 @@ public class AudioService {
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func createEnrollment(
         modelName: String,
-        sampleRate: Int32,
         userID: String,
+        languageCode: String? = nil,
         description: String = "",
         isLivenessEnabled: Bool,
         numUtterances: UInt32? = nil,
@@ -116,9 +116,9 @@ public class AudioService {
         // Send initial config message
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
         audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = Config.languageCode
+        audioConfig.languageCode = languageCode ?? Config.languageCode
 
         var config = Sensory_Api_V1_Audio_CreateEnrollmentConfig()
         config.audio = audioConfig
@@ -146,14 +146,14 @@ public class AudioService {
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
     ///   - enrollment: enrollment or enrollment group to authenticate against
-    ///   - sampleRate: Sample rate of model to validate
+    ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - isLivenessEnabled: Specifies if the authentication should include a liveness check
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func authenticate(
         enrollment: EnrollmentIdentifier,
-        sampleRate: Int32,
+        languageCode: String? = nil,
         isLivenessEnabled: Bool,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_AuthenticateResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
@@ -170,9 +170,9 @@ public class AudioService {
         // Send initial config message
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
         audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = Config.languageCode
+        audioConfig.languageCode = languageCode ?? Config.languageCode
 
         var config = Sensory_Api_V1_Audio_AuthenticateConfig()
         config.audio = audioConfig
@@ -197,16 +197,16 @@ public class AudioService {
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
     ///   - modelName: Name of model to validate
-    ///   - sampleRate: Sample rate of model to validate
     ///   - userID: Unique user identifier
+    ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - sensitivity: How sensitive the model should be to false accepts
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func validateTrigger(
         modelName: String,
-        sampleRate: Int32,
         userID: String,
+        languageCode: String? = nil,
         sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_ValidateEventResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
@@ -223,9 +223,9 @@ public class AudioService {
         // Send initial config message
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
         audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = Config.languageCode
+        audioConfig.languageCode = languageCode ?? Config.languageCode
 
         var config = Sensory_Api_V1_Audio_ValidateEventConfig()
         config.audio = audioConfig
@@ -246,16 +246,16 @@ public class AudioService {
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
     ///   - modelName: Name of model to enroll against
-    ///   - sampleRate: Sample rate of the model
     ///   - userID: Unique user identifier
+    ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - description: User supplied description of the enrollment
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func streamCreateEnrolledEvent(
         modelName: String,
-        sampleRate: Int32,
         userID: String,
+        languageCode: String? = nil,
         description: String = "",
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
@@ -270,9 +270,9 @@ public class AudioService {
 
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
         audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = Config.languageCode
+        audioConfig.languageCode = languageCode ?? Config.languageCode
 
         var config = Sensory_Api_V1_Audio_CreateEnrollmentEventConfig()
         config.audio = audioConfig
@@ -293,14 +293,14 @@ public class AudioService {
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
     ///   - enrollment: enrollment or enrollment group to validate against
-    ///   - sampleRate: Sample rate of the model
+    ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - sensitivity: How sensitive the model should be to false accepts
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func streamValidateEnrolledEvent(
         enrollment: EnrollmentIdentifier,
-        sampleRate: Int32,
+        languageCode: String? = nil,
         sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_ValidateEnrolledEventResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
@@ -315,9 +315,9 @@ public class AudioService {
 
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
         audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = Config.languageCode
+        audioConfig.languageCode = languageCode ?? Config.languageCode
 
         var config = Sensory_Api_V1_Audio_ValidateEnrolledEventConfig()
         switch enrollment {
@@ -341,15 +341,15 @@ public class AudioService {
     /// This call will automatically send the initial `AudioConfig` message to the server
     /// - Parameters:
     ///   - modelName: Name of model to validate
-    ///   - sampleRate: Sample rate of model to validate
     ///   - userID: Unique user identifier
+    ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
     public func transcribeAudio(
         modelName: String,
-        sampleRate: Int32,
         userID: String,
+        languageCode: String? = nil,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_TranscribeResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_TranscribeRequest,
@@ -365,9 +365,9 @@ public class AudioService {
         // Send initial config message
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
         audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = sampleRate
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
         audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = Config.languageCode
+        audioConfig.languageCode = languageCode ?? Config.languageCode
 
         var config = Sensory_Api_V1_Audio_TranscribeConfig()
         config.audio = audioConfig
