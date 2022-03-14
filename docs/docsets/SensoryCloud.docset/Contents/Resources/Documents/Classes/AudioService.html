@@ -48,6 +48,9 @@
                 <a href="../Classes/Config.html">Config</a>
               </li>
               <li class="nav-group-task">
+                <a href="../Classes/HealthService.html">HealthService</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Classes/ManagementService.html">ManagementService</a>
               </li>
               <li class="nav-group-task">
@@ -203,9 +206,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName10sampleRate6userID11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_s5Int32VS2SSbs6UInt32VSgSfSgyASctKF"></a>
-                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:sampleRate:userID:description:isLivenessEnabled:numUtterances:enrollmentDuration:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName10sampleRate6userID11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_s5Int32VS2SSbs6UInt32VSgSfSgyASctKF">createEnrollment(modelName:<wbr>sampleRate:<wbr>userID:<wbr>description:<wbr>isLivenessEnabled:<wbr>numUtterances:<wbr>enrollmentDuration:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName6userID12languageCode11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSgSSSbs6UInt32VSgSfSgyASctKF"></a>
+                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:languageCode:description:isLivenessEnabled:numUtterances:enrollmentDuration:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName6userID12languageCode11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSgSSSbs6UInt32VSgSfSgyASctKF">createEnrollment(modelName:<wbr>userID:<wbr>languageCode:<wbr>description:<wbr>isLivenessEnabled:<wbr>numUtterances:<wbr>enrollmentDuration:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -233,8 +236,8 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">createEnrollment</span><span class="p">(</span>
     <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
     <span class="nv">numUtterances</span><span class="p">:</span> <span class="kt">UInt32</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
@@ -266,24 +269,24 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>sampleRate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Sample rate of model to validate</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
                                 <em>userID</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
                                   <p>Unique user identifier</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>languageCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred language code for the user, pass in nil to use the value from config</p>
                                 </div>
                               </td>
                             </tr>
@@ -362,9 +365,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate10enrollment10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_s5Int32VSbyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(enrollment:sampleRate:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate10enrollment10sampleRate17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_s5Int32VSbyAOctKF">authenticate(enrollment:<wbr>sampleRate:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate10enrollment12languageCode17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SSSgSbyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(enrollment:languageCode:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate10enrollment12languageCode17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SSSgSbyAOctKF">authenticate(enrollment:<wbr>languageCode:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -388,7 +391,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">authenticate</span><span class="p">(</span>
     <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
@@ -417,12 +420,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>sampleRate</em>
+                                <em>languageCode</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>Sample rate of model to validate</p>
+                                  <p>Preferred language code for the user, pass in nil to use the value from config</p>
                                 </div>
                               </td>
                             </tr>
@@ -463,9 +466,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName10sampleRate6userID11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_u1_v1_c1_wX8ResponseVGSS_s5Int32VSSAA0a1_u1_v1_C21_ThresholdSensitivityOyAPctKF"></a>
-                    <a name="//apple_ref/swift/Method/validateTrigger(modelName:sampleRate:userID:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName10sampleRate6userID11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_u1_v1_c1_wX8ResponseVGSS_s5Int32VSSAA0a1_u1_v1_C21_ThresholdSensitivityOyAPctKF">validateTrigger(modelName:<wbr>sampleRate:<wbr>userID:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName6userID12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_u1_v1_c1_wX8ResponseVGSS_S2SSgAA0a1_u1_v1_C21_ThresholdSensitivityOyAPctKF"></a>
+                    <a name="//apple_ref/swift/Method/validateTrigger(modelName:userID:languageCode:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName6userID12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_u1_v1_c1_wX8ResponseVGSS_S2SSgAA0a1_u1_v1_C21_ThresholdSensitivityOyAPctKF">validateTrigger(modelName:<wbr>userID:<wbr>languageCode:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -489,8 +492,8 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">validateTrigger</span><span class="p">(</span>
     <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">sensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_ValidateEventResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
@@ -519,24 +522,24 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>sampleRate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Sample rate of model to validate</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
                                 <em>userID</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
                                   <p>Unique user identifier</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>languageCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred language code for the user, pass in nil to use the value from config</p>
                                 </div>
                               </td>
                             </tr>
@@ -577,9 +580,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName10sampleRate6userID11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_s5Int32VS2SyAPctKF"></a>
-                    <a name="//apple_ref/swift/Method/streamCreateEnrolledEvent(modelName:sampleRate:userID:description:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName10sampleRate6userID11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_s5Int32VS2SyAPctKF">streamCreateEnrolledEvent(modelName:<wbr>sampleRate:<wbr>userID:<wbr>description:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName6userID12languageCode11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_S2SSgSSyAPctKF"></a>
+                    <a name="//apple_ref/swift/Method/streamCreateEnrolledEvent(modelName:userID:languageCode:description:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName6userID12languageCode11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_S2SSgSSyAPctKF">streamCreateEnrolledEvent(modelName:<wbr>userID:<wbr>languageCode:<wbr>description:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -603,8 +606,8 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">streamCreateEnrolledEvent</span><span class="p">(</span>
     <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
@@ -633,24 +636,24 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>sampleRate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Sample rate of the model</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
                                 <em>userID</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
                                   <p>Unique user identifier</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>languageCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred language code for the user, pass in nil to use the value from config</p>
                                 </div>
                               </td>
                             </tr>
@@ -691,9 +694,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment10sampleRate11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_s5Int32VAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/streamValidateEnrolledEvent(enrollment:sampleRate:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment10sampleRate11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_s5Int32VAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF">streamValidateEnrolledEvent(enrollment:<wbr>sampleRate:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_SSSgAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/streamValidateEnrolledEvent(enrollment:languageCode:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_SSSgAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF">streamValidateEnrolledEvent(enrollment:<wbr>languageCode:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -717,7 +720,7 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">streamValidateEnrolledEvent</span><span class="p">(</span>
     <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">sensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_ValidateEnrolledEventResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
@@ -746,12 +749,12 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>sampleRate</em>
+                                <em>languageCode</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>Sample rate of the model</p>
+                                  <p>Preferred language code for the user, pass in nil to use the value from config</p>
                                 </div>
                               </td>
                             </tr>
@@ -792,9 +795,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName10sampleRate6userID15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_s5Int32VSSyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:sampleRate:userID:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName10sampleRate6userID15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_s5Int32VSSyAOctKF">transcribeAudio(modelName:<wbr>sampleRate:<wbr>userID:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_S2SSgyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:userID:languageCode:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_S2SSgyAOctKF">transcribeAudio(modelName:<wbr>userID:<wbr>languageCode:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -818,8 +821,8 @@
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">transcribeAudio</span><span class="p">(</span>
     <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">sampleRate</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_TranscribeResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_TranscribeRequest</span><span class="p">,</span>
@@ -847,24 +850,24 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>sampleRate</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Sample rate of model to validate</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
                                 <em>userID</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
                                   <p>Unique user identifier</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>languageCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred language code for the user, pass in nil to use the value from config</p>
                                 </div>
                               </td>
                             </tr>
@@ -895,7 +898,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-01-31)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-03-14)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.1</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

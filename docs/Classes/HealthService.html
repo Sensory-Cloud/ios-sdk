@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>OSStatus Extension Reference</title>
+    <title>HealthService Class Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Extension/OSStatus" class="dashAnchor"></a>
-    <a title="OSStatus Extension Reference"></a>
+    <a name="//apple_ref/swift/Class/HealthService" class="dashAnchor"></a>
+    <a title="HealthService Class Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">SensoryCloud Docs</a> (98% documented)</p>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">SensoryCloud Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        OSStatus Extension Reference
+        HealthService Class Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -131,15 +131,15 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>OSStatus</h1>
+            <h1>HealthService</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">extension</span> <span class="kt">OSStatus</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">class</span> <span class="kt">HealthService</span></code></pre>
 
                 </div>
               </div>
-            <p>Helper util for <code>SecCopyErrorMessageString</code></p>
+            <p>A collection of grpc service calls for getting the health of the cloud health</p>
 
           </section>
           <section class="section task-group-section">
@@ -148,9 +148,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:s5Int32V12SensoryCloudE17secErrDescriptionSSSgvp"></a>
-                    <a name="//apple_ref/swift/Property/secErrDescription" class="dashAnchor"></a>
-                    <a class="token" href="#/s:s5Int32V12SensoryCloudE17secErrDescriptionSSSgvp">secErrDescription</a>
+                    <a name="/s:12SensoryCloud13HealthServiceCACycfc"></a>
+                    <a name="//apple_ref/swift/Method/init()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13HealthServiceCACycfc">init()</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -158,16 +158,47 @@
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Generates an error message using <code>SecCopyErrorMessageString</code> and converts the result to a string</p>
+                        <p>Initializes a new instance of <code>HealthService</code></p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="k">var</span> <span class="nv">secErrDescription</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="nf">init</span><span class="p">()</span></code></pre>
 
                         </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13HealthServiceC03getC07NIOCore15EventLoopFutureCyAA0a18_Api_Common_ServerC8ResponseVGyF"></a>
+                    <a name="//apple_ref/swift/Method/getHealth()" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13HealthServiceC03getC07NIOCore15EventLoopFutureCyAA0a18_Api_Common_ServerC8ResponseVGyF">getHealth()</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Fetches the current health status of the cloud host</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">getHealth</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kt">EventLoopFuture</span><span class="o">&lt;</span><span class="kt">Sensory_Api_Common_ServerHealthResponse</span><span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>A future to be fulfilled with either the server health, or a network error if one occurred</p>
                       </div>
                     </section>
                   </div>
