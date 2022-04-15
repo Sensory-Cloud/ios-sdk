@@ -22,6 +22,43 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
+/// Generic NULL value
+public enum Sensory_Api_Common_Void: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+  case value // = 0
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .value
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .value
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .value: return 0
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Sensory_Api_Common_Void: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Sensory_Api_Common_Void] = [
+    .value,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 /// A type of key supported by the API
 /// Note: if you change this enum, ensure to update schema.prisma KeyType
 public enum Sensory_Api_Common_KeyType: SwiftProtobuf.Enum {
@@ -35,6 +72,9 @@ public enum Sensory_Api_Common_KeyType: SwiftProtobuf.Enum {
 
   /// Shared secret string
   case sharedSecret // = 3
+
+  /// AES-256 32 byte string
+  case aes256 // = 4
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -46,6 +86,7 @@ public enum Sensory_Api_Common_KeyType: SwiftProtobuf.Enum {
     case 0: self = .publicKey
     case 1: self = .publicKeyEd25519
     case 3: self = .sharedSecret
+    case 4: self = .aes256
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -55,6 +96,7 @@ public enum Sensory_Api_Common_KeyType: SwiftProtobuf.Enum {
     case .publicKey: return 0
     case .publicKeyEd25519: return 1
     case .sharedSecret: return 3
+    case .aes256: return 4
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -69,6 +111,63 @@ extension Sensory_Api_Common_KeyType: CaseIterable {
     .publicKey,
     .publicKeyEd25519,
     .sharedSecret,
+    .aes256,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
+/// Example ideas of possible FFs
+/// Voice
+/// VoiceBiometricTextDependent   FeatureFlag = iota // Voice Auth Text Dependent (Enrollable)
+/// VoiceBiometricTextIndependent                    // Voice Auth Text Independent (Enrollable)
+/// VoiceBiometricWakeword                           // Voice Wakeword (Enrollable)
+/// VoiceEventWakeword                               // Voice Wakeword
+public enum Sensory_Api_Common_FeatureFlag: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+
+  /// TssvAll feature set
+  case tssvAll // = 0
+
+  /// TsAll feature set
+  case tsAll // = 1
+
+  /// TnlAll feature set
+  case tnlAll // = 2
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .tssvAll
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .tssvAll
+    case 1: self = .tsAll
+    case 2: self = .tnlAll
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .tssvAll: return 0
+    case .tsAll: return 1
+    case .tnlAll: return 2
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Sensory_Api_Common_FeatureFlag: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Sensory_Api_Common_FeatureFlag] = [
+    .tssvAll,
+    .tsAll,
+    .tnlAll,
   ]
 }
 
@@ -428,6 +527,47 @@ extension Sensory_Api_Common_UsageEventType: CaseIterable {
 
 #endif  // swift(>=4.2)
 
+/// Possible types of servers
+public enum Sensory_Api_Common_ServerType: SwiftProtobuf.Enum {
+  public typealias RawValue = Int
+  case titan // = 0
+  case io // = 1
+  case UNRECOGNIZED(Int)
+
+  public init() {
+    self = .titan
+  }
+
+  public init?(rawValue: Int) {
+    switch rawValue {
+    case 0: self = .titan
+    case 1: self = .io
+    default: self = .UNRECOGNIZED(rawValue)
+    }
+  }
+
+  public var rawValue: Int {
+    switch self {
+    case .titan: return 0
+    case .io: return 1
+    case .UNRECOGNIZED(let i): return i
+    }
+  }
+
+}
+
+#if swift(>=4.2)
+
+extension Sensory_Api_Common_ServerType: CaseIterable {
+  // The compiler won't synthesize support with the UNRECOGNIZED case.
+  public static var allCases: [Sensory_Api_Common_ServerType] = [
+    .titan,
+    .io,
+  ]
+}
+
+#endif  // swift(>=4.2)
+
 /// Configuration for how data can be compressed
 public struct Sensory_Api_Common_CompressionConfiguration {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -502,6 +642,9 @@ public struct Sensory_Api_Common_ServerHealthResponse {
 
   /// List of services and their health statuses
   public var services: [Sensory_Api_Common_ServiceHealth] = []
+
+  /// The type of server that is sending the health response
+  public var serverType: Sensory_Api_Common_ServerType = .titan
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -619,13 +762,115 @@ public struct Sensory_Api_Common_GenericClient {
   public init() {}
 }
 
+/// Tenant response
+public struct Sensory_Api_Common_TenantResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The unique uuid for this tenant
+  public var id: String = String()
+
+  /// The unique name for this tenant
+  public var name: String = String()
+
+  /// Created timestamp
+  public var createdAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _createdAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_createdAt = newValue}
+  }
+  /// Returns true if `createdAt` has been explicitly set.
+  public var hasCreatedAt: Bool {return self._createdAt != nil}
+  /// Clears the value of `createdAt`. Subsequent reads from it will return its default value.
+  public mutating func clearCreatedAt() {self._createdAt = nil}
+
+  /// Last updated timestamp
+  public var updatedAt: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _updatedAt ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_updatedAt = newValue}
+  }
+  /// Returns true if `updatedAt` has been explicitly set.
+  public var hasUpdatedAt: Bool {return self._updatedAt != nil}
+  /// Clears the value of `updatedAt`. Subsequent reads from it will return its default value.
+  public mutating func clearUpdatedAt() {self._updatedAt = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _createdAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _updatedAt: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
+/// A message for telling the server how to paginate and order data
+public struct Sensory_Api_Common_PaginationOptions {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The parameter to order the data by. If empty, the server will choose a default ordering
+  public var ordering: String = String()
+
+  /// If "True" the data will be sorted in decending order
+  public var decending: Bool = false
+
+  /// The page index to return
+  public var pageIndex: Int32 = 0
+
+  /// The preferred number of elements per page. If zero the server will choose a default size
+  /// The server enforces a maximum page size of 100
+  public var pageSize: Int32 = 0
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// A message for the server to tell how the data has been paginated
+public struct Sensory_Api_Common_PaginationResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The parameter by which the data has been ordered by
+  public var ordering: String = String()
+
+  /// "True" if the data has been sorted in decending order
+  public var decending: Bool = false
+
+  /// A list of all possible parameters that the data can be ordered by
+  public var possibleOrderings: [String] = []
+
+  /// The total count of data objects
+  public var totalCount: Int64 = 0
+
+  /// The page size of the data
+  public var pageSize: Int32 = 0
+
+  /// The page index for the previous page. If negative there is no previous page
+  public var prevPageIndex: Int32 = 0
+
+  /// The page index for the current page.
+  public var currentPageIndex: Int32 = 0
+
+  /// The page index for the next page. If negative there is no next page
+  public var nextPageIndex: Int32 = 0
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
+extension Sensory_Api_Common_Void: @unchecked Sendable {}
 extension Sensory_Api_Common_KeyType: @unchecked Sendable {}
+extension Sensory_Api_Common_FeatureFlag: @unchecked Sendable {}
 extension Sensory_Api_Common_ModelType: @unchecked Sendable {}
 extension Sensory_Api_Common_TechnologyType: @unchecked Sendable {}
 extension Sensory_Api_Common_CompressionType: @unchecked Sendable {}
 extension Sensory_Api_Common_ClientType: @unchecked Sendable {}
 extension Sensory_Api_Common_UsageEventType: @unchecked Sendable {}
+extension Sensory_Api_Common_ServerType: @unchecked Sendable {}
 extension Sensory_Api_Common_CompressionConfiguration: @unchecked Sendable {}
 extension Sensory_Api_Common_TokenResponse: @unchecked Sendable {}
 extension Sensory_Api_Common_ServiceHealth: @unchecked Sendable {}
@@ -634,17 +879,35 @@ extension Sensory_Api_Common_SystemSummary: @unchecked Sendable {}
 extension Sensory_Api_Common_CpuSummary: @unchecked Sendable {}
 extension Sensory_Api_Common_MemorySummary: @unchecked Sendable {}
 extension Sensory_Api_Common_GenericClient: @unchecked Sendable {}
+extension Sensory_Api_Common_TenantResponse: @unchecked Sendable {}
+extension Sensory_Api_Common_PaginationOptions: @unchecked Sendable {}
+extension Sensory_Api_Common_PaginationResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.common"
 
+extension Sensory_Api_Common_Void: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "VOID_VALUE"),
+  ]
+}
+
 extension Sensory_Api_Common_KeyType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "PUBLIC_KEY"),
     1: .same(proto: "PUBLIC_KEY_ED25519"),
     3: .same(proto: "SHARED_SECRET"),
+    4: .same(proto: "AES_256"),
+  ]
+}
+
+extension Sensory_Api_Common_FeatureFlag: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "TSSV_ALL"),
+    1: .same(proto: "TS_ALL"),
+    2: .same(proto: "TNL_ALL"),
   ]
 }
 
@@ -701,6 +964,13 @@ extension Sensory_Api_Common_UsageEventType: SwiftProtobuf._ProtoNameProviding {
     0: .same(proto: "AUTHENTICATION"),
     1: .same(proto: "RECOGNITION"),
     2: .same(proto: "ENROLLMENT"),
+  ]
+}
+
+extension Sensory_Api_Common_ServerType: SwiftProtobuf._ProtoNameProviding {
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    0: .same(proto: "TITAN"),
+    1: .same(proto: "IO"),
   ]
 }
 
@@ -837,6 +1107,7 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
     2: .same(proto: "serverVersion"),
     3: .same(proto: "id"),
     4: .same(proto: "services"),
+    5: .same(proto: "serverType"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -849,6 +1120,7 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
       case 2: try { try decoder.decodeSingularStringField(value: &self.serverVersion) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.id) }()
       case 4: try { try decoder.decodeRepeatedMessageField(value: &self.services) }()
+      case 5: try { try decoder.decodeSingularEnumField(value: &self.serverType) }()
       default: break
       }
     }
@@ -867,6 +1139,9 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
     if !self.services.isEmpty {
       try visitor.visitRepeatedMessageField(value: self.services, fieldNumber: 4)
     }
+    if self.serverType != .titan {
+      try visitor.visitSingularEnumField(value: self.serverType, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -875,6 +1150,7 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
     if lhs.serverVersion != rhs.serverVersion {return false}
     if lhs.id != rhs.id {return false}
     if lhs.services != rhs.services {return false}
+    if lhs.serverType != rhs.serverType {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1085,6 +1361,184 @@ extension Sensory_Api_Common_GenericClient: SwiftProtobuf.Message, SwiftProtobuf
   public static func ==(lhs: Sensory_Api_Common_GenericClient, rhs: Sensory_Api_Common_GenericClient) -> Bool {
     if lhs.clientID != rhs.clientID {return false}
     if lhs.secret != rhs.secret {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_TenantResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".TenantResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "name"),
+    3: .same(proto: "createdAt"),
+    4: .same(proto: "updatedAt"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._createdAt) }()
+      case 4: try { try decoder.decodeSingularMessageField(value: &self._updatedAt) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.id.isEmpty {
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
+    }
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 2)
+    }
+    try { if let v = self._createdAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    try { if let v = self._updatedAt {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_TenantResponse, rhs: Sensory_Api_Common_TenantResponse) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.name != rhs.name {return false}
+    if lhs._createdAt != rhs._createdAt {return false}
+    if lhs._updatedAt != rhs._updatedAt {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_PaginationOptions: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PaginationOptions"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "ordering"),
+    2: .same(proto: "decending"),
+    3: .same(proto: "pageIndex"),
+    4: .same(proto: "pageSize"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.ordering) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.decending) }()
+      case 3: try { try decoder.decodeSingularInt32Field(value: &self.pageIndex) }()
+      case 4: try { try decoder.decodeSingularInt32Field(value: &self.pageSize) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.ordering.isEmpty {
+      try visitor.visitSingularStringField(value: self.ordering, fieldNumber: 1)
+    }
+    if self.decending != false {
+      try visitor.visitSingularBoolField(value: self.decending, fieldNumber: 2)
+    }
+    if self.pageIndex != 0 {
+      try visitor.visitSingularInt32Field(value: self.pageIndex, fieldNumber: 3)
+    }
+    if self.pageSize != 0 {
+      try visitor.visitSingularInt32Field(value: self.pageSize, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_PaginationOptions, rhs: Sensory_Api_Common_PaginationOptions) -> Bool {
+    if lhs.ordering != rhs.ordering {return false}
+    if lhs.decending != rhs.decending {return false}
+    if lhs.pageIndex != rhs.pageIndex {return false}
+    if lhs.pageSize != rhs.pageSize {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_PaginationResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".PaginationResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "ordering"),
+    2: .same(proto: "decending"),
+    3: .same(proto: "possibleOrderings"),
+    4: .same(proto: "totalCount"),
+    5: .same(proto: "pageSize"),
+    6: .same(proto: "prevPageIndex"),
+    7: .same(proto: "currentPageIndex"),
+    8: .same(proto: "nextPageIndex"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.ordering) }()
+      case 2: try { try decoder.decodeSingularBoolField(value: &self.decending) }()
+      case 3: try { try decoder.decodeRepeatedStringField(value: &self.possibleOrderings) }()
+      case 4: try { try decoder.decodeSingularInt64Field(value: &self.totalCount) }()
+      case 5: try { try decoder.decodeSingularInt32Field(value: &self.pageSize) }()
+      case 6: try { try decoder.decodeSingularInt32Field(value: &self.prevPageIndex) }()
+      case 7: try { try decoder.decodeSingularInt32Field(value: &self.currentPageIndex) }()
+      case 8: try { try decoder.decodeSingularInt32Field(value: &self.nextPageIndex) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.ordering.isEmpty {
+      try visitor.visitSingularStringField(value: self.ordering, fieldNumber: 1)
+    }
+    if self.decending != false {
+      try visitor.visitSingularBoolField(value: self.decending, fieldNumber: 2)
+    }
+    if !self.possibleOrderings.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.possibleOrderings, fieldNumber: 3)
+    }
+    if self.totalCount != 0 {
+      try visitor.visitSingularInt64Field(value: self.totalCount, fieldNumber: 4)
+    }
+    if self.pageSize != 0 {
+      try visitor.visitSingularInt32Field(value: self.pageSize, fieldNumber: 5)
+    }
+    if self.prevPageIndex != 0 {
+      try visitor.visitSingularInt32Field(value: self.prevPageIndex, fieldNumber: 6)
+    }
+    if self.currentPageIndex != 0 {
+      try visitor.visitSingularInt32Field(value: self.currentPageIndex, fieldNumber: 7)
+    }
+    if self.nextPageIndex != 0 {
+      try visitor.visitSingularInt32Field(value: self.nextPageIndex, fieldNumber: 8)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_PaginationResponse, rhs: Sensory_Api_Common_PaginationResponse) -> Bool {
+    if lhs.ordering != rhs.ordering {return false}
+    if lhs.decending != rhs.decending {return false}
+    if lhs.possibleOrderings != rhs.possibleOrderings {return false}
+    if lhs.totalCount != rhs.totalCount {return false}
+    if lhs.pageSize != rhs.pageSize {return false}
+    if lhs.prevPageIndex != rhs.prevPageIndex {return false}
+    if lhs.currentPageIndex != rhs.currentPageIndex {return false}
+    if lhs.nextPageIndex != rhs.nextPageIndex {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

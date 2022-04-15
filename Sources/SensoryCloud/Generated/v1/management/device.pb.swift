@@ -84,28 +84,56 @@ public struct Sensory_Api_V1_Management_RenewDeviceCredentialRequest {
   public init() {}
 }
 
-/// A response containing information about a device
-public struct Sensory_Api_V1_Management_DeviceResponse {
+/// A request to obtain information about the calling device
+public struct Sensory_Api_V1_Management_DeviceGetWhoAmIRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
-
-  /// The friendly name of the device
-  public var name: String = String()
-
-  /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
-  public var deviceID: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 }
 
-/// A request to obtain information about the calling device
-public struct Sensory_Api_V1_Management_DeviceGetWhoAmIRequest {
+public struct Sensory_Api_V1_Management_GetDevicesRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
+
+  /// TenantID to filter on. TenantId validation is handled within the tenant_filter_middleware.
+  public var tenantID: String = String()
+
+  /// Metadata about how to paginate the response
+  public var pagination: Sensory_Api_Common_PaginationOptions {
+    get {return _pagination ?? Sensory_Api_Common_PaginationOptions()}
+    set {_pagination = newValue}
+  }
+  /// Returns true if `pagination` has been explicitly set.
+  public var hasPagination: Bool {return self._pagination != nil}
+  /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
+  public mutating func clearPagination() {self._pagination = nil}
+
+  /// User id to get a list of devices for
+  public var userID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _pagination: Sensory_Api_Common_PaginationOptions? = nil
+}
+
+/// A request to update the name of a device
+public struct Sensory_Api_V1_Management_UpdateDeviceRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
+  public var deviceID: String = String()
+
+  /// The new name of the device
+  public var name: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -126,30 +154,58 @@ public struct Sensory_Api_V1_Management_DeleteDeviceRequest {
   public init() {}
 }
 
-/// A request to update the name of a device
-public struct Sensory_Api_V1_Management_UpdateDeviceRequest {
+/// A response containing information about a device
+public struct Sensory_Api_V1_Management_DeviceResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
+  /// The friendly name of the device
+  public var name: String = String()
+
   /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
   public var deviceID: String = String()
-
-  /// The new name of the device
-  public var name: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 }
 
+/// A response containing multiple devices
+public struct Sensory_Api_V1_Management_DeviceListResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// A list of devices
+  public var devices: [Sensory_Api_V1_Management_DeviceResponse] = []
+
+  /// Metadata about how the response has been paginated
+  public var pagination: Sensory_Api_Common_PaginationResponse {
+    get {return _pagination ?? Sensory_Api_Common_PaginationResponse()}
+    set {_pagination = newValue}
+  }
+  /// Returns true if `pagination` has been explicitly set.
+  public var hasPagination: Bool {return self._pagination != nil}
+  /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
+  public mutating func clearPagination() {self._pagination = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _pagination: Sensory_Api_Common_PaginationResponse? = nil
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
 extension Sensory_Api_V1_Management_EnrollDeviceRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_RenewDeviceCredentialRequest: @unchecked Sendable {}
-extension Sensory_Api_V1_Management_DeviceResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_DeviceGetWhoAmIRequest: @unchecked Sendable {}
-extension Sensory_Api_V1_Management_DeleteDeviceRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_GetDevicesRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_UpdateDeviceRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_DeleteDeviceRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_DeviceResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_DeviceListResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -266,44 +322,6 @@ extension Sensory_Api_V1_Management_RenewDeviceCredentialRequest: SwiftProtobuf.
   }
 }
 
-extension Sensory_Api_V1_Management_DeviceResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".DeviceResponse"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "name"),
-    2: .same(proto: "deviceId"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.name.isEmpty {
-      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
-    }
-    if !self.deviceID.isEmpty {
-      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 2)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Management_DeviceResponse, rhs: Sensory_Api_V1_Management_DeviceResponse) -> Bool {
-    if lhs.name != rhs.name {return false}
-    if lhs.deviceID != rhs.deviceID {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
 extension Sensory_Api_V1_Management_DeviceGetWhoAmIRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".DeviceGetWhoAmIRequest"
   public static let _protobuf_nameMap = SwiftProtobuf._NameMap()
@@ -323,10 +341,12 @@ extension Sensory_Api_V1_Management_DeviceGetWhoAmIRequest: SwiftProtobuf.Messag
   }
 }
 
-extension Sensory_Api_V1_Management_DeleteDeviceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".DeleteDeviceRequest"
+extension Sensory_Api_V1_Management_GetDevicesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GetDevicesRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "deviceId"),
+    1: .same(proto: "tenantId"),
+    2: .same(proto: "pagination"),
+    3: .same(proto: "userId"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -335,21 +355,35 @@ extension Sensory_Api_V1_Management_DeleteDeviceRequest: SwiftProtobuf.Message, 
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
+      case 1: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._pagination) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.userID) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.deviceID.isEmpty {
-      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 1)
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.tenantID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tenantID, fieldNumber: 1)
+    }
+    try { if let v = self._pagination {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    if !self.userID.isEmpty {
+      try visitor.visitSingularStringField(value: self.userID, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Sensory_Api_V1_Management_DeleteDeviceRequest, rhs: Sensory_Api_V1_Management_DeleteDeviceRequest) -> Bool {
-    if lhs.deviceID != rhs.deviceID {return false}
+  public static func ==(lhs: Sensory_Api_V1_Management_GetDevicesRequest, rhs: Sensory_Api_V1_Management_GetDevicesRequest) -> Bool {
+    if lhs.tenantID != rhs.tenantID {return false}
+    if lhs._pagination != rhs._pagination {return false}
+    if lhs.userID != rhs.userID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -388,6 +422,118 @@ extension Sensory_Api_V1_Management_UpdateDeviceRequest: SwiftProtobuf.Message, 
   public static func ==(lhs: Sensory_Api_V1_Management_UpdateDeviceRequest, rhs: Sensory_Api_V1_Management_UpdateDeviceRequest) -> Bool {
     if lhs.deviceID != rhs.deviceID {return false}
     if lhs.name != rhs.name {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_DeleteDeviceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".DeleteDeviceRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "deviceId"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.deviceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_DeleteDeviceRequest, rhs: Sensory_Api_V1_Management_DeleteDeviceRequest) -> Bool {
+    if lhs.deviceID != rhs.deviceID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_DeviceResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".DeviceResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+    2: .same(proto: "deviceId"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    }
+    if !self.deviceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_DeviceResponse, rhs: Sensory_Api_V1_Management_DeviceResponse) -> Bool {
+    if lhs.name != rhs.name {return false}
+    if lhs.deviceID != rhs.deviceID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_DeviceListResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".DeviceListResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "devices"),
+    2: .same(proto: "pagination"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedMessageField(value: &self.devices) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._pagination) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.devices.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.devices, fieldNumber: 1)
+    }
+    try { if let v = self._pagination {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_DeviceListResponse, rhs: Sensory_Api_V1_Management_DeviceListResponse) -> Bool {
+    if lhs.devices != rhs.devices {return false}
+    if lhs._pagination != rhs._pagination {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
