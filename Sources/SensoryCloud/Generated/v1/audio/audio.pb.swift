@@ -33,6 +33,9 @@ public enum Sensory_Api_V1_Audio_AudioPostProcessingAction: SwiftProtobuf.Enum {
 
   /// Request the audio engine reset itself.
   case reset // = 2
+
+  /// Indicates this message is the final message. The audio engine will create a final result, return it to the client, and close the stream.
+  case final // = 3
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -44,6 +47,7 @@ public enum Sensory_Api_V1_Audio_AudioPostProcessingAction: SwiftProtobuf.Enum {
     case 0: self = .notSet
     case 1: self = .flush
     case 2: self = .reset
+    case 3: self = .final
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -53,6 +57,7 @@ public enum Sensory_Api_V1_Audio_AudioPostProcessingAction: SwiftProtobuf.Enum {
     case .notSet: return 0
     case .flush: return 1
     case .reset: return 2
+    case .final: return 3
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -67,6 +72,7 @@ extension Sensory_Api_V1_Audio_AudioPostProcessingAction: CaseIterable {
     .notSet,
     .flush,
     .reset,
+    .final,
   ]
 }
 
@@ -1497,6 +1503,7 @@ extension Sensory_Api_V1_Audio_AudioPostProcessingAction: SwiftProtobuf._ProtoNa
     0: .same(proto: "NOT_SET"),
     1: .same(proto: "FLUSH"),
     2: .same(proto: "RESET"),
+    3: .same(proto: "FINAL"),
   ]
 }
 

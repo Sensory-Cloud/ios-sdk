@@ -95,6 +95,20 @@ public struct Sensory_Api_V1_Management_DeviceGetWhoAmIRequest {
   public init() {}
 }
 
+/// A request for a device
+public struct Sensory_Api_V1_Management_DeviceRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
+  public var deviceID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 public struct Sensory_Api_V1_Management_GetDevicesRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -113,7 +127,7 @@ public struct Sensory_Api_V1_Management_GetDevicesRequest {
   /// Clears the value of `pagination`. Subsequent reads from it will return its default value.
   public mutating func clearPagination() {self._pagination = nil}
 
-  /// User id to get a list of devices for
+  /// Optional user id to filter devices by
   public var userID: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -140,20 +154,6 @@ public struct Sensory_Api_V1_Management_UpdateDeviceRequest {
   public init() {}
 }
 
-/// A request to delete a device
-public struct Sensory_Api_V1_Management_DeleteDeviceRequest {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
-  public var deviceID: String = String()
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  public init() {}
-}
-
 /// A response containing information about a device
 public struct Sensory_Api_V1_Management_DeviceResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -165,6 +165,26 @@ public struct Sensory_Api_V1_Management_DeviceResponse {
 
   /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
   public var deviceID: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// A response containing information about a device and associated users
+public struct Sensory_Api_V1_Management_GetDeviceResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The friendly name of the device
+  public var name: String = String()
+
+  /// The unique internal identifier for this device. Ideally, this value is static for the lifetime of the device.
+  public var deviceID: String = String()
+
+  /// The count of total users that are linked to the device
+  public var userCount: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -201,10 +221,11 @@ public struct Sensory_Api_V1_Management_DeviceListResponse {
 extension Sensory_Api_V1_Management_EnrollDeviceRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_RenewDeviceCredentialRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_DeviceGetWhoAmIRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_DeviceRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_GetDevicesRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_UpdateDeviceRequest: @unchecked Sendable {}
-extension Sensory_Api_V1_Management_DeleteDeviceRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_DeviceResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Management_GetDeviceResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Management_DeviceListResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
@@ -341,6 +362,38 @@ extension Sensory_Api_V1_Management_DeviceGetWhoAmIRequest: SwiftProtobuf.Messag
   }
 }
 
+extension Sensory_Api_V1_Management_DeviceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".DeviceRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "deviceId"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.deviceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_DeviceRequest, rhs: Sensory_Api_V1_Management_DeviceRequest) -> Bool {
+    if lhs.deviceID != rhs.deviceID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Sensory_Api_V1_Management_GetDevicesRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".GetDevicesRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -427,38 +480,6 @@ extension Sensory_Api_V1_Management_UpdateDeviceRequest: SwiftProtobuf.Message, 
   }
 }
 
-extension Sensory_Api_V1_Management_DeleteDeviceRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".DeleteDeviceRequest"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "deviceId"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.deviceID.isEmpty {
-      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 1)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Management_DeleteDeviceRequest, rhs: Sensory_Api_V1_Management_DeleteDeviceRequest) -> Bool {
-    if lhs.deviceID != rhs.deviceID {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
 extension Sensory_Api_V1_Management_DeviceResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".DeviceResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -492,6 +513,50 @@ extension Sensory_Api_V1_Management_DeviceResponse: SwiftProtobuf.Message, Swift
   public static func ==(lhs: Sensory_Api_V1_Management_DeviceResponse, rhs: Sensory_Api_V1_Management_DeviceResponse) -> Bool {
     if lhs.name != rhs.name {return false}
     if lhs.deviceID != rhs.deviceID {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Management_GetDeviceResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GetDeviceResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+    2: .same(proto: "deviceId"),
+    3: .same(proto: "userCount"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
+      case 3: try { try decoder.decodeSingularInt64Field(value: &self.userCount) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    }
+    if !self.deviceID.isEmpty {
+      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 2)
+    }
+    if self.userCount != 0 {
+      try visitor.visitSingularInt64Field(value: self.userCount, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Management_GetDeviceResponse, rhs: Sensory_Api_V1_Management_GetDeviceResponse) -> Bool {
+    if lhs.name != rhs.name {return false}
+    if lhs.deviceID != rhs.deviceID {return false}
+    if lhs.userCount != rhs.userCount {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

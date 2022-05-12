@@ -47,6 +47,11 @@ public protocol Sensory_Api_V1_Management_DeviceServiceClientProtocol: GRPCClien
     callOptions: CallOptions?
   ) -> UnaryCall<Sensory_Api_V1_Management_DeviceGetWhoAmIRequest, Sensory_Api_V1_Management_DeviceResponse>
 
+  func getDevice(
+    _ request: Sensory_Api_V1_Management_DeviceRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_GetDeviceResponse>
+
   func getDevices(
     _ request: Sensory_Api_V1_Management_GetDevicesRequest,
     callOptions: CallOptions?
@@ -58,9 +63,9 @@ public protocol Sensory_Api_V1_Management_DeviceServiceClientProtocol: GRPCClien
   ) -> UnaryCall<Sensory_Api_V1_Management_UpdateDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>
 
   func deleteDevice(
-    _ request: Sensory_Api_V1_Management_DeleteDeviceRequest,
+    _ request: Sensory_Api_V1_Management_DeviceRequest,
     callOptions: CallOptions?
-  ) -> UnaryCall<Sensory_Api_V1_Management_DeleteDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>
+  ) -> UnaryCall<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_DeviceResponse>
 }
 
 extension Sensory_Api_V1_Management_DeviceServiceClientProtocol {
@@ -124,6 +129,24 @@ extension Sensory_Api_V1_Management_DeviceServiceClientProtocol {
     )
   }
 
+  /// Returns device information
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetDevice.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getDevice(
+    _ request: Sensory_Api_V1_Management_DeviceRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_GetDeviceResponse> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.management.DeviceService/GetDevice",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetDeviceInterceptors() ?? []
+    )
+  }
+
   /// Returns a list of devices associated with the given userId
   ///
   /// - Parameters:
@@ -167,9 +190,9 @@ extension Sensory_Api_V1_Management_DeviceServiceClientProtocol {
   ///   - callOptions: Call options.
   /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
   public func deleteDevice(
-    _ request: Sensory_Api_V1_Management_DeleteDeviceRequest,
+    _ request: Sensory_Api_V1_Management_DeviceRequest,
     callOptions: CallOptions? = nil
-  ) -> UnaryCall<Sensory_Api_V1_Management_DeleteDeviceRequest, Sensory_Api_V1_Management_DeviceResponse> {
+  ) -> UnaryCall<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_DeviceResponse> {
     return self.makeUnaryCall(
       path: "/sensory.api.v1.management.DeviceService/DeleteDevice",
       request: request,
@@ -190,6 +213,9 @@ public protocol Sensory_Api_V1_Management_DeviceServiceClientInterceptorFactoryP
   /// - Returns: Interceptors to use when invoking 'getWhoAmI'.
   func makeGetWhoAmIInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_DeviceGetWhoAmIRequest, Sensory_Api_V1_Management_DeviceResponse>]
 
+  /// - Returns: Interceptors to use when invoking 'getDevice'.
+  func makeGetDeviceInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_GetDeviceResponse>]
+
   /// - Returns: Interceptors to use when invoking 'getDevices'.
   func makeGetDevicesInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_GetDevicesRequest, Sensory_Api_V1_Management_DeviceListResponse>]
 
@@ -197,7 +223,7 @@ public protocol Sensory_Api_V1_Management_DeviceServiceClientInterceptorFactoryP
   func makeUpdateDeviceInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_UpdateDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
 
   /// - Returns: Interceptors to use when invoking 'deleteDevice'.
-  func makeDeleteDeviceInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_DeleteDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
+  func makeDeleteDeviceInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
 }
 
 public final class Sensory_Api_V1_Management_DeviceServiceClient: Sensory_Api_V1_Management_DeviceServiceClientProtocol {
@@ -313,6 +339,30 @@ public final class Sensory_Api_V1_Management_DeviceServiceTestClient: Sensory_Ap
     return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.DeviceService/GetWhoAmI")
   }
 
+  /// Make a unary response for the GetDevice RPC. This must be called
+  /// before calling 'getDevice'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeGetDeviceResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_DeviceRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_GetDeviceResponse> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.management.DeviceService/GetDevice", requestHandler: requestHandler)
+  }
+
+  public func enqueueGetDeviceResponse(
+    _ response: Sensory_Api_V1_Management_GetDeviceResponse,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_DeviceRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeGetDeviceResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'GetDevice'
+  public var hasGetDeviceResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.management.DeviceService/GetDevice")
+  }
+
   /// Make a unary response for the GetDevices RPC. This must be called
   /// before calling 'getDevices'. See also 'FakeUnaryResponse'.
   ///
@@ -366,14 +416,14 @@ public final class Sensory_Api_V1_Management_DeviceServiceTestClient: Sensory_Ap
   ///
   /// - Parameter requestHandler: a handler for request parts sent by the RPC.
   public func makeDeleteDeviceResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_DeleteDeviceRequest>) -> () = { _ in }
-  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_DeleteDeviceRequest, Sensory_Api_V1_Management_DeviceResponse> {
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_DeviceRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_DeviceResponse> {
     return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.management.DeviceService/DeleteDevice", requestHandler: requestHandler)
   }
 
   public func enqueueDeleteDeviceResponse(
     _ response: Sensory_Api_V1_Management_DeviceResponse,
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_DeleteDeviceRequest>) -> () = { _ in }
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Management_DeviceRequest>) -> () = { _ in }
   )  {
     let stream = self.makeDeleteDeviceResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.

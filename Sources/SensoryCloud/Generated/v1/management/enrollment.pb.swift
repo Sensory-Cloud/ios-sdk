@@ -121,6 +121,9 @@ public struct Sensory_Api_V1_Management_EnrollmentResponse {
   /// Client-assigned referenceId for external use
   public var referenceID: String = String()
 
+  /// Indicates if the enrollmed is suited for biometrics. If this value is false, the enrollment cannot be used for authentication.
+  public var didEnrollAsBiometric: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -432,6 +435,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     11: .same(proto: "deviceName"),
     12: .same(proto: "didEnrollWithLiveness"),
     13: .same(proto: "referenceId"),
+    14: .same(proto: "didEnrollAsBiometric"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -453,6 +457,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
       case 11: try { try decoder.decodeSingularStringField(value: &self.deviceName) }()
       case 12: try { try decoder.decodeSingularBoolField(value: &self.didEnrollWithLiveness) }()
       case 13: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
+      case 14: try { try decoder.decodeSingularBoolField(value: &self.didEnrollAsBiometric) }()
       default: break
       }
     }
@@ -502,6 +507,9 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if !self.referenceID.isEmpty {
       try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 13)
     }
+    if self.didEnrollAsBiometric != false {
+      try visitor.visitSingularBoolField(value: self.didEnrollAsBiometric, fieldNumber: 14)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -519,6 +527,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if lhs.deviceName != rhs.deviceName {return false}
     if lhs.didEnrollWithLiveness != rhs.didEnrollWithLiveness {return false}
     if lhs.referenceID != rhs.referenceID {return false}
+    if lhs.didEnrollAsBiometric != rhs.didEnrollAsBiometric {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
