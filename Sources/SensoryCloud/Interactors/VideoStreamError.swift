@@ -20,3 +20,9 @@ public enum VideoStreamError: Error {
     /// Thrown when `startRecording`is called before configuration has occurred. Configuration occurs when `RequestPermission` is called.
     case notConfigured
 }
+
+// TODO: own file
+public enum InitializationError: Error {
+    case configFileNotFound
+    case fqdnParseError
+}

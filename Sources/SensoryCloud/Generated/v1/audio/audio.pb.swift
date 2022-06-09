@@ -753,8 +753,10 @@ public struct Sensory_Api_V1_Audio_CreateEnrollmentResponse {
   public var modelPrompt: String = String()
 
   /// Percent complete as values between 0 and 100 indicating the progress of the current enrollment segment.
-  /// This is relevent in liveness enrollment where multiple groups of numbers must be spoken.
+  /// This is relevant in liveness enrollment where multiple groups of numbers must be spoken.
   public var percentSegmentComplete: Int64 = 0
+
+  public var enrollmentBytes: Data = Data()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -795,7 +797,7 @@ public struct Sensory_Api_V1_Audio_AuthenticateResponse {
   public var modelPrompt: String = String()
 
   /// Percent complete as values between 0 and 100 indicating the progress of the current authentication segment.
-  /// This is relevent in liveness enrollment where multiple numbers must be spoken.
+  /// This is relevant in liveness enrollment where multiple numbers must be spoken.
   public var percentSegmentComplete: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -1054,6 +1056,8 @@ public struct Sensory_Api_V1_Audio_AuthenticateConfig {
 
   /// Enable liveness if supported by the audio model
   public var isLivenessEnabled: Bool = false
+
+  public var enrollmentBytes: Data = Data()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2130,6 +2134,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     5: .same(proto: "modelVersion"),
     6: .same(proto: "modelPrompt"),
     7: .same(proto: "percentSegmentComplete"),
+    8: .same(proto: "enrollmentBytes"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2145,6 +2150,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
       case 5: try { try decoder.decodeSingularStringField(value: &self.modelVersion) }()
       case 6: try { try decoder.decodeSingularStringField(value: &self.modelPrompt) }()
       case 7: try { try decoder.decodeSingularInt64Field(value: &self.percentSegmentComplete) }()
+      case 8: try { try decoder.decodeSingularBytesField(value: &self.enrollmentBytes) }()
       default: break
       }
     }
@@ -2172,6 +2178,9 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if self.percentSegmentComplete != 0 {
       try visitor.visitSingularInt64Field(value: self.percentSegmentComplete, fieldNumber: 7)
     }
+    if !self.enrollmentBytes.isEmpty {
+      try visitor.visitSingularBytesField(value: self.enrollmentBytes, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2183,6 +2192,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if lhs.modelVersion != rhs.modelVersion {return false}
     if lhs.modelPrompt != rhs.modelPrompt {return false}
     if lhs.percentSegmentComplete != rhs.percentSegmentComplete {return false}
+    if lhs.enrollmentBytes != rhs.enrollmentBytes {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2542,6 +2552,7 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     5: .same(proto: "sensitivity"),
     6: .same(proto: "security"),
     7: .same(proto: "isLivenessEnabled"),
+    8: .same(proto: "enrollmentBytes"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2571,6 +2582,7 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
       case 5: try { try decoder.decodeSingularEnumField(value: &self.sensitivity) }()
       case 6: try { try decoder.decodeSingularEnumField(value: &self.security) }()
       case 7: try { try decoder.decodeSingularBoolField(value: &self.isLivenessEnabled) }()
+      case 8: try { try decoder.decodeSingularBytesField(value: &self.enrollmentBytes) }()
       default: break
       }
     }
@@ -2607,6 +2619,9 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     if self.isLivenessEnabled != false {
       try visitor.visitSingularBoolField(value: self.isLivenessEnabled, fieldNumber: 7)
     }
+    if !self.enrollmentBytes.isEmpty {
+      try visitor.visitSingularBytesField(value: self.enrollmentBytes, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2617,6 +2632,7 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     if lhs.sensitivity != rhs.sensitivity {return false}
     if lhs.security != rhs.security {return false}
     if lhs.isLivenessEnabled != rhs.isLivenessEnabled {return false}
+    if lhs.enrollmentBytes != rhs.enrollmentBytes {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

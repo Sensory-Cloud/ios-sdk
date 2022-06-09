@@ -143,6 +143,8 @@ public class ManagementService {
     public func deleteEnrollment(with enrollmentID: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse> {
         NSLog("Requesting to delete enrollment: %@", enrollmentID)
 
+        // TODO: delete enrollment bytes
+
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
