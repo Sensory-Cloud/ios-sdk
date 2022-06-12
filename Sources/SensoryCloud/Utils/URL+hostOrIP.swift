@@ -1,5 +1,5 @@
 //
-//  URL+hostORIP.swift
+//  URL+hostOrIP.swift
 //  Sensory Cloud
 //
 //  Created by Niles Hacking on 6/3/22.
@@ -30,6 +30,7 @@ func parseURL(_ urlStr: String) -> CloudHost? {
 
 /// Some of the automatic host and port parsing provided by `URL` breaks if the url is a raw ip + port combination Ex: `127.0.0.1:9001`
 /// This extension aims to add support for such urls
+/// - Note: this extension does not handle `localhost`. `127.0.0.1` should be used instead
 extension URL {
 
     /// Returns the automatically parsed host, or the ip address if the url is a raw ip + port
@@ -66,7 +67,7 @@ extension URL {
     /// Attempts to determine if TLS encryption should be used. This assumes that raw ip + port urls do not support TLS
     var isSecure: Bool {
         if let scheme = scheme {
-            return scheme != "http"
+            return scheme == "https"
         }
 
         // assume we're insecure if the url is a raw ip and port

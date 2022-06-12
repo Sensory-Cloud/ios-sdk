@@ -167,6 +167,9 @@ public class VideoStreamInteractor: NSObject {
 }
 
 extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
+    /// Delegate function for conformance to `AVCaptureVideoDataOutputSampleBufferDelegate`
+    ///
+    /// This function should not be directly called by an SDK implementer
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
         if !photoRequested { return }

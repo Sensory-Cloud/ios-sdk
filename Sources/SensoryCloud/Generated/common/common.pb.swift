@@ -835,7 +835,7 @@ public struct Sensory_Api_Common_PaginationResponse {
   /// The parameter by which the data has been ordered by
   public var ordering: String = String()
 
-  /// "True" if the data has been sorted in decending order
+  /// "True" if the data has been sorted in descending order
   public var decending: Bool = false
 
   /// A list of all possible parameters that the data can be ordered by
@@ -855,6 +855,23 @@ public struct Sensory_Api_Common_PaginationResponse {
 
   /// The page index for the next page. If negative there is no next page
   public var nextPageIndex: Int32 = 0
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// A message with an encrypted enrollment token and a token expiration date
+public struct Sensory_Api_Common_EnrollmentToken {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Encrypted token containing enrollment information
+  public var token: Data = Data()
+
+  /// The number of seconds until the enrollment token expires
+  public var expiration: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -882,6 +899,7 @@ extension Sensory_Api_Common_GenericClient: @unchecked Sendable {}
 extension Sensory_Api_Common_TenantResponse: @unchecked Sendable {}
 extension Sensory_Api_Common_PaginationOptions: @unchecked Sendable {}
 extension Sensory_Api_Common_PaginationResponse: @unchecked Sendable {}
+extension Sensory_Api_Common_EnrollmentToken: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -1539,6 +1557,44 @@ extension Sensory_Api_Common_PaginationResponse: SwiftProtobuf.Message, SwiftPro
     if lhs.prevPageIndex != rhs.prevPageIndex {return false}
     if lhs.currentPageIndex != rhs.currentPageIndex {return false}
     if lhs.nextPageIndex != rhs.nextPageIndex {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_EnrollmentToken: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".EnrollmentToken"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "token"),
+    2: .same(proto: "expiration"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularBytesField(value: &self.token) }()
+      case 2: try { try decoder.decodeSingularInt64Field(value: &self.expiration) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.token.isEmpty {
+      try visitor.visitSingularBytesField(value: self.token, fieldNumber: 1)
+    }
+    if self.expiration != 0 {
+      try visitor.visitSingularInt64Field(value: self.expiration, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_EnrollmentToken, rhs: Sensory_Api_Common_EnrollmentToken) -> Bool {
+    if lhs.token != rhs.token {return false}
+    if lhs.expiration != rhs.expiration {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

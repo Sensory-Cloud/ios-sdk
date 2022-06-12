@@ -16,7 +16,7 @@
     <a title="SensoryCloud  Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="index.html">SensoryCloud Docs</a> (98% documented)</p>
+        <p><a href="index.html">SensoryCloud Docs</a> (100% documented)</p>
         <div class="header-right">
           <form role="search" action="search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -47,7 +47,13 @@
                 <a href="Classes/Config.html">Config</a>
               </li>
               <li class="nav-group-task">
+                <a href="Classes/EnrollmentTokenInteractor.html">EnrollmentTokenInteractor</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Classes/HealthService.html">HealthService</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Classes/Initializer.html">Initializer</a>
               </li>
               <li class="nav-group-task">
                 <a href="Classes/ManagementService.html">ManagementService</a>
@@ -80,6 +86,9 @@
               </li>
               <li class="nav-group-task">
                 <a href="Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Enums/InitializerError.html">InitializerError</a>
               </li>
               <li class="nav-group-task">
                 <a href="Enums/KeychainError.html">KeychainError</a>
@@ -123,6 +132,23 @@
               <li class="nav-group-task">
                 <a href="Structs/CloudHost.html">CloudHost</a>
               </li>
+              <li class="nav-group-task">
+                <a href="Structs/SDKInitConfig.html">SDKInitConfig</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Structs/SDKInitConfig/EnrollmentType.html">– EnrollmentType</a>
+              </li>
+            </ul>
+          </li>
+          <li class="nav-group-name">
+            <a href="Typealiases.html">Type Aliases</a>
+            <ul class="nav-group-tasks">
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:12SensoryCloud15SDKinitCallbacka">SDKinitCallback</a>
+              </li>
+              <li class="nav-group-task">
+                <a href="Typealiases.html#/s:12SensoryCloud13SDKinitResulta">SDKinitResult</a>
+              </li>
             </ul>
           </li>
         </ul>
@@ -146,6 +172,50 @@
 
 <p>The Sensory Cloud iOS SDK is distributed via Swift Package Manager. From Xcode 11 it is possible to <a href="https://help.apple.com/xcode/mac/current/#/devb83d64851">add Swift Package dependencies to Xcode projects</a> and link targets to products of those packages; this is the easiest way to integrate Sensory Cloud with an existing <code>xcodeproj</code>.</p>
 <h1 id='examples' class='heading'>Examples</h1>
+<h2 id='sdk-initialization' class='heading'>SDK Initialization</h2>
+
+<p>The SDK must be explicitly initialized every time the app is launched. This initialization sets up internal configurations and will also enroll the device into the Sensory Cloud server if the device has not been previously enrolled. SDK initialization is completed by calling <code><a href="Classes/Initializer.html#/s:12SensoryCloud11InitializerC10initialize10configFile10completiony10Foundation3URLVSg_ys6ResultOyAA0A33_Api_V1_Management_DeviceResponseVSgs5Error_pGctFZ">Initializer.initialize(...)</a></code>. There are two versions of this function. One that takes in an explicit configuration object, and one that takes in a fileURL for a config file. The following configurations are set during initialization:</p>
+
+<ul>
+<li>fullyQualifiedDomainName: This is the fqdn of the Sensory Cloud server to communicate with</li>
+<li>tenantID: The unique identifier (UUID) for your Sensory Cloud tenant</li>
+<li>enrollmentType: The amount of security required for device enrollment. This should be one of <code>none</code>, <code>sharedSecret</code> or <code>jwt</code>. If the device has already been enrolled during a previous app session, this field is ignored</li>
+<li><p>credential: The credential required for device enrollment, the value depends on the enrollment type:</p>
+
+<ul>
+<li><code>none</code> enrollmentType: credential should be an empty string</li>
+<li><code>sharedSecret</code> enrollmentType: credential should be the shared secret (password)</li>
+<li><code>jwt</code> enrollmentType: credential should be a hex string of the enrollment private key</li>
+</ul>
+
+<p>If the device has already been enrolled during a previous app session, this field is ignored</p></li>
+<li><p>deviceID: A unique device identifier (UUID), if left nil the SDK will generate one</p></li>
+<li><p>deviceName: The friendly name of the device, if let nil the system device name will be used (<code>UIDevice.current.name</code>)</p></li>
+</ul>
+
+<p>The iOS Sensory Cloud SDK accepts config files with the following formats: <code>ini</code>, <code>env</code>, <code>json</code>, and <code>plist</code>. Example config files for each of these formats can be found under <code>Tests/SensoryCloudTests/Resources/Initializer</code>. The below example shows how to initialize the SDK from a config file.</p>
+<pre class="highlight plaintext"><code> // Get a file URL of the config file
+ guard let fileURL = Bundle.main.url(forResource: "SensoryCloudConfig", withExtension: "ini") else {
+    NSLog("Failed to find config file")
+    return
+}
+
+// Initialize the SDK
+Initializer.initialize(configFile: fileURL) { result in
+    switch result {
+    case .success(let response):
+        NSLog("Successful SDK initialization")
+        // A response is returned if the device was newly enrolled, otherwise response will be `nil`
+        if let response = response {
+            NSLog("Successful device enrollment")
+        } else {
+            NSLog("Device was enrolled during a previous app session")
+        }
+    case .failure(let error):
+        NSLog("An error occurred during SDK initialization")
+    }
+}
+</code></pre>
 <h2 id='the-token-manager' class='heading'>The Token Manager</h2>
 
 <p>The <code><a href="Classes/TokenManager.html">TokenManager</a></code> class manages the saving and retrieving OAuth credentials (clientID and clientSecret). This implementation uses the Apple Keychain for secure credential storage, and it is recommended to use this implementation. If a custom TokenManager is required, a custom class that conforms to the <code><a href="Protocols/CredentialProvider.html">CredentialProvider</a></code> interface should be set to <code><a href="Classes/Service.html#/s:12SensoryCloud7ServiceC18credentialProviderAA010CredentialE0_pvp">Service.credentialProvider</a></code> see the <code>docs</code> subdirectory for more information.</p>
@@ -740,7 +810,7 @@ func stopValidatingLiveness() {
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-05-12)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-12)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -20,6 +20,7 @@ let package = Package(
             dependencies: [.product(name: "GRPC", package: "grpc-swift")]),
         .testTarget(
             name: "SensoryCloudTests",
-            dependencies: ["SensoryCloud"])
+            dependencies: ["SensoryCloud"],
+            resources: [.process("Resources")])
     ]
 )

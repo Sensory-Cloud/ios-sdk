@@ -8,7 +8,7 @@
 import Foundation
 
 /// All configurations required to initialize the Sensory Cloud SDK
-public struct SDKInitConfig: Codable {
+public struct SDKInitConfig: Codable, Equatable {
 
     /// The authentication method required for device enrollment by the Sensory Cloud Server
     public enum EnrollmentType: String, Codable {

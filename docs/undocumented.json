@@ -1,19 +1,6 @@
 {
   "warnings": [
-    {
-      "file": "/Users/niles/ios-sdk/Sources/SensoryCloud/Config.swift",
-      "line": 19,
-      "symbol": "CloudHost.init(_:_:_:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    },
-    {
-      "file": "/Users/niles/ios-sdk/Sources/SensoryCloud/Interactors/VideoStreamInteractor.swift",
-      "line": 170,
-      "symbol": "VideoStreamInteractor.captureOutput(_:didOutput:from:)",
-      "symbol_kind": "source.lang.swift.decl.function.method.instance",
-      "warning": "undocumented"
-    }
+
   ],
   "source_directory": "/Users/niles/ios-sdk"
 }

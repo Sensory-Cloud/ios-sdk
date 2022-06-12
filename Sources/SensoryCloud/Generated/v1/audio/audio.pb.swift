@@ -756,11 +756,22 @@ public struct Sensory_Api_V1_Audio_CreateEnrollmentResponse {
   /// This is relevant in liveness enrollment where multiple groups of numbers must be spoken.
   public var percentSegmentComplete: Int64 = 0
 
-  public var enrollmentBytes: Data = Data()
+  /// Encrypted enrollment token, this token should be included in authentication requests
+  /// If the server is configured to store enrollments server side, this will be left empty
+  public var enrollmentToken: Sensory_Api_Common_EnrollmentToken {
+    get {return _enrollmentToken ?? Sensory_Api_Common_EnrollmentToken()}
+    set {_enrollmentToken = newValue}
+  }
+  /// Returns true if `enrollmentToken` has been explicitly set.
+  public var hasEnrollmentToken: Bool {return self._enrollmentToken != nil}
+  /// Clears the value of `enrollmentToken`. Subsequent reads from it will return its default value.
+  public mutating func clearEnrollmentToken() {self._enrollmentToken = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _enrollmentToken: Sensory_Api_Common_EnrollmentToken? = nil
 }
 
 /// Response to an authentication request
@@ -1057,7 +1068,9 @@ public struct Sensory_Api_V1_Audio_AuthenticateConfig {
   /// Enable liveness if supported by the audio model
   public var isLivenessEnabled: Bool = false
 
-  public var enrollmentBytes: Data = Data()
+  /// Encrypted enrollment token that was provided on enrollment creation
+  /// If the server is configured to store enrollments server side, this may be left blank
+  public var enrollmentToken: Data = Data()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -1313,6 +1326,10 @@ public struct Sensory_Api_V1_Audio_ValidateEnrolledEventConfig {
 
   /// The model sensitivity
   public var sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .lowest
+
+  /// Encrypted enrollment token that was provided on enrollment creation
+  /// If the server is configured to store enrollments server side, this may be left blank
+  public var enrollmentToken: Data = Data()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2134,7 +2151,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     5: .same(proto: "modelVersion"),
     6: .same(proto: "modelPrompt"),
     7: .same(proto: "percentSegmentComplete"),
-    8: .same(proto: "enrollmentBytes"),
+    8: .same(proto: "enrollmentToken"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2150,13 +2167,17 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
       case 5: try { try decoder.decodeSingularStringField(value: &self.modelVersion) }()
       case 6: try { try decoder.decodeSingularStringField(value: &self.modelPrompt) }()
       case 7: try { try decoder.decodeSingularInt64Field(value: &self.percentSegmentComplete) }()
-      case 8: try { try decoder.decodeSingularBytesField(value: &self.enrollmentBytes) }()
+      case 8: try { try decoder.decodeSingularMessageField(value: &self._enrollmentToken) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.percentComplete != 0 {
       try visitor.visitSingularInt64Field(value: self.percentComplete, fieldNumber: 1)
     }
@@ -2178,9 +2199,9 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if self.percentSegmentComplete != 0 {
       try visitor.visitSingularInt64Field(value: self.percentSegmentComplete, fieldNumber: 7)
     }
-    if !self.enrollmentBytes.isEmpty {
-      try visitor.visitSingularBytesField(value: self.enrollmentBytes, fieldNumber: 8)
-    }
+    try { if let v = self._enrollmentToken {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 8)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2192,7 +2213,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if lhs.modelVersion != rhs.modelVersion {return false}
     if lhs.modelPrompt != rhs.modelPrompt {return false}
     if lhs.percentSegmentComplete != rhs.percentSegmentComplete {return false}
-    if lhs.enrollmentBytes != rhs.enrollmentBytes {return false}
+    if lhs._enrollmentToken != rhs._enrollmentToken {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2552,7 +2573,7 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     5: .same(proto: "sensitivity"),
     6: .same(proto: "security"),
     7: .same(proto: "isLivenessEnabled"),
-    8: .same(proto: "enrollmentBytes"),
+    8: .same(proto: "enrollmentToken"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2582,7 +2603,7 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
       case 5: try { try decoder.decodeSingularEnumField(value: &self.sensitivity) }()
       case 6: try { try decoder.decodeSingularEnumField(value: &self.security) }()
       case 7: try { try decoder.decodeSingularBoolField(value: &self.isLivenessEnabled) }()
-      case 8: try { try decoder.decodeSingularBytesField(value: &self.enrollmentBytes) }()
+      case 8: try { try decoder.decodeSingularBytesField(value: &self.enrollmentToken) }()
       default: break
       }
     }
@@ -2619,8 +2640,8 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     if self.isLivenessEnabled != false {
       try visitor.visitSingularBoolField(value: self.isLivenessEnabled, fieldNumber: 7)
     }
-    if !self.enrollmentBytes.isEmpty {
-      try visitor.visitSingularBytesField(value: self.enrollmentBytes, fieldNumber: 8)
+    if !self.enrollmentToken.isEmpty {
+      try visitor.visitSingularBytesField(value: self.enrollmentToken, fieldNumber: 8)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
@@ -2632,7 +2653,7 @@ extension Sensory_Api_V1_Audio_AuthenticateConfig: SwiftProtobuf.Message, SwiftP
     if lhs.sensitivity != rhs.sensitivity {return false}
     if lhs.security != rhs.security {return false}
     if lhs.isLivenessEnabled != rhs.isLivenessEnabled {return false}
-    if lhs.enrollmentBytes != rhs.enrollmentBytes {return false}
+    if lhs.enrollmentToken != rhs.enrollmentToken {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2796,6 +2817,7 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: SwiftProtobuf.Messag
     2: .same(proto: "enrollmentId"),
     3: .same(proto: "enrollmentGroupId"),
     4: .same(proto: "sensitivity"),
+    5: .same(proto: "enrollmentToken"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2822,6 +2844,7 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: SwiftProtobuf.Messag
         }
       }()
       case 4: try { try decoder.decodeSingularEnumField(value: &self.sensitivity) }()
+      case 5: try { try decoder.decodeSingularBytesField(value: &self.enrollmentToken) }()
       default: break
       }
     }
@@ -2849,6 +2872,9 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: SwiftProtobuf.Messag
     if self.sensitivity != .lowest {
       try visitor.visitSingularEnumField(value: self.sensitivity, fieldNumber: 4)
     }
+    if !self.enrollmentToken.isEmpty {
+      try visitor.visitSingularBytesField(value: self.enrollmentToken, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2856,6 +2882,7 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: SwiftProtobuf.Messag
     if lhs._audio != rhs._audio {return false}
     if lhs.authID != rhs.authID {return false}
     if lhs.sensitivity != rhs.sensitivity {return false}
+    if lhs.enrollmentToken != rhs.enrollmentToken {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

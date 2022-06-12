@@ -353,9 +353,22 @@ public struct Sensory_Api_V1_Video_CreateEnrollmentResponse {
   /// Score of the enrollment. Currently only used for error messages.
   public var score: Float = 0
 
+  /// Encrypted enrollment token, this token should be included in authentication requests
+  /// If the server is configured to store enrollments server side, this will be left empty
+  public var enrollmentToken: Sensory_Api_Common_EnrollmentToken {
+    get {return _enrollmentToken ?? Sensory_Api_Common_EnrollmentToken()}
+    set {_enrollmentToken = newValue}
+  }
+  /// Returns true if `enrollmentToken` has been explicitly set.
+  public var hasEnrollmentToken: Bool {return self._enrollmentToken != nil}
+  /// Clears the value of `enrollmentToken`. Subsequent reads from it will return its default value.
+  public mutating func clearEnrollmentToken() {self._enrollmentToken = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _enrollmentToken: Sensory_Api_Common_EnrollmentToken? = nil
 }
 
 /// Response to an authentication request
@@ -926,6 +939,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     4: .same(proto: "modelName"),
     5: .same(proto: "modelVersion"),
     6: .same(proto: "score"),
+    7: .same(proto: "enrollmentToken"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -940,12 +954,17 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
       case 4: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
       case 5: try { try decoder.decodeSingularStringField(value: &self.modelVersion) }()
       case 6: try { try decoder.decodeSingularFloatField(value: &self.score) }()
+      case 7: try { try decoder.decodeSingularMessageField(value: &self._enrollmentToken) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
     if self.percentComplete != 0 {
       try visitor.visitSingularInt64Field(value: self.percentComplete, fieldNumber: 1)
     }
@@ -964,6 +983,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if self.score != 0 {
       try visitor.visitSingularFloatField(value: self.score, fieldNumber: 6)
     }
+    try { if let v = self._enrollmentToken {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -974,6 +996,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if lhs.modelName != rhs.modelName {return false}
     if lhs.modelVersion != rhs.modelVersion {return false}
     if lhs.score != rhs.score {return false}
+    if lhs._enrollmentToken != rhs._enrollmentToken {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

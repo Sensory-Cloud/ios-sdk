@@ -46,18 +46,15 @@ extension Sensory_Api_V1_Audio_AudioTranscriptionsClient: GrpcClient {
 public class AudioService {
 
     var service: Service
-    var keychain: KeychainPersistence
 
     /// Initializes a new instance of `AudioService`
     public init() {
         self.service = Service.shared
-        self.keychain = KeychainPersistence()
     }
 
     /// Internal initializer, used for unit testing
-    init(service: Service, persistence: KeychainPersistence) {
+    init(service: Service) {
         self.service = service
-        self.keychain = persistence
     }
 
     /// Fetches a list of the current audio models supported by the cloud host
@@ -114,16 +111,7 @@ public class AudioService {
         // Establish grpc streaming
         let client: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
-        let call = client.createEnrollment(callOptions: metadata) { [weak self] response in
-            if !response.enrollmentID.isEmpty && !response.enrollmentBytes.isEmpty {
-                do {
-                    try self?.keychain.save(id: response.enrollmentID, data: response.enrollmentBytes)
-                } catch {
-                    NSLog("Failed to securely save enrollment bytes: %@", error.localizedDescription)
-                }
-            }
-            onStreamReceive(response)
-        }
+        let call = client.createEnrollment(callOptions: metadata, handler: onStreamReceive)
 
         // Send initial config message
         var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
@@ -191,17 +179,6 @@ public class AudioService {
         switch enrollment {
         case .enrollmentID(let enrollmentID):
             config.enrollmentID = enrollmentID
-            // Check for enrollment bytes and add to request if present
-            do {
-                let enrollmentBytes = try keychain.getData(id: enrollmentID)
-                config.enrollmentBytes = enrollmentBytes
-            } catch KeychainError.itemNotFound {
-                // No error if enrollment bytes were never saved
-                break
-            } catch {
-                NSLog("Failed to append enrollment bytes: %@", error.localizedDescription)
-                throw error
-            }
         case .enrollmentGroupID(let groupID):
             config.enrollmentGroupID = groupID
         }

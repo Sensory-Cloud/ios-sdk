@@ -15,6 +15,47 @@ The Sensory Cloud iOS SDK is distributed via Swift Package Manager. From Xcode 1
 
 # Examples
 
+## SDK Initialization
+
+The SDK must be explicitly initialized every time the app is launched. This initialization sets up internal configurations and will also enroll the device into the Sensory Cloud server if the device has not been previously enrolled. SDK initialization is completed by calling `Initializer.initialize(...)`. There are two versions of this function. One that takes in an explicit configuration object, and one that takes in a fileURL for a config file. The following configurations are set during initialization:
+ - fullyQualifiedDomainName: This is the fqdn of the Sensory Cloud server to communicate with
+ - tenantID: The unique identifier (UUID) for your Sensory Cloud tenant
+ - enrollmentType: The amount of security required for device enrollment. This should be one of `none`, `sharedSecret` or `jwt`. If the device has already been enrolled during a previous app session, this field is ignored
+ - credential: The credential required for device enrollment, the value depends on the enrollment type:
+    - `none` enrollmentType: credential should be an empty string
+    - `sharedSecret` enrollmentType: credential should be the shared secret (password)
+    - `jwt` enrollmentType: credential should be a hex string of the enrollment private key
+
+    If the device has already been enrolled during a previous app session, this field is ignored
+ - deviceID: A unique device identifier (UUID), if left nil the SDK will generate one
+ - deviceName: The friendly name of the device, if let nil the system device name will be used (`UIDevice.current.name`)
+
+ The iOS Sensory Cloud SDK accepts config files with the following formats: `ini`, `env`, `json`, and `plist`. Example config files for each of these formats can be found under `Tests/SensoryCloudTests/Resources/Initializer`. The below example shows how to initialize the SDK from a config file.
+
+ ```Swift
+ // Get a file URL of the config file
+ guard let fileURL = Bundle.main.url(forResource: "SensoryCloudConfig", withExtension: "ini") else {
+    NSLog("Failed to find config file")
+    return
+}
+
+// Initialize the SDK
+Initializer.initialize(configFile: fileURL) { result in
+    switch result {
+    case .success(let response):
+        NSLog("Successful SDK initialization")
+        // A response is returned if the device was newly enrolled, otherwise response will be `nil`
+        if let response = response {
+            NSLog("Successful device enrollment")
+        } else {
+            NSLog("Device was enrolled during a previous app session")
+        }
+    case .failure(let error):
+        NSLog("An error occurred during SDK initialization")
+    }
+}
+ ```
+
 ## The Token Manager
 
 The `TokenManager` class manages the saving and retrieving OAuth credentials (clientID and clientSecret). This implementation uses the Apple Keychain for secure credential storage, and it is recommended to use this implementation. If a custom TokenManager is required, a custom class that conforms to the `CredentialProvider` interface should be set to `Service.credentialProvider` see the `docs` subdirectory for more information.

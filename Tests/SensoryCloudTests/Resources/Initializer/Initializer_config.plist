@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fullyQualifiedDomainName</key>
+	<string>sensorycloud.ai</string>
+	<key>tenantID</key>
+	<string>tenant</string>
+	<key>credential</key>
+	<string>password</string>
+	<key>enrollmentType</key>
+	<string>sharedSecret</string>
+	<key>deviceID</key>
+	<string>device_id</string>
+	<key>deviceName</key>
+	<string>device_name</string>
+</dict>
+</plist>
