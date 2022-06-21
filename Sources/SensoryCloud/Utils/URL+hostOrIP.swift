@@ -45,11 +45,6 @@ extension URL {
         return URL(string: "https://\(absoluteString)").flatMap { $0.host }
     }
 
-    /// Returns true if the url is a raw ip + port
-    var isIP: Bool {
-        return absoluteString.range(of: ipAndPortRegex, options: .regularExpression, range: nil, locale: nil) != nil
-    }
-
     /// Returns the port if specified. This will handle standard urls and raw ip + port combinations
     var ipSafePort: Int? {
         if let port = port {
@@ -61,15 +56,5 @@ extension URL {
         }
 
         return URL(string: "https://\(absoluteString)").flatMap { $0.port }
-    }
-
-    /// Attempts to determine if TLS encryption should be used. This assumes that raw ip + port urls do not support TLS
-    var isSecure: Bool {
-        if let scheme = scheme {
-            return scheme == "https"
-        }
-
-        // assume we're insecure if the url is a raw ip and port
-        return !isIP
     }
 }
