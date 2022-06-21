@@ -16,7 +16,7 @@ private let defaultPort = 443
 ///
 /// - Parameter urlStr: raw url string to parse
 /// - Returns: Parsed cloud host, or nil if the url cannot be parsed
-func parseURL(_ urlStr: String) -> CloudHost? {
+func parseURL(_ urlStr: String, _ isSecure: Bool = true) -> CloudHost? {
     guard let url = URL(string: urlStr) else {
         return nil
     }
@@ -24,8 +24,7 @@ func parseURL(_ urlStr: String) -> CloudHost? {
         return nil
     }
     let port = url.ipSafePort ?? defaultPort
-    let secure = url.isSecure
-    return CloudHost(host, port, secure)
+    return CloudHost(host, port, isSecure)
 }
 
 /// Some of the automatic host and port parsing provided by `URL` breaks if the url is a raw ip + port combination Ex: `127.0.0.1:9001`

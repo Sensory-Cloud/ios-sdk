@@ -22,7 +22,7 @@ class EnvFileParserTests: XCTestCase {
             return
         }
         var config = try parser.loadConfig(fileURL: configURL)
-        var expected = SDKInitConfig("fqdn", "tenant", .none, "credential", "deviceID", "deviceName")
+        var expected = SDKInitConfig("fqdn", true, "tenant", .none, "credential", "deviceID", "deviceName")
         XCTAssertEqual(config, expected)
 
         // Nil device info
@@ -31,7 +31,7 @@ class EnvFileParserTests: XCTestCase {
             return
         }
         config = try parser.loadConfig(fileURL: noDeviceURL)
-        expected = SDKInitConfig("fqdn", "tenant", .sharedSecret, "credential")
+        expected = SDKInitConfig("fqdn", true, "tenant", .sharedSecret, "credential")
         XCTAssertEqual(config, expected)
 
         // missing required config field

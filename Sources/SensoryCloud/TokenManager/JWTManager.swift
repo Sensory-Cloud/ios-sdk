@@ -41,8 +41,6 @@ func genJWT(enrollmentKey: String, deviceName: String, tenantID: String, clientI
         throw SensoryCloud.KeychainError.encodingError
     }
 
-    NSLog(privateKey.rawRepresentation.toHexString())
-
     let signature = try privateKey.signature(for: toSign)
     let signatureBase64String = Data(signature).urlSafeBase64EncodedString()
 

@@ -57,11 +57,7 @@ public class Initializer {
         }
         Config.tenantID = config.tenantID
         Config.deviceID = config.deviceID ?? UIDevice.current.identifierForVendor?.uuidString ?? UUID().uuidString
-        if host.isSecure {
-            Config.setCloudHost(host: host.host, port: host.port)
-        } else {
-            Config.setInsecureCloudHost(host: host.host, port: host.port)
-        }
+        Config.setCloudHost(host: host.host, port: host.port, isSecure: config.isSecure)
 
         // check if the device is already enrolled
         if tokenManager.hasSavedCredentials() {

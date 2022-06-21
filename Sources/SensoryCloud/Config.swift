@@ -23,6 +23,9 @@ public struct SDKInitConfig: Codable, Equatable {
     /// The fully qualified domain name of the Sensory Cloud Server to communicate with
     var fullyQualifiedDomainName: String
 
+    /// Tells if the SDK should use a secure connection to the Sensory Cloud server or not
+    var isSecure: Bool
+
     /// The tenant ID to use during device enrollment
     var tenantID: String
 
@@ -50,6 +53,7 @@ public struct SDKInitConfig: Codable, Equatable {
     /// Public initializer
     public init(
         _ fqdn: String,
+        _ isSecure: Bool,
         _ tenantID: String,
         _ enrollmentType: EnrollmentType,
         _ credential: String,
@@ -57,6 +61,7 @@ public struct SDKInitConfig: Codable, Equatable {
         _ deviceName: String? = nil
     ) {
         self.fullyQualifiedDomainName = fqdn
+        self.isSecure = isSecure
         self.tenantID = tenantID
         self.enrollmentType = enrollmentType
         self.credential = credential
@@ -123,18 +128,9 @@ public class Config {
     /// - Parameters:
     ///   - host: Cloud host to use
     ///   - port: Optional port, port 443 is used by default
-    static func setCloudHost(host: String, port: Int = 443) {
-        cloudHost = CloudHost(host, port, true)
-    }
-
-    /// Sets an insecure host for Sensory Cloud to use
-    ///
-    /// This should only be used for testing against a test cloud instance and not used in production
-    /// - Parameters:
-    ///   - host: Cloud host to use
-    ///   - port: optional port, port 443 is used by default
-    static func setInsecureCloudHost(host: String, port: Int = 443) {
-        cloudHost = CloudHost(host, port, false)
+    ///   - isSecure: Tells if a secure connection should be used
+    static func setCloudHost(host: String, port: Int = 443, isSecure: Bool = true) {
+        cloudHost = CloudHost(host, port, isSecure)
     }
 
     /// Returns the currently configured cloud host, or `nil` if the SDK has not been initialized yet

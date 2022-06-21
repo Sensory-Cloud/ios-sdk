@@ -9,6 +9,7 @@ import Foundation
 
 private enum SDKConfigKeys: String {
     case fqdn = "fullyQualifiedDomainName"
+    case isSecure = "isSecure"
     case tenantID = "tenantID"
     case enrollmentType = "enrollmentType"
     case credential = "credential"
@@ -17,6 +18,8 @@ private enum SDKConfigKeys: String {
 }
 
 class EnvFileParser {
+
+    private let truthyVals = ["true", "True", "TRUE", "T", "t", "yes", "Yes", "YES", "y", "Y", "1"]
 
     func loadConfig(fileURL: URL) throws -> SDKInitConfig {
         let fileContents = try String(contentsOf: fileURL)
@@ -56,6 +59,8 @@ class EnvFileParser {
 
     func parseToConfig(contents: [String: String]) throws -> SDKInitConfig {
         let fqdn = try getValueFor(key: SDKConfigKeys.fqdn.rawValue, contents: contents)
+        let isSecureStr = try getValueFor(key: SDKConfigKeys.isSecure.rawValue, contents: contents)
+        let isSecure = truthyVals.contains(isSecureStr)
         let tenant = try getValueFor(key: SDKConfigKeys.tenantID.rawValue, contents: contents)
         let enrollmentTypeRaw = try getValueFor(key: SDKConfigKeys.enrollmentType.rawValue, contents: contents)
         let enrollmentType = SDKInitConfig.EnrollmentType(rawValue: enrollmentTypeRaw)
@@ -66,7 +71,7 @@ class EnvFileParser {
         let deviceID = contents[SDKConfigKeys.deviceID.rawValue]
         let deviceName = contents[SDKConfigKeys.deviceName.rawValue]
 
-        return SDKInitConfig(fqdn, tenant, enrollmentType, credential, deviceID, deviceName)
+        return SDKInitConfig(fqdn, isSecure, tenant, enrollmentType, credential, deviceID, deviceName)
     }
 
     func getValueFor(key: String, contents: [String: String]) throws -> String {

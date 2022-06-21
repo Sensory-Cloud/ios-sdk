@@ -43,7 +43,7 @@ class InitializerTests: XCTestCase {
         tokenManager.credentials = AccessTokenCredentials(clientID: "client", secret: "secret")
         oauthService.enrollResponse = mockDeviceResponse
 
-        let initConfig = SDKInitConfig("sensorycloud.ai", "tenant", .sharedSecret, "password", "devID", "my device")
+        let initConfig = SDKInitConfig("sensorycloud.ai", true, "tenant", .sharedSecret, "password", "devID", "my device")
         Initializer.initialize(config: initConfig) { [weak self] result in
             self?.assertResult(result: result, initConfig: initConfig)
             self?.expectCallback.fulfill()
@@ -54,7 +54,7 @@ class InitializerTests: XCTestCase {
     func testInitializeSavedCredentials() throws {
         tokenManager.mockHasCredentials = true
 
-        let initConfig = SDKInitConfig("127.0.0.1:8080", "tenantID", .none, "doesn't matter", "devID", "name")
+        let initConfig = SDKInitConfig("127.0.0.1:8080", true, "tenantID", .none, "doesn't matter", "devID", "name")
 
         Initializer.initialize(config: initConfig) { [weak self] result in
             switch result {
@@ -83,7 +83,7 @@ class InitializerTests: XCTestCase {
         tokenManager.credentials = AccessTokenCredentials(clientID: "client", secret: "secret")
         oauthService.enrollResponse = mockDeviceResponse
 
-        let expectedConfig = SDKInitConfig("127.0.0.1:8080", "tenant", .jwt, "doesnt-matter", "device_id", "device_name")
+        let expectedConfig = SDKInitConfig("127.0.0.1:8080", true, "tenant", .jwt, "doesnt-matter", "device_id", "device_name")
         let url = loadFile(named: "config", ext: "json")
         Initializer.initialize(configFile: url) { [weak self] result in
             self?.assertResult(result: result, initConfig: expectedConfig)
@@ -96,7 +96,7 @@ class InitializerTests: XCTestCase {
         tokenManager.credentials = AccessTokenCredentials(clientID: "client", secret: "secret")
         oauthService.enrollResponse = mockDeviceResponse
 
-        let expectedConfig = SDKInitConfig("sensorycloud.ai", "tenant", .sharedSecret, "password", "device_id", "device_name")
+        let expectedConfig = SDKInitConfig("sensorycloud.ai", true, "tenant", .sharedSecret, "password", "device_id", "device_name")
         let url = loadFile(named: "config", ext: "plist")
         Initializer.initialize(configFile: url) { [weak self] result in
             self?.assertResult(result: result, initConfig: expectedConfig)
@@ -109,7 +109,7 @@ class InitializerTests: XCTestCase {
         tokenManager.credentials = AccessTokenCredentials(clientID: "client", secret: "secret")
         oauthService.enrollResponse = mockDeviceResponse
 
-        let expectedConfig = SDKInitConfig("sensorycloud.ai", "tenant", .sharedSecret, "password", "device_id", "device_name")
+        let expectedConfig = SDKInitConfig("sensorycloud.ai", true, "tenant", .sharedSecret, "password", "device_id", "device_name")
         let url = loadFile(named: "config", ext: "env")
         Initializer.initialize(configFile: url) { [weak self] result in
             self?.assertResult(result: result, initConfig: expectedConfig)
@@ -122,7 +122,7 @@ class InitializerTests: XCTestCase {
         tokenManager.credentials = AccessTokenCredentials(clientID: "client", secret: "secret")
         oauthService.enrollResponse = mockDeviceResponse
 
-        let expectedConfig = SDKInitConfig("127.0.0.1:8080", "tenant", .jwt, "doesnt-matter", "device_id", "device_name")
+        let expectedConfig = SDKInitConfig("127.0.0.1:8080", true, "tenant", .jwt, "doesnt-matter", "device_id", "device_name")
         let url = loadFile(named: "config", ext: "ini")
         Initializer.initialize(configFile: url) { [weak self] result in
             self?.assertResult(result: result, initConfig: expectedConfig)
@@ -133,7 +133,7 @@ class InitializerTests: XCTestCase {
 
     // MARK: - Error cases
     func testInitializeParseError() throws {
-        let initConfig = SDKInitConfig("bogus fqdn", "...", .none, "...")
+        let initConfig = SDKInitConfig("bogus fqdn", false, "...", .none, "...")
         Initializer.initialize(config: initConfig) { [weak self] result in
             switch result {
             case .success:
@@ -148,7 +148,7 @@ class InitializerTests: XCTestCase {
     }
 
     func testInitializeOauthError() throws {
-        let initConfig = SDKInitConfig("sensorycloud.ai", "...", .none, "...")
+        let initConfig = SDKInitConfig("sensorycloud.ai", false, "...", .none, "...")
         tokenManager.generateError = KeychainError.expired
         Initializer.initialize(config: initConfig) { [weak self] result in
             switch result {
@@ -164,7 +164,7 @@ class InitializerTests: XCTestCase {
     }
 
     func testInitializeJWTError() throws {
-        let initConfig = SDKInitConfig("sensorycloud.ai", "...", .jwt, "bogus private key")
+        let initConfig = SDKInitConfig("sensorycloud.ai", false, "...", .jwt, "bogus private key")
         tokenManager.credentials = AccessTokenCredentials(clientID: "...", secret: "...")
         Initializer.initialize(config: initConfig) { [weak self] result in
             switch result {
@@ -180,7 +180,7 @@ class InitializerTests: XCTestCase {
     }
 
     func testInitializeGRPCError() throws {
-        let initConfig = SDKInitConfig("sensorycloud.ai", "...", .none, "...")
+        let initConfig = SDKInitConfig("sensorycloud.ai", false, "...", .none, "...")
         tokenManager.credentials = AccessTokenCredentials(clientID: "...", secret: "...")
         oauthService.networkError = KeychainError.expired
         Initializer.initialize(config: initConfig) { [weak self] result in
@@ -206,7 +206,7 @@ class InitializerTests: XCTestCase {
             } else {
                 XCTAssertEqual(Config.deviceID, initConfig.deviceID)
             }
-            let host = parseURL(initConfig.fullyQualifiedDomainName)
+            let host = parseURL(initConfig.fullyQualifiedDomainName, initConfig.isSecure)
             XCTAssertEqual(Config.getCloudHost(), host)
 
             XCTAssertEqual(oauthService.name, initConfig.deviceName)

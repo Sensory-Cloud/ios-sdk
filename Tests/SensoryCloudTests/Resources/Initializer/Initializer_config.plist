@@ -4,6 +4,8 @@
 <dict>
 	<key>fullyQualifiedDomainName</key>
 	<string>sensorycloud.ai</string>
+	<key>isSecure</key>
+	<true/>
 	<key>tenantID</key>
 	<string>tenant</string>
 	<key>credential</key>

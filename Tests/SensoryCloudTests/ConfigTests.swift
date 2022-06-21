@@ -23,22 +23,8 @@ final class ConfigTests: XCTestCase {
         XCTAssertEqual(Config.cloudHost, expectedHost)
         XCTAssertEqual(Config.getCloudHost(), expectedHost)
 
-        expectedHost = CloudHost("AnotherSecureHost", 443, true)
-        Config.setCloudHost(host: "AnotherSecureHost")
-        XCTAssertEqual(Config.cloudHost, expectedHost)
-        XCTAssertEqual(Config.getCloudHost(), expectedHost)
-    }
-
-    func testSetInsecureCloudHost() throws {
-        XCTAssertNil(Config.getCloudHost(), "Cloud host should initially be nil")
-
-        var expectedHost = CloudHost("SomeInsecureHost", 123, false)
-        Config.setInsecureCloudHost(host: "SomeInsecureHost", port: 123)
-        XCTAssertEqual(Config.cloudHost, expectedHost)
-        XCTAssertEqual(Config.getCloudHost(), expectedHost)
-
-        expectedHost = CloudHost("localhost", 443, false)
-        Config.setInsecureCloudHost(host: "localhost")
+        expectedHost = CloudHost("AnotherSecureHost", 443, false)
+        Config.setCloudHost(host: "AnotherSecureHost", port: 443, isSecure: false)
         XCTAssertEqual(Config.cloudHost, expectedHost)
         XCTAssertEqual(Config.getCloudHost(), expectedHost)
     }
