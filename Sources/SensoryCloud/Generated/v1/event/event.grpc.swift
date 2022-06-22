@@ -36,6 +36,16 @@ public protocol Sensory_Api_V1_Event_EventServiceClientProtocol: GRPCClient {
     _ request: Sensory_Api_V1_Event_PublishUsageEventsRequest,
     callOptions: CallOptions?
   ) -> UnaryCall<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse>
+
+  func getUsageEventList(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse>
+
+  func getUsageEventSummary(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>
 }
 
 extension Sensory_Api_V1_Event_EventServiceClientProtocol {
@@ -61,12 +71,56 @@ extension Sensory_Api_V1_Event_EventServiceClientProtocol {
       interceptors: self.interceptors?.makePublishUsageEventsInterceptors() ?? []
     )
   }
+
+  /// Obtains a list of events given the filter criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetUsageEventList.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getUsageEventList(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.event.EventService/GetUsageEventList",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetUsageEventListInterceptors() ?? []
+    )
+  }
+
+  /// Obtains a summary of events given the filter critieria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetUsageEventSummary.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getUsageEventSummary(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary> {
+    return self.makeUnaryCall(
+      path: "/sensory.api.v1.event.EventService/GetUsageEventSummary",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
+    )
+  }
 }
 
 public protocol Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol {
 
   /// - Returns: Interceptors to use when invoking 'publishUsageEvents'.
   func makePublishUsageEventsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getUsageEventList'.
+  func makeGetUsageEventListInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getUsageEventSummary'.
+  func makeGetUsageEventSummaryInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>]
 }
 
 public final class Sensory_Api_V1_Event_EventServiceClient: Sensory_Api_V1_Event_EventServiceClientProtocol {
@@ -132,6 +186,54 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
   /// Returns true if there are response streams enqueued for 'PublishUsageEvents'
   public var hasPublishUsageEventsResponsesRemaining: Bool {
     return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.event.EventService/PublishUsageEvents")
+  }
+
+  /// Make a unary response for the GetUsageEventList RPC. This must be called
+  /// before calling 'getUsageEventList'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeGetUsageEventListResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.event.EventService/GetUsageEventList", requestHandler: requestHandler)
+  }
+
+  public func enqueueGetUsageEventListResponse(
+    _ response: Sensory_Api_V1_Event_UsageEventListResponse,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeGetUsageEventListResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'GetUsageEventList'
+  public var hasGetUsageEventListResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.event.EventService/GetUsageEventList")
+  }
+
+  /// Make a unary response for the GetUsageEventSummary RPC. This must be called
+  /// before calling 'getUsageEventSummary'. See also 'FakeUnaryResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeGetUsageEventSummaryResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
+  ) -> FakeUnaryResponse<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary> {
+    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.event.EventService/GetUsageEventSummary", requestHandler: requestHandler)
+  }
+
+  public func enqueueGetUsageEventSummaryResponse(
+    _ response: Sensory_Api_V1_Event_UsageEventSummary,
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeGetUsageEventSummaryResponseStream(requestHandler)
+    // This is the only operation on the stream; try! is fine.
+    try! stream.sendMessage(response)
+  }
+
+  /// Returns true if there are response streams enqueued for 'GetUsageEventSummary'
+  public var hasGetUsageEventSummaryResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.event.EventService/GetUsageEventSummary")
   }
 }
 

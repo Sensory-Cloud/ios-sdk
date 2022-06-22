@@ -170,7 +170,7 @@ public struct Sensory_Api_V1_Audio_AudioModel {
   public var isEnrollable: Bool = false
 
   /// Model type
-  public var modelType: Sensory_Api_Common_ModelType = .voiceBiometricTextDependent
+  public var modelType: Sensory_Api_Common_ModelType = .unknown
 
   /// Specific phrase used for enrollment (if applicable)
   public var fixedPhrase: String = String()
@@ -728,6 +728,32 @@ public struct Sensory_Api_V1_Audio_TranscribeRequest {
   fileprivate var _postProcessingAction: Sensory_Api_V1_Audio_AudioRequestPostProcessingAction? = nil
 }
 
+/// The top-level message sent by the client for the `SynthesizeSpeech` method.
+public struct Sensory_Api_V1_Audio_SynthesizeSpeechRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The raw text to create voice synthesis for
+  public var phrase: String = String()
+
+  /// Configurations for the synthesized voice
+  public var config: Sensory_Api_V1_Audio_VoiceSynthesisConfig {
+    get {return _config ?? Sensory_Api_V1_Audio_VoiceSynthesisConfig()}
+    set {_config = newValue}
+  }
+  /// Returns true if `config` has been explicitly set.
+  public var hasConfig: Bool {return self._config != nil}
+  /// Clears the value of `config`. Subsequent reads from it will return its default value.
+  public mutating func clearConfig() {self._config = nil}
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _config: Sensory_Api_V1_Audio_VoiceSynthesisConfig? = nil
+}
+
 /// Response to an enrollment request
 public struct Sensory_Api_V1_Audio_CreateEnrollmentResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -753,7 +779,7 @@ public struct Sensory_Api_V1_Audio_CreateEnrollmentResponse {
   public var modelPrompt: String = String()
 
   /// Percent complete as values between 0 and 100 indicating the progress of the current enrollment segment.
-  /// This is relevant in liveness enrollment where multiple groups of numbers must be spoken.
+  /// This is relevent in liveness enrollment where multiple groups of numbers must be spoken.
   public var percentSegmentComplete: Int64 = 0
 
   /// Encrypted enrollment token, this token should be included in authentication requests
@@ -808,7 +834,7 @@ public struct Sensory_Api_V1_Audio_AuthenticateResponse {
   public var modelPrompt: String = String()
 
   /// Percent complete as values between 0 and 100 indicating the progress of the current authentication segment.
-  /// This is relevant in liveness enrollment where multiple numbers must be spoken.
+  /// This is relevent in liveness enrollment where multiple numbers must be spoken.
   public var percentSegmentComplete: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -914,6 +940,71 @@ public struct Sensory_Api_V1_Audio_TranscribeResponse {
   public init() {}
 
   fileprivate var _postProcessingAction: Sensory_Api_V1_Audio_AudioResponsePostProcessingAction? = nil
+}
+
+/// The response to a speech synthesis request
+public struct Sensory_Api_V1_Audio_SynthesizeSpeechResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var streamingResponse: Sensory_Api_V1_Audio_SynthesizeSpeechResponse.OneOf_StreamingResponse? = nil
+
+  /// Provides information that specifies how the audio has been formatted.
+  /// The first `SpeechSynthesisResponse` message will contain a `config` message.
+  public var config: Sensory_Api_V1_Audio_AudioConfig {
+    get {
+      if case .config(let v)? = streamingResponse {return v}
+      return Sensory_Api_V1_Audio_AudioConfig()
+    }
+    set {streamingResponse = .config(newValue)}
+  }
+
+  /// The synthesized audio data. Sequential chunks of audio data are sent in
+  /// sequential `SpeechSynthesisResponse` messages. The first `SpeechSynthesisResponse`
+  /// message will only contain `config` data and all supsequent `SpeechSynthesisResponse`
+  /// messages will contain `audioContent` data.
+  public var audioContent: Data {
+    get {
+      if case .audioContent(let v)? = streamingResponse {return v}
+      return Data()
+    }
+    set {streamingResponse = .audioContent(newValue)}
+  }
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public enum OneOf_StreamingResponse: Equatable {
+    /// Provides information that specifies how the audio has been formatted.
+    /// The first `SpeechSynthesisResponse` message will contain a `config` message.
+    case config(Sensory_Api_V1_Audio_AudioConfig)
+    /// The synthesized audio data. Sequential chunks of audio data are sent in
+    /// sequential `SpeechSynthesisResponse` messages. The first `SpeechSynthesisResponse`
+    /// message will only contain `config` data and all supsequent `SpeechSynthesisResponse`
+    /// messages will contain `audioContent` data.
+    case audioContent(Data)
+
+  #if !swift(>=4.1)
+    public static func ==(lhs: Sensory_Api_V1_Audio_SynthesizeSpeechResponse.OneOf_StreamingResponse, rhs: Sensory_Api_V1_Audio_SynthesizeSpeechResponse.OneOf_StreamingResponse) -> Bool {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch (lhs, rhs) {
+      case (.config, .config): return {
+        guard case .config(let l) = lhs, case .config(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      case (.audioContent, .audioContent): return {
+        guard case .audioContent(let l) = lhs, case .audioContent(let r) = rhs else { preconditionFailure() }
+        return l == r
+      }()
+      default: return false
+      }
+    }
+  #endif
+  }
+
+  public init() {}
 }
 
 /// Provides information for an audio-based enrollment
@@ -1475,6 +1566,32 @@ extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: CaseIterable {
 
 #endif  // swift(>=4.2)
 
+/// Configurations for the voice synthesis model
+public struct Sensory_Api_V1_Audio_VoiceSynthesisConfig {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Required. Provides information that specifies how the synthesized audio should be formatted
+  public var audio: Sensory_Api_V1_Audio_AudioConfig {
+    get {return _audio ?? Sensory_Api_V1_Audio_AudioConfig()}
+    set {_audio = newValue}
+  }
+  /// Returns true if `audio` has been explicitly set.
+  public var hasAudio: Bool {return self._audio != nil}
+  /// Clears the value of `audio`. Subsequent reads from it will return its default value.
+  public mutating func clearAudio() {self._audio = nil}
+
+  /// Required. The name of the voice to use for voice synthesis
+  public var voice: String = String()
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _audio: Sensory_Api_V1_Audio_AudioConfig? = nil
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
 extension Sensory_Api_V1_Audio_AudioPostProcessingAction: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ThresholdSensitivity: @unchecked Sendable {}
@@ -1495,11 +1612,14 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventRequest: @unchecked Sendable
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventRequest.OneOf_StreamingRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_TranscribeRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_TranscribeRequest.OneOf_StreamingRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_SynthesizeSpeechRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AuthenticateResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEventResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_TranscribeResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_SynthesizeSpeechResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_SynthesizeSpeechResponse.OneOf_StreamingResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_CreateEnrollmentConfig.OneOf_EnrollLength: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AuthenticateConfig: @unchecked Sendable {}
@@ -1513,6 +1633,7 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig.OneOf_AuthID: @unchec
 extension Sensory_Api_V1_Audio_TranscribeConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AudioConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_VoiceSynthesisConfig: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -1596,7 +1717,7 @@ extension Sensory_Api_V1_Audio_AudioModel: SwiftProtobuf.Message, SwiftProtobuf.
     if self.isEnrollable != false {
       try visitor.visitSingularBoolField(value: self.isEnrollable, fieldNumber: 2)
     }
-    if self.modelType != .voiceBiometricTextDependent {
+    if self.modelType != .unknown {
       try visitor.visitSingularEnumField(value: self.modelType, fieldNumber: 3)
     }
     if !self.fixedPhrase.isEmpty {
@@ -2141,6 +2262,48 @@ extension Sensory_Api_V1_Audio_TranscribeRequest: SwiftProtobuf.Message, SwiftPr
   }
 }
 
+extension Sensory_Api_V1_Audio_SynthesizeSpeechRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SynthesizeSpeechRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "phrase"),
+    2: .same(proto: "config"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.phrase) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._config) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.phrase.isEmpty {
+      try visitor.visitSingularStringField(value: self.phrase, fieldNumber: 1)
+    }
+    try { if let v = self._config {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Audio_SynthesizeSpeechRequest, rhs: Sensory_Api_V1_Audio_SynthesizeSpeechRequest) -> Bool {
+    if lhs.phrase != rhs.phrase {return false}
+    if lhs._config != rhs._config {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".CreateEnrollmentResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -2456,6 +2619,71 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
     if lhs.transcript != rhs.transcript {return false}
     if lhs.isPartialResult != rhs.isPartialResult {return false}
     if lhs._postProcessingAction != rhs._postProcessingAction {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_V1_Audio_SynthesizeSpeechResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SynthesizeSpeechResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "config"),
+    2: .same(proto: "audioContent"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try {
+        var v: Sensory_Api_V1_Audio_AudioConfig?
+        var hadOneofValue = false
+        if let current = self.streamingResponse {
+          hadOneofValue = true
+          if case .config(let m) = current {v = m}
+        }
+        try decoder.decodeSingularMessageField(value: &v)
+        if let v = v {
+          if hadOneofValue {try decoder.handleConflictingOneOf()}
+          self.streamingResponse = .config(v)
+        }
+      }()
+      case 2: try {
+        var v: Data?
+        try decoder.decodeSingularBytesField(value: &v)
+        if let v = v {
+          if self.streamingResponse != nil {try decoder.handleConflictingOneOf()}
+          self.streamingResponse = .audioContent(v)
+        }
+      }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    switch self.streamingResponse {
+    case .config?: try {
+      guard case .config(let v)? = self.streamingResponse else { preconditionFailure() }
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    }()
+    case .audioContent?: try {
+      guard case .audioContent(let v)? = self.streamingResponse else { preconditionFailure() }
+      try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+    }()
+    case nil: break
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Audio_SynthesizeSpeechResponse, rhs: Sensory_Api_V1_Audio_SynthesizeSpeechResponse) -> Bool {
+    if lhs.streamingResponse != rhs.streamingResponse {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2992,4 +3220,46 @@ extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: SwiftProtobuf._ProtoNa
     1: .same(proto: "FLAC"),
     2: .same(proto: "MULAW"),
   ]
+}
+
+extension Sensory_Api_V1_Audio_VoiceSynthesisConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".VoiceSynthesisConfig"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "audio"),
+    2: .same(proto: "voice"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._audio) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.voice) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._audio {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
+    if !self.voice.isEmpty {
+      try visitor.visitSingularStringField(value: self.voice, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Audio_VoiceSynthesisConfig, rhs: Sensory_Api_V1_Audio_VoiceSynthesisConfig) -> Bool {
+    if lhs._audio != rhs._audio {return false}
+    if lhs.voice != rhs.voice {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
 }

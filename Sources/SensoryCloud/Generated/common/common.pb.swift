@@ -178,8 +178,8 @@ extension Sensory_Api_Common_FeatureFlag: CaseIterable {
 public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
   public typealias RawValue = Int
 
-  /// Voice Auth Text Dependent (Enrollable)
-  case voiceBiometricTextDependent // = 0
+  /// Unknown Model Type
+  case unknown // = 0
 
   /// Voice Auth Text Independent (Enrollable)
   case voiceBiometricTextIndependent // = 1
@@ -205,6 +205,12 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
   /// Voice digit recognizer for liveness
   case voiceBiometricLivenessDigit // = 8
 
+  /// Voice Auth Text Dependent (Enrollable)
+  case voiceBiometricTextDependent // = 9
+
+  /// Voice Synthesis
+  case voiceSynthesis // = 10
+
   /// Sound Event Auth (Enrollable)
   case soundEventEnrollable // = 100
 
@@ -228,18 +234,15 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
 
   /// Image Transformation
   case imageTransform // = 204
-
-  /// Unknown Model Type
-  case unknown // = 1000
   case UNRECOGNIZED(Int)
 
   public init() {
-    self = .voiceBiometricTextDependent
+    self = .unknown
   }
 
   public init?(rawValue: Int) {
     switch rawValue {
-    case 0: self = .voiceBiometricTextDependent
+    case 0: self = .unknown
     case 1: self = .voiceBiometricTextIndependent
     case 2: self = .voiceBiometricWakeword
     case 3: self = .voiceEventWakeword
@@ -248,6 +251,8 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case 6: self = .voiceRecognitionActivityDetection
     case 7: self = .voiceFeatureExtractor
     case 8: self = .voiceBiometricLivenessDigit
+    case 9: self = .voiceBiometricTextDependent
+    case 10: self = .voiceSynthesis
     case 100: self = .soundEventEnrollable
     case 101: self = .soundEventRevalidation
     case 102: self = .soundEventFixed
@@ -256,14 +261,13 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case 202: self = .faceRecognition
     case 203: self = .objectRecognition
     case 204: self = .imageTransform
-    case 1000: self = .unknown
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
 
   public var rawValue: Int {
     switch self {
-    case .voiceBiometricTextDependent: return 0
+    case .unknown: return 0
     case .voiceBiometricTextIndependent: return 1
     case .voiceBiometricWakeword: return 2
     case .voiceEventWakeword: return 3
@@ -272,6 +276,8 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case .voiceRecognitionActivityDetection: return 6
     case .voiceFeatureExtractor: return 7
     case .voiceBiometricLivenessDigit: return 8
+    case .voiceBiometricTextDependent: return 9
+    case .voiceSynthesis: return 10
     case .soundEventEnrollable: return 100
     case .soundEventRevalidation: return 101
     case .soundEventFixed: return 102
@@ -280,7 +286,6 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case .faceRecognition: return 202
     case .objectRecognition: return 203
     case .imageTransform: return 204
-    case .unknown: return 1000
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -292,7 +297,7 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
 extension Sensory_Api_Common_ModelType: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   public static var allCases: [Sensory_Api_Common_ModelType] = [
-    .voiceBiometricTextDependent,
+    .unknown,
     .voiceBiometricTextIndependent,
     .voiceBiometricWakeword,
     .voiceEventWakeword,
@@ -301,6 +306,8 @@ extension Sensory_Api_Common_ModelType: CaseIterable {
     .voiceRecognitionActivityDetection,
     .voiceFeatureExtractor,
     .voiceBiometricLivenessDigit,
+    .voiceBiometricTextDependent,
+    .voiceSynthesis,
     .soundEventEnrollable,
     .soundEventRevalidation,
     .soundEventFixed,
@@ -309,7 +316,6 @@ extension Sensory_Api_Common_ModelType: CaseIterable {
     .faceRecognition,
     .objectRecognition,
     .imageTransform,
-    .unknown,
   ]
 }
 
@@ -333,6 +339,9 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
 
   /// Speech to Text, a large scale neural speech recognition tool
   case stt // = 4
+
+  /// Text to Speech, a voice synthesis tool
+  case tts // = 5
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -346,6 +355,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case 2: self = .ts
     case 3: self = .tnl
     case 4: self = .stt
+    case 5: self = .tts
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -357,6 +367,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case .ts: return 2
     case .tnl: return 3
     case .stt: return 4
+    case .tts: return 5
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -373,6 +384,7 @@ extension Sensory_Api_Common_TechnologyType: CaseIterable {
     .ts,
     .tnl,
     .stt,
+    .tts,
   ]
 }
 
@@ -425,14 +437,20 @@ public enum Sensory_Api_Common_ClientType: SwiftProtobuf.Enum {
   /// Sensory Root Token
   case root // = 0
 
-  /// User End Device (E.G. Sensory SDK on Smartphone)
+  /// User End Device       (E.G. Sensory SDK on Smartphone)
   case device // = 1
 
-  /// Remote Cluster   (E.G. Customer-Deployed Io Cluster)
+  /// Remote Cluster        (E.G. Customer-Deployed Io Cluster)
   case cluster // = 2
 
-  /// User Account    (E.G. Customer-Portal)
+  /// User Account          (E.G. Customer-Portal)
   case user // = 3
+
+  /// Super User Account    (E.G. Admin)
+  case superUser // = 4
+
+  /// Billing User Account   (E.G. CFO)
+  case billingUser // = 5
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -445,6 +463,8 @@ public enum Sensory_Api_Common_ClientType: SwiftProtobuf.Enum {
     case 1: self = .device
     case 2: self = .cluster
     case 3: self = .user
+    case 4: self = .superUser
+    case 5: self = .billingUser
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -455,6 +475,8 @@ public enum Sensory_Api_Common_ClientType: SwiftProtobuf.Enum {
     case .device: return 1
     case .cluster: return 2
     case .user: return 3
+    case .superUser: return 4
+    case .billingUser: return 5
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -470,6 +492,8 @@ extension Sensory_Api_Common_ClientType: CaseIterable {
     .device,
     .cluster,
     .user,
+    .superUser,
+    .billingUser,
   ]
 }
 
@@ -488,6 +512,12 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
 
   /// Enrollment usage event
   case enrollment // = 2
+
+  /// Synthesis usage event
+  case synthesis // = 3
+
+  /// Speech to text usage event
+  case transcription // = 4
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -499,6 +529,8 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
     case 0: self = .authentication
     case 1: self = .recognition
     case 2: self = .enrollment
+    case 3: self = .synthesis
+    case 4: self = .transcription
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -508,6 +540,8 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
     case .authentication: return 0
     case .recognition: return 1
     case .enrollment: return 2
+    case .synthesis: return 3
+    case .transcription: return 4
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -522,6 +556,8 @@ extension Sensory_Api_Common_UsageEventType: CaseIterable {
     .authentication,
     .recognition,
     .enrollment,
+    .synthesis,
+    .transcription,
   ]
 }
 
@@ -835,7 +871,7 @@ public struct Sensory_Api_Common_PaginationResponse {
   /// The parameter by which the data has been ordered by
   public var ordering: String = String()
 
-  /// "True" if the data has been sorted in descending order
+  /// "True" if the data has been sorted in decending order
   public var decending: Bool = false
 
   /// A list of all possible parameters that the data can be ordered by
@@ -871,6 +907,7 @@ public struct Sensory_Api_Common_EnrollmentToken {
   public var token: Data = Data()
 
   /// The number of seconds until the enrollment token expires
+  /// An expiration of 0 means that the enrollment token never expires
   public var expiration: Int64 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
@@ -931,7 +968,7 @@ extension Sensory_Api_Common_FeatureFlag: SwiftProtobuf._ProtoNameProviding {
 
 extension Sensory_Api_Common_ModelType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "VOICE_BIOMETRIC_TEXT_DEPENDENT"),
+    0: .same(proto: "UNKNOWN"),
     1: .same(proto: "VOICE_BIOMETRIC_TEXT_INDEPENDENT"),
     2: .same(proto: "VOICE_BIOMETRIC_WAKEWORD"),
     3: .same(proto: "VOICE_EVENT_WAKEWORD"),
@@ -940,6 +977,8 @@ extension Sensory_Api_Common_ModelType: SwiftProtobuf._ProtoNameProviding {
     6: .same(proto: "VOICE_RECOGNITION_ACTIVITY_DETECTION"),
     7: .same(proto: "VOICE_FEATURE_EXTRACTOR"),
     8: .same(proto: "VOICE_BIOMETRIC_LIVENESS_DIGIT"),
+    9: .same(proto: "VOICE_BIOMETRIC_TEXT_DEPENDENT"),
+    10: .same(proto: "VOICE_SYNTHESIS"),
     100: .same(proto: "SOUND_EVENT_ENROLLABLE"),
     101: .same(proto: "SOUND_EVENT_REVALIDATION"),
     102: .same(proto: "SOUND_EVENT_FIXED"),
@@ -948,7 +987,6 @@ extension Sensory_Api_Common_ModelType: SwiftProtobuf._ProtoNameProviding {
     202: .same(proto: "FACE_RECOGNITION"),
     203: .same(proto: "OBJECT_RECOGNITION"),
     204: .same(proto: "IMAGE_TRANSFORM"),
-    1000: .same(proto: "UNKNOWN"),
   ]
 }
 
@@ -959,6 +997,7 @@ extension Sensory_Api_Common_TechnologyType: SwiftProtobuf._ProtoNameProviding {
     2: .same(proto: "TS"),
     3: .same(proto: "TNL"),
     4: .same(proto: "STT"),
+    5: .same(proto: "TTS"),
   ]
 }
 
@@ -974,6 +1013,8 @@ extension Sensory_Api_Common_ClientType: SwiftProtobuf._ProtoNameProviding {
     1: .same(proto: "DEVICE"),
     2: .same(proto: "CLUSTER"),
     3: .same(proto: "USER"),
+    4: .same(proto: "SUPER_USER"),
+    5: .same(proto: "BILLING_USER"),
   ]
 }
 
@@ -982,6 +1023,8 @@ extension Sensory_Api_Common_UsageEventType: SwiftProtobuf._ProtoNameProviding {
     0: .same(proto: "AUTHENTICATION"),
     1: .same(proto: "RECOGNITION"),
     2: .same(proto: "ENROLLMENT"),
+    3: .same(proto: "SYNTHESIS"),
+    4: .same(proto: "TRANSCRIPTION"),
   ]
 }
 

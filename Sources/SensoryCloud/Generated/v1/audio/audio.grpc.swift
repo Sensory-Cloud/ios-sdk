@@ -648,3 +648,118 @@ public final class Sensory_Api_V1_Audio_AudioTranscriptionsTestClient: Sensory_A
   }
 }
 
+/// Handles synthesizing audio from text
+///
+/// Usage: instantiate `Sensory_Api_V1_Audio_AudioSynthesisClient`, then call methods of this protocol to make API calls.
+public protocol Sensory_Api_V1_Audio_AudioSynthesisClientProtocol: GRPCClient {
+  var serviceName: String { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? { get }
+
+  func synthesizeSpeech(
+    _ request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+    callOptions: CallOptions?,
+    handler: @escaping (Sensory_Api_V1_Audio_SynthesizeSpeechResponse) -> Void
+  ) -> ServerStreamingCall<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse>
+}
+
+extension Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
+  public var serviceName: String {
+    return "sensory.api.v1.audio.AudioSynthesis"
+  }
+
+  /// Synthesizes speech from text
+  /// Authorization metadata is required {"authorization": "Bearer <TOKNE>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to SynthesizeSpeech.
+  ///   - callOptions: Call options.
+  ///   - handler: A closure called when each response is received from the server.
+  /// - Returns: A `ServerStreamingCall` with futures for the metadata and status.
+  public func synthesizeSpeech(
+    _ request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+    callOptions: CallOptions? = nil,
+    handler: @escaping (Sensory_Api_V1_Audio_SynthesizeSpeechResponse) -> Void
+  ) -> ServerStreamingCall<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse> {
+    return self.makeServerStreamingCall(
+      path: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech",
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSynthesizeSpeechInterceptors() ?? [],
+      handler: handler
+    )
+  }
+}
+
+public protocol Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when invoking 'synthesizeSpeech'.
+  func makeSynthesizeSpeechInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse>]
+}
+
+public final class Sensory_Api_V1_Audio_AudioSynthesisClient: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol?
+
+  /// Creates a client for the sensory.api.v1.audio.AudioSynthesis service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+public final class Sensory_Api_V1_Audio_AudioSynthesisTestClient: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
+  private let fakeChannel: FakeChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol?
+
+  public var channel: GRPCChannel {
+    return self.fakeChannel
+  }
+
+  public init(
+    fakeChannel: FakeChannel = FakeChannel(),
+    defaultCallOptions callOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.fakeChannel = fakeChannel
+    self.defaultCallOptions = callOptions
+    self.interceptors = interceptors
+  }
+
+  /// Make a streaming response for the SynthesizeSpeech RPC. This must be called
+  /// before calling 'synthesizeSpeech'. See also 'FakeStreamingResponse'.
+  ///
+  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
+  public func makeSynthesizeSpeechResponseStream(
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_SynthesizeSpeechRequest>) -> () = { _ in }
+  ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse> {
+    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech", requestHandler: requestHandler)
+  }
+
+  public func enqueueSynthesizeSpeechResponses(
+    _ responses: [Sensory_Api_V1_Audio_SynthesizeSpeechResponse],
+    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_SynthesizeSpeechRequest>) -> () = { _ in }
+  )  {
+    let stream = self.makeSynthesizeSpeechResponseStream(requestHandler)
+    // These are the only operation on the stream; try! is fine.
+    responses.forEach { try! stream.sendMessage($0) }
+    try! stream.sendEnd()
+  }
+
+  /// Returns true if there are response streams enqueued for 'SynthesizeSpeech'
+  public var hasSynthesizeSpeechResponsesRemaining: Bool {
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech")
+  }
+}
+
