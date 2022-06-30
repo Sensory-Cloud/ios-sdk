@@ -70,6 +70,7 @@ public class VideoService {
     ///   - livenessThreshold: Liveness threshold for the potential liveness check
     ///   - numLiveFramesRequired: The number of frames that need to pass the liveness check for a successful enrollment (if liveness is enabled).
     ///         A value of 0 means that *all * frames need to pass the liveness check
+    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
@@ -81,6 +82,7 @@ public class VideoService {
         isLivenessEnabled: Bool = false,
         livenessThreshold: Sensory_Api_V1_Video_RecognitionThreshold = .low,
         numLiveFramesRequired: Int32 = 0,
+        disableServerEnrollmentStorage: Bool = false,
         onStreamReceive: @escaping ((Sensory_Api_V1_Video_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Video_CreateEnrollmentRequest,
@@ -105,6 +107,7 @@ public class VideoService {
         config.isLivenessEnabled = isLivenessEnabled
         config.livenessThreshold = livenessThreshold
         config.numLivenessFramesRequired = numLiveFramesRequired
+        config.disableServerEnrollmentTemplateStorage = disableServerEnrollmentStorage
 
         var request = Sensory_Api_V1_Video_CreateEnrollmentRequest()
         request.config = config

@@ -232,9 +232,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName6userID12languageCode11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSgSSSbs6UInt32VSgSfSgyASctKF"></a>
-                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:languageCode:description:isLivenessEnabled:numUtterances:enrollmentDuration:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName6userID12languageCode11description17isLivenessEnabled13numUtterances18enrollmentDuration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSgSSSbs6UInt32VSgSfSgyASctKF">createEnrollment(modelName:<wbr>userID:<wbr>languageCode:<wbr>description:<wbr>isLivenessEnabled:<wbr>numUtterances:<wbr>enrollmentDuration:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName6userID12languageCode11description17isLivenessEnabled13numUtterances18enrollmentDuration013disableServerF7Storage15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSgSSSbs6UInt32VSgSfSgSbyATctKF"></a>
+                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:languageCode:description:isLivenessEnabled:numUtterances:enrollmentDuration:disableServerEnrollmentStorage:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16createEnrollment9modelName6userID12languageCode11description17isLivenessEnabled13numUtterances18enrollmentDuration013disableServerF7Storage15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSgSSSbs6UInt32VSgSfSgSbyATctKF">createEnrollment(modelName:<wbr>userID:<wbr>languageCode:<wbr>description:<wbr>isLivenessEnabled:<wbr>numUtterances:<wbr>enrollmentDuration:<wbr>disableServerEnrollmentStorage:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -268,6 +268,7 @@
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
     <span class="nv">numUtterances</span><span class="p">:</span> <span class="kt">UInt32</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">enrollmentDuration</span><span class="p">:</span> <span class="kt">Float</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">disableServerEnrollmentStorage</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentRequest</span><span class="p">,</span>
@@ -363,6 +364,18 @@
                                 <div>
                                   <p>Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled.
                 This parameter should be left <code>nil</code> for text-dependent enrollments</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>disableServerEnrollmentStorage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration</p>
                                 </div>
                               </td>
                             </tr>
@@ -619,9 +632,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName6userID12languageCode11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_S2SSgSSyAPctKF"></a>
-                    <a name="//apple_ref/swift/Method/streamCreateEnrolledEvent(modelName:userID:languageCode:description:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName6userID12languageCode11description15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_w1_x1_c1_F18EnrollmentResponseVGSS_S2SSgSSyAPctKF">streamCreateEnrolledEvent(modelName:<wbr>userID:<wbr>languageCode:<wbr>description:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName6userID12languageCode11description30disableServerEnrollmentStorage15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a8_Api_V1_c1_fR8ResponseVGSS_S2SSgSSSbyAQctKF"></a>
+                    <a name="//apple_ref/swift/Method/streamCreateEnrolledEvent(modelName:userID:languageCode:description:disableServerEnrollmentStorage:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC25streamCreateEnrolledEvent9modelName6userID12languageCode11description30disableServerEnrollmentStorage15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a8_Api_V1_c1_fR8ResponseVGSS_S2SSgSSSbyAQctKF">streamCreateEnrolledEvent(modelName:<wbr>userID:<wbr>languageCode:<wbr>description:<wbr>disableServerEnrollmentStorage:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -648,6 +661,7 @@
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">description</span><span class="p">:</span> <span class="kt">String</span> <span class="o">=</span> <span class="s">""</span><span class="p">,</span>
+    <span class="nv">disableServerEnrollmentStorage</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_CreateEnrolledEventRequest</span><span class="p">,</span>
@@ -705,6 +719,18 @@
                               <td>
                                 <div>
                                   <p>User supplied description of the enrollment</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>disableServerEnrollmentStorage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration</p>
                                 </div>
                               </td>
                             </tr>

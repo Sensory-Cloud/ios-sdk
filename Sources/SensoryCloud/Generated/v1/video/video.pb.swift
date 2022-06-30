@@ -473,6 +473,9 @@ public struct Sensory_Api_V1_Video_CreateEnrollmentConfig {
   /// A value of 0 means that all enrollment frames must pass the liveness check.
   public var numLivenessFramesRequired: Int32 = 0
 
+  /// Prevent the server from storing the enrollment template. The template will be returned to the client for storage.
+  public var disableServerEnrollmentTemplateStorage: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1122,6 +1125,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     7: .same(proto: "compression"),
     8: .same(proto: "referenceId"),
     9: .same(proto: "numLivenessFramesRequired"),
+    10: .same(proto: "disableServerEnrollmentTemplateStorage"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1139,6 +1143,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
       case 7: try { try decoder.decodeSingularMessageField(value: &self._compression) }()
       case 8: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
       case 9: try { try decoder.decodeSingularInt32Field(value: &self.numLivenessFramesRequired) }()
+      case 10: try { try decoder.decodeSingularBoolField(value: &self.disableServerEnrollmentTemplateStorage) }()
       default: break
       }
     }
@@ -1176,6 +1181,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if self.numLivenessFramesRequired != 0 {
       try visitor.visitSingularInt32Field(value: self.numLivenessFramesRequired, fieldNumber: 9)
     }
+    if self.disableServerEnrollmentTemplateStorage != false {
+      try visitor.visitSingularBoolField(value: self.disableServerEnrollmentTemplateStorage, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1189,6 +1197,7 @@ extension Sensory_Api_V1_Video_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if lhs._compression != rhs._compression {return false}
     if lhs.referenceID != rhs.referenceID {return false}
     if lhs.numLivenessFramesRequired != rhs.numLivenessFramesRequired {return false}
+    if lhs.disableServerEnrollmentTemplateStorage != rhs.disableServerEnrollmentTemplateStorage {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

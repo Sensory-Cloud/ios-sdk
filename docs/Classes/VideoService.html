@@ -232,9 +232,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold21numLiveFramesRequired15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSbAA0a8_Api_V1_c12_RecognitionP0Os5Int32VyARctKF"></a>
-                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:description:isLivenessEnabled:livenessThreshold:numLiveFramesRequired:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold21numLiveFramesRequired15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSbAA0a8_Api_V1_c12_RecognitionP0Os5Int32VyARctKF">createEnrollment(modelName:<wbr>userID:<wbr>description:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>numLiveFramesRequired:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold21numLiveFramesRequired013disableServerF7Storage15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSbAA0a8_Api_V1_c12_RecognitionP0Os5Int32VSbyASctKF"></a>
+                    <a name="//apple_ref/swift/Method/createEnrollment(modelName:userID:description:isLivenessEnabled:livenessThreshold:numLiveFramesRequired:disableServerEnrollmentStorage:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC16createEnrollment9modelName6userID11description17isLivenessEnabled17livenessThreshold21numLiveFramesRequired013disableServerF7Storage15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c7_CreateF7RequestVAA0a8_Api_V1_c7_CreateF8ResponseVGSS_S2SSbAA0a8_Api_V1_c12_RecognitionP0Os5Int32VSbyASctKF">createEnrollment(modelName:<wbr>userID:<wbr>description:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>numLiveFramesRequired:<wbr>disableServerEnrollmentStorage:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -267,6 +267,7 @@
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">livenessThreshold</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Video_RecognitionThreshold</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
     <span class="nv">numLiveFramesRequired</span><span class="p">:</span> <span class="kt">Int32</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+    <span class="nv">disableServerEnrollmentStorage</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Video_CreateEnrollmentResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Video_CreateEnrollmentRequest</span><span class="p">,</span>
@@ -349,6 +350,18 @@
                                 <div>
                                   <p>The number of frames that need to pass the liveness check for a successful enrollment (if liveness is enabled).
 A value of 0 means that *all * frames need to pass the liveness check</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>disableServerEnrollmentStorage</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration</p>
                                 </div>
                               </td>
                             </tr>

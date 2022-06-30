@@ -1070,6 +1070,9 @@ public struct Sensory_Api_V1_Audio_CreateEnrollmentConfig {
   /// such as tying an audio and video enrollment together.
   public var referenceID: String = String()
 
+  /// Prevent the server from storing the enrollment template. The template will be returned to the client for storage.
+  public var disableServerEnrollmentTemplateStorage: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   /// Optional: Controls the allowed length of enrollment. Longer enrollments are generally more accurate, but take more time to perform.
@@ -1339,6 +1342,9 @@ public struct Sensory_Api_V1_Audio_CreateEnrollmentEventConfig {
   /// Reference Id allows clients to assign their own identifier to enrollments for various purposes
   /// such as tying an audio and video enrollment together.
   public var referenceID: String = String()
+
+  /// Prevent the server from storing the enrollment template. The template will be returned to the client for storage.
+  public var disableServerEnrollmentTemplateStorage: Bool = false
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2701,6 +2707,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     7: .same(proto: "enrollmentNumUtterances"),
     8: .same(proto: "enrollmentDuration"),
     9: .same(proto: "referenceId"),
+    10: .same(proto: "disableServerEnrollmentTemplateStorage"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2732,6 +2739,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
         }
       }()
       case 9: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
+      case 10: try { try decoder.decodeSingularBoolField(value: &self.disableServerEnrollmentTemplateStorage) }()
       default: break
       }
     }
@@ -2774,6 +2782,9 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if !self.referenceID.isEmpty {
       try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 9)
     }
+    if self.disableServerEnrollmentTemplateStorage != false {
+      try visitor.visitSingularBoolField(value: self.disableServerEnrollmentTemplateStorage, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -2786,6 +2797,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentConfig: SwiftProtobuf.Message, Sw
     if lhs.isLivenessEnabled != rhs.isLivenessEnabled {return false}
     if lhs.enrollLength != rhs.enrollLength {return false}
     if lhs.referenceID != rhs.referenceID {return false}
+    if lhs.disableServerEnrollmentTemplateStorage != rhs.disableServerEnrollmentTemplateStorage {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2958,6 +2970,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: SwiftProtobuf.Messag
     5: .same(proto: "enrollmentNumUtterances"),
     6: .same(proto: "enrollmentDuration"),
     7: .same(proto: "referenceId"),
+    8: .same(proto: "disableServerEnrollmentTemplateStorage"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -2987,6 +3000,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: SwiftProtobuf.Messag
         }
       }()
       case 7: try { try decoder.decodeSingularStringField(value: &self.referenceID) }()
+      case 8: try { try decoder.decodeSingularBoolField(value: &self.disableServerEnrollmentTemplateStorage) }()
       default: break
       }
     }
@@ -3023,6 +3037,9 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: SwiftProtobuf.Messag
     if !self.referenceID.isEmpty {
       try visitor.visitSingularStringField(value: self.referenceID, fieldNumber: 7)
     }
+    if self.disableServerEnrollmentTemplateStorage != false {
+      try visitor.visitSingularBoolField(value: self.disableServerEnrollmentTemplateStorage, fieldNumber: 8)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3033,6 +3050,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: SwiftProtobuf.Messag
     if lhs.description_p != rhs.description_p {return false}
     if lhs.enrollLength != rhs.enrollLength {return false}
     if lhs.referenceID != rhs.referenceID {return false}
+    if lhs.disableServerEnrollmentTemplateStorage != rhs.disableServerEnrollmentTemplateStorage {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -86,6 +86,7 @@ public class AudioService {
     ///                    This parameter should be left `nil` for text-independent enrollments
     ///   - enrollmentDuration: Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled.
     ///                         This parameter should be left `nil` for text-dependent enrollments
+    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
@@ -98,6 +99,7 @@ public class AudioService {
         isLivenessEnabled: Bool,
         numUtterances: UInt32? = nil,
         enrollmentDuration: Float? = nil,
+        disableServerEnrollmentStorage: Bool = false,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_CreateEnrollmentRequest,
@@ -132,6 +134,7 @@ public class AudioService {
         } else if let duration = enrollmentDuration {
             config.enrollmentDuration = duration
         }
+        config.disableServerEnrollmentTemplateStorage = disableServerEnrollmentStorage
 
         var request = Sensory_Api_V1_Audio_CreateEnrollmentRequest()
         request.config = config
@@ -254,6 +257,7 @@ public class AudioService {
     ///   - userID: Unique user identifier
     ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - description: User supplied description of the enrollment
+    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -262,6 +266,7 @@ public class AudioService {
         userID: String,
         languageCode: String? = nil,
         description: String = "",
+        disableServerEnrollmentStorage: Bool = false,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_CreateEnrolledEventRequest,
@@ -284,6 +289,7 @@ public class AudioService {
         config.modelName = modelName
         config.userID = userID
         config.description_p = description
+        config.disableServerEnrollmentTemplateStorage = disableServerEnrollmentStorage
 
         var request = Sensory_Api_V1_Audio_CreateEnrolledEventRequest()
         request.config = config
