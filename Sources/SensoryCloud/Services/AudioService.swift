@@ -148,6 +148,7 @@ public class AudioService {
     ///   - enrollment: enrollment or enrollment group to authenticate against
     ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - isLivenessEnabled: Specifies if the authentication should include a liveness check
+    ///   - enrollmentToken: Encrypted enrollment token that was provided on enrollment, pass nil if no token was provided
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -155,6 +156,7 @@ public class AudioService {
         enrollment: EnrollmentIdentifier,
         languageCode: String? = nil,
         isLivenessEnabled: Bool,
+        enrollmentToken: Data? = nil,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_AuthenticateResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_AuthenticateRequest,
@@ -183,6 +185,9 @@ public class AudioService {
             config.enrollmentGroupID = groupID
         }
         config.isLivenessEnabled = isLivenessEnabled
+        if let token = enrollmentToken {
+            config.enrollmentToken = token
+        }
 
         var request = Sensory_Api_V1_Audio_AuthenticateRequest()
         request.config = config
@@ -295,6 +300,7 @@ public class AudioService {
     ///   - enrollment: enrollment or enrollment group to validate against
     ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - sensitivity: How sensitive the model should be to false accepts
+    ///   - enrollmentToken: Encrypted enrollment token that was provided on enrollment, pass nil if no token was provided
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -302,6 +308,7 @@ public class AudioService {
         enrollment: EnrollmentIdentifier,
         languageCode: String? = nil,
         sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity,
+        enrollmentToken: Data? = nil,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_ValidateEnrolledEventResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_ValidateEnrolledEventRequest,
@@ -328,6 +335,9 @@ public class AudioService {
         }
         config.audio = audioConfig
         config.sensitivity = sensitivity
+        if let token = enrollmentToken {
+            config.enrollmentToken = token
+        }
 
         var request = Sensory_Api_V1_Audio_ValidateEnrolledEventRequest()
         request.config = config

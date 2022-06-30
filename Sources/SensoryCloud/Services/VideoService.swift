@@ -121,6 +121,7 @@ public class VideoService {
     ///   - enrollment: enrollment or enrollment group to authenticate against
     ///   - isLivenessEnabled: Determines if a liveness check should be conducted as well as an enrollment
     ///   - livenessThreshold: Liveness threshold for the potential liveness check
+    ///   - enrollmentToken: Encrypted enrollment token that was provided on enrollment, pass nil if no token was provided
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -128,6 +129,7 @@ public class VideoService {
         enrollment: EnrollmentIdentifier,
         isLivenessEnabled: Bool = false,
         livenessThreshold: Sensory_Api_V1_Video_RecognitionThreshold = .low,
+        enrollmentToken: Data? = nil,
         onStreamReceive: @escaping ((Sensory_Api_V1_Video_AuthenticateResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Video_AuthenticateRequest,
@@ -150,6 +152,9 @@ public class VideoService {
         }
         config.isLivenessEnabled = isLivenessEnabled
         config.livenessThreshold = livenessThreshold
+        if let token = enrollmentToken {
+            config.enrollmentToken = token
+        }
 
         var request = Sensory_Api_V1_Video_AuthenticateRequest()
         request.config = config

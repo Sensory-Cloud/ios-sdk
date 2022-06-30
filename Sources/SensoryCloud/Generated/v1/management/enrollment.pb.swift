@@ -91,7 +91,7 @@ public struct Sensory_Api_V1_Management_EnrollmentResponse {
   public var modelName: String = String()
 
   /// Type of the model enrolled
-  public var modelType: Sensory_Api_Common_ModelType = .voiceBiometricTextDependent
+  public var modelType: Sensory_Api_Common_ModelType = .unknown
 
   /// Version of the model enrolled
   public var modelVersion: String = String()
@@ -186,7 +186,7 @@ public struct Sensory_Api_V1_Management_EnrollmentGroupResponse {
   public var modelName: String = String()
 
   /// Type of the model for this enrollment gooup
-  public var modelType: Sensory_Api_Common_ModelType = .voiceBiometricTextDependent
+  public var modelType: Sensory_Api_Common_ModelType = .unknown
 
   /// Version of the model
   public var modelVersion: String = String()
@@ -483,7 +483,7 @@ extension Sensory_Api_V1_Management_EnrollmentResponse: SwiftProtobuf.Message, S
     if !self.modelName.isEmpty {
       try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 5)
     }
-    if self.modelType != .voiceBiometricTextDependent {
+    if self.modelType != .unknown {
       try visitor.visitSingularEnumField(value: self.modelType, fieldNumber: 6)
     }
     if !self.modelVersion.isEmpty {
@@ -624,7 +624,7 @@ extension Sensory_Api_V1_Management_EnrollmentGroupResponse: SwiftProtobuf.Messa
     if !self.modelName.isEmpty {
       try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 6)
     }
-    if self.modelType != .voiceBiometricTextDependent {
+    if self.modelType != .unknown {
       try visitor.visitSingularEnumField(value: self.modelType, fieldNumber: 7)
     }
     if !self.modelVersion.isEmpty {

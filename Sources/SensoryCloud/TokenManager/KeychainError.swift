@@ -17,7 +17,7 @@ public enum KeychainError: Error {
     case itemNotFound(String)
     /// An error that occurs while deleting from the Apple Keychain, the specific OSStatus is attached if available
     ///
-    /// In general, deleting an item that does not exist is *NOT* considered as an error case
+    /// In general, attempting to delete an item that does not exist is *NOT* considered an error case
     case deleteError(OSStatus?)
     /// An error that occurs while encoding data before storing it in Apple Keychain
     case encodingError
@@ -25,6 +25,10 @@ public enum KeychainError: Error {
     case decodingError
     /// An error that occurs if the device isn't able to generate cryptographically secure random numbers
     case insecureRandom
+    /// An error that occurs if the item saved in Apple Keychain has expired
+    ///
+    /// Expirations are managed by the Sensory Cloud SDK and not Apple Keychain itself
+    case expired
 }
 
 extension KeychainError: LocalizedError {
@@ -44,6 +48,8 @@ extension KeychainError: LocalizedError {
             return "An error occurred while decoding data to a string"
         case .insecureRandom:
             return "Cryptographically secure random numbers cannot be generated"
+        case .expired:
+            return "The saved item has been expired"
         }
     }
 }
