@@ -377,9 +377,9 @@ A value of 0 means that *all * frames need to pass the liveness check</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12VideoServiceC12authenticate10enrollment17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SbAA0a1_s1_t1_c12_RecognitionK0OyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(enrollment:isLivenessEnabled:livenessThreshold:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC12authenticate10enrollment17isLivenessEnabled17livenessThreshold15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SbAA0a1_s1_t1_c12_RecognitionK0OyAOctKF">authenticate(enrollment:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12VideoServiceC12authenticate10enrollment17isLivenessEnabled17livenessThreshold0F5Token15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGAA20EnrollmentIdentifierO_SbAA0a1_t1_u1_c12_RecognitionK0O10Foundation4DataVSgyAPctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(enrollment:isLivenessEnabled:livenessThreshold:enrollmentToken:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12VideoServiceC12authenticate10enrollment17isLivenessEnabled17livenessThreshold0F5Token15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGAA20EnrollmentIdentifierO_SbAA0a1_t1_u1_c12_RecognitionK0O10Foundation4DataVSgyAPctKF">authenticate(enrollment:<wbr>isLivenessEnabled:<wbr>livenessThreshold:<wbr>enrollmentToken:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -405,6 +405,7 @@ A value of 0 means that *all * frames need to pass the liveness check</p>
     <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">livenessThreshold</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Video_RecognitionThreshold</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
+    <span class="nv">enrollmentToken</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Video_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Video_AuthenticateRequest</span><span class="p">,</span>
@@ -450,6 +451,18 @@ A value of 0 means that *all * frames need to pass the liveness check</p>
                               <td>
                                 <div>
                                   <p>Liveness threshold for the potential liveness check</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollmentToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Encrypted enrollment token that was provided on enrollment, pass nil if no token was provided</p>
                                 </div>
                               </td>
                             </tr>
@@ -581,7 +594,7 @@ A value of 0 means that *all * frames need to pass the liveness check</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-12)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

@@ -391,9 +391,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate10enrollment12languageCode17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SSSgSbyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/authenticate(enrollment:languageCode:isLivenessEnabled:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate10enrollment12languageCode17isLivenessEnabled15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_s1_t1_c1_U8ResponseVGAA20EnrollmentIdentifierO_SSSgSbyAOctKF">authenticate(enrollment:<wbr>languageCode:<wbr>isLivenessEnabled:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC12authenticate10enrollment12languageCode17isLivenessEnabled0F5Token15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGAA20EnrollmentIdentifierO_SSSgSb10Foundation4DataVSgyAPctKF"></a>
+                    <a name="//apple_ref/swift/Method/authenticate(enrollment:languageCode:isLivenessEnabled:enrollmentToken:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC12authenticate10enrollment12languageCode17isLivenessEnabled0F5Token15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C20_AuthenticateRequestVAA0a1_t1_u1_c1_V8ResponseVGAA20EnrollmentIdentifierO_SSSgSb10Foundation4DataVSgyAPctKF">authenticate(enrollment:<wbr>languageCode:<wbr>isLivenessEnabled:<wbr>enrollmentToken:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -419,6 +419,7 @@
     <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
     <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">isLivenessEnabled</span><span class="p">:</span> <span class="kt">Bool</span><span class="p">,</span>
+    <span class="nv">enrollmentToken</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_AuthenticateResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_AuthenticateRequest</span><span class="p">,</span>
@@ -464,6 +465,18 @@
                               <td>
                                 <div>
                                   <p>Specifies if the authentication should include a liveness check</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollmentToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Encrypted enrollment token that was provided on enrollment, pass nil if no token was provided</p>
                                 </div>
                               </td>
                             </tr>
@@ -720,9 +733,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_SSSgAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/streamValidateEnrolledEvent(enrollment:languageCode:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_t1_u1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_SSSgAA0a1_t1_u1_C21_ThresholdSensitivityOyAOctKF">streamValidateEnrolledEvent(enrollment:<wbr>languageCode:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment12languageCode11sensitivity0I5Token15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_u1_v1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_SSSgAA0a1_u1_v1_C21_ThresholdSensitivityO10Foundation4DataVSgyAPctKF"></a>
+                    <a name="//apple_ref/swift/Method/streamValidateEnrolledEvent(enrollment:languageCode:sensitivity:enrollmentToken:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC27streamValidateEnrolledEvent10enrollment12languageCode11sensitivity0I5Token15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_c1_fgH7RequestVAA0a1_u1_v1_c1_fgH8ResponseVGAA20EnrollmentIdentifierO_SSSgAA0a1_u1_v1_C21_ThresholdSensitivityO10Foundation4DataVSgyAPctKF">streamValidateEnrolledEvent(enrollment:<wbr>languageCode:<wbr>sensitivity:<wbr>enrollmentToken:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -748,6 +761,7 @@
     <span class="nv">enrollment</span><span class="p">:</span> <span class="kt"><a href="../Enums/EnrollmentIdentifier.html">EnrollmentIdentifier</a></span><span class="p">,</span>
     <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">sensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span><span class="p">,</span>
+    <span class="nv">enrollmentToken</span><span class="p">:</span> <span class="kt">Data</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_ValidateEnrolledEventResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_ValidateEnrolledEventRequest</span><span class="p">,</span>
@@ -793,6 +807,18 @@
                               <td>
                                 <div>
                                   <p>How sensitive the model should be to false accepts</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enrollmentToken</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Encrypted enrollment token that was provided on enrollment, pass nil if no token was provided</p>
                                 </div>
                               </td>
                             </tr>
@@ -928,7 +954,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-12)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-30)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
