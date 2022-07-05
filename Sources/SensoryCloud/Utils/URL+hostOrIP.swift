@@ -38,10 +38,6 @@ extension URL {
             return host
         }
 
-        if scheme != nil {
-            return nil
-        }
-
         return URL(string: "https://\(absoluteString)").flatMap { $0.host }
     }
 
@@ -49,10 +45,6 @@ extension URL {
     var ipSafePort: Int? {
         if let port = port {
             return port
-        }
-
-        if scheme != nil {
-            return nil
         }
 
         return URL(string: "https://\(absoluteString)").flatMap { $0.port }

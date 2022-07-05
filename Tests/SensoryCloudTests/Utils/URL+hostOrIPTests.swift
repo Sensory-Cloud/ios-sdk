@@ -27,9 +27,13 @@ class URL_hostOrIPTests: XCTestCase {
         expectedHost = CloudHost("127.0.0.1", 800, false)
         XCTAssertEqual(parseURL(url, false), expectedHost)
 
-        // localhost is not supported
         url = "localhost:8001"
-        XCTAssertNil(parseURL(url))
+        expectedHost = CloudHost("localhost", 8001, false)
+        XCTAssertEqual(parseURL(url, false), expectedHost)
+
+        url = "api.sensorycloud.ai:443"
+        expectedHost = CloudHost("api.sensorycloud.ai", 443, true)
+        XCTAssertEqual(parseURL(url, true), expectedHost)
 
         url = "some bogus string"
         XCTAssertNil(parseURL(url))
@@ -44,6 +48,9 @@ class URL_hostOrIPTests: XCTestCase {
 
         url = URL(string: "127.0.0.1:1000")!
         XCTAssertEqual(url.hostOrIP, "127.0.0.1")
+
+        url = URL(string: "api.sensorycloud.ai:443")!
+        XCTAssertEqual(url.hostOrIP, "api.sensorycloud.ai")
     }
 
     func testIPSafePort() {
@@ -58,5 +65,8 @@ class URL_hostOrIPTests: XCTestCase {
 
         url = URL(string: "123.456.789.123:8080")!
         XCTAssertEqual(url.ipSafePort, 8080)
+
+        url = URL(string: "api.sensorycloud.ai:443")!
+        XCTAssertEqual(url.ipSafePort, 443)
     }
 }
