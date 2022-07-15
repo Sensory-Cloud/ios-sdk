@@ -374,4 +374,46 @@ final class AudioServiceTests: XCTestCase {
 
         wait(for: [expectResponse, expectRequest, expectRequestMetadata], timeout: 1)
     }
+
+    func testSynthesizeSpeech() throws {
+        let voiceName = "Some voice name"
+        let phrase = "Some phrase to synthesize"
+
+        let mockClient = Sensory_Api_V1_Audio_AudioSynthesisTestClient()
+        mockService.setClient(forType: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol.self, client: mockClient)
+        let audioService = AudioService(service: mockService)
+
+        var expectedResponse = Sensory_Api_V1_Audio_SynthesizeSpeechResponse()
+        expectedResponse.config = mockAudioConfig
+        expectedResponse.audioContent = Data(repeating: 10, count: 20)
+
+        var voiceConfig = Sensory_Api_V1_Audio_VoiceSynthesisConfig()
+        voiceConfig.voice = voiceName
+        voiceConfig.audio = mockAudioConfig
+        var expectedRequest = Sensory_Api_V1_Audio_SynthesizeSpeechRequest()
+        expectedRequest.config = voiceConfig
+        expectedRequest.phrase = phrase
+
+        let mockStream = mockClient.makeSynthesizeSpeechResponseStream{ [weak self] part in
+            switch part {
+            case .metadata(let headers):
+                XCTAssertEqual(self?.mockService.defaultStreamHeaders, headers)
+                self?.expectRequestMetadata.fulfill()
+            case .message(let message):
+                XCTAssertEqual(expectedRequest, message)
+                self?.expectRequest.fulfill()
+            case .end:
+                // request stream will be automatically closed since this is a server streaming call
+                break
+            }
+        }
+
+        _ = try audioService.synthesizeSpeech(phrase: phrase, voiceName: voiceName) { [weak self] response in
+            XCTAssertEqual(expectedResponse, response)
+            self?.expectResponse.fulfill()
+        }
+        try mockStream.sendMessage(expectedResponse)
+
+        wait(for: [expectResponse, expectRequest, expectRequestMetadata], timeout: 1)
+    }
 }

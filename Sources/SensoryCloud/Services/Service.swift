@@ -42,6 +42,7 @@ public class Service {
         "\(Sensory_Api_V1_Audio_AudioEventsClientProtocol.self)": Sensory_Api_V1_Audio_AudioEventsClient.self,
         "\(Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol.self)":
             Sensory_Api_V1_Audio_AudioTranscriptionsClient.self,
+        "\(Sensory_Api_V1_Audio_AudioSynthesisClientProtocol.self)": Sensory_Api_V1_Audio_AudioSynthesisClient.self,
         "\(Sensory_Api_V1_Video_VideoModelsClientProtocol.self)": Sensory_Api_V1_Video_VideoModelsClient.self,
         "\(Sensory_Api_V1_Video_VideoBiometricsClientProtocol.self)": Sensory_Api_V1_Video_VideoBiometricsClient.self,
         "\(Sensory_Api_V1_Video_VideoRecognitionClientProtocol.self)": Sensory_Api_V1_Video_VideoRecognitionClient.self

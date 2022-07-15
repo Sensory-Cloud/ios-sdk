@@ -42,6 +42,12 @@ extension Sensory_Api_V1_Audio_AudioTranscriptionsClient: GrpcClient {
     }
 }
 
+extension Sensory_Api_V1_Audio_AudioSynthesisClient: GrpcClient {
+    convenience init(grpcChannel: GRPCChannel) {
+        self.init(channel: grpcChannel)
+    }
+}
+
 /// A collection of grpc service calls for using audio models through Sensory Cloud
 public class AudioService {
 
@@ -395,6 +401,47 @@ public class AudioService {
         request.config = config
 
         call.sendMessage(request, promise: nil)
+
+        return call
+    }
+
+    /// Sends a request to Sensory Cloud to synthesize speech
+    ///
+    /// Concatenating all of the `audioContent` of the responses passed to the `onStreamReceive` handler will result in a complete WAV file of the resultant audio
+    /// - Parameters:
+    ///   - phrase: The text phrase to synthesize a voice saying
+    ///   - voiceName: The name of the voice to use during speech synthesis
+    ///   - languageCode: Preferred language code, pass nil to use the value from config
+    ///   - onStreamReceive: Handler function to handle responses sent from the server
+    /// - Returns: ServerStreamingCall object, can be used to prematurely close the grpc stream.
+    public func synthesizeSpeech(
+        phrase: String,
+        voiceName: String,
+        languageCode: String? = nil,
+        onStreamReceive: @escaping ((Sensory_Api_V1_Audio_SynthesizeSpeechResponse) -> Void)
+    ) throws -> ServerStreamingCall<
+        Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+        Sensory_Api_V1_Audio_SynthesizeSpeechResponse
+    > {
+        // Build request message
+        var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
+        audioConfig.encoding = .linear16
+        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
+        audioConfig.audioChannelCount = 1
+        audioConfig.languageCode = languageCode ?? Config.languageCode
+
+        var voiceConfig = Sensory_Api_V1_Audio_VoiceSynthesisConfig()
+        voiceConfig.voice = voiceName
+        voiceConfig.audio = audioConfig
+
+        var request = Sensory_Api_V1_Audio_SynthesizeSpeechRequest()
+        request.phrase = phrase
+        request.config = voiceConfig
+
+        // Open grpc stream
+        let client: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol = try service.getClient()
+        let metadata = try service.getDefaultMetadata()
+        let call = client.synthesizeSpeech(request, callOptions: metadata, handler: onStreamReceive)
 
         return call
     }
