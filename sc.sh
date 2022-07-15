@@ -11,7 +11,7 @@ COMMANDS="
     lint | l\t\t Lint Source Files\n
     test | t\t\t Run Unit Tests\n
     testpretty | tp\t Run Unit Tests using xcpretty output\n
-    genproto | gp\t\t Generate Proto Files\n
+    genproto | gp [tag]\t Pulls and generates proto files from master or from an optional git tag\n
     doc | d\t\t Generate Documentation\n
     help | h\t\t Display This Help Message\n
 "
@@ -29,10 +29,16 @@ if [ $# == 0 ] ; then
     exit 1;
 fi
 
+# --- Vars ---------------------------------------------------------
+PROTO_PATH='./proto'
+GEN_PATH='./Sources/SensoryCloud/Generated'
+PROTO_REPO='git@gitlab.com:sensory-cloud/sdk/proto.git'
+PROTO_BRANCH='master'
+
 # --- Helper Functions ---------------------------------------------
 gen_proto() {
 
-  mkdir -p "Sources/SensoryCloud/Generated"
+  mkdir -p "${GEN_PATH}"
   for x in $(find ./proto -iname "*.proto");
   do
     
@@ -41,11 +47,11 @@ gen_proto() {
     fi
 
     protoc \
-      --proto_path="./proto" \
+      --proto_path="${PROTO_PATH}" \
       --swift_opt="Visibility=Public" \
-      --swift_out="./Sources/SensoryCloud/Generated" \
+      --swift_out="${GEN_PATH}" \
       --grpc-swift_opt="Visibility=Public" \
-      --grpc-swift_out="Client=true,TestClient=true,Server=false:./Sources/SensoryCloud/Generated" \
+      --grpc-swift_out="Client=true,TestClient=true,Server=false:${GEN_PATH}" \
       $x;
 
     echo "Generated grpc code for $x";
@@ -79,7 +85,22 @@ case "$1" in
     ;;
 
   "genproto"|"gp")
+    echo "Deleting old generated code"
+    rm -rf "${GEN_PATH}"
+
+    echo "Pulling raw proto files"
+    if [[ $# -eq 2 ]]; then
+        git clone -b $2 "${PROTO_REPO}"
+    else
+        git clone -b "${PROTO_BRANCH}" "${PROTO_REPO}"
+    fi
+
+    echo "Generating proto code"
     gen_proto
+
+    echo "Deleting raw proto files"
+    rm -rf "${PROTO_PATH}"
+    
     exit 0;
     ;;
 
