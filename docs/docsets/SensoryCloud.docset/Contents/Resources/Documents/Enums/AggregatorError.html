@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <title>CredentialProvider Protocol Reference</title>
+    <title>AggregatorError Enumeration Reference</title>
     <link rel="stylesheet" type="text/css" href="../css/jazzy.css" />
     <link rel="stylesheet" type="text/css" href="../css/highlight.css" />
     <meta charset='utf-8'>
@@ -13,8 +13,8 @@
     <script src="../js/jazzy.search.js" defer></script>
   </head>
   <body>
-    <a name="//apple_ref/swift/Protocol/CredentialProvider" class="dashAnchor"></a>
-    <a title="CredentialProvider Protocol Reference"></a>
+    <a name="//apple_ref/swift/Enum/AggregatorError" class="dashAnchor"></a>
+    <a title="AggregatorError Enumeration Reference"></a>
     <header>
       <div class="content-wrapper">
         <p><a href="../index.html">SensoryCloud Docs</a> (100% documented)</p>
@@ -29,7 +29,7 @@
       <p id="breadcrumbs">
         <a href="../index.html">SensoryCloud Reference</a>
         <img id="carat" src="../img/carat.png" alt=""/>
-        CredentialProvider Protocol Reference
+        AggregatorError Enumeration Reference
       </p>
     </div>
     <div class="content-wrapper">
@@ -160,34 +160,16 @@
       <article class="main-content">
         <section>
           <section class="section">
-            <h1>CredentialProvider</h1>
+            <h1>AggregatorError</h1>
               <div class="declaration">
                 <div class="language">
                   
-                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">protocol</span> <span class="kt">CredentialProvider</span></code></pre>
+                  <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">enum</span> <span class="kt">AggregatorError</span> <span class="p">:</span> <span class="kt">Error</span></code></pre>
+<pre class="highlight swift"><code><span class="kd">extension</span> <span class="kt">AggregatorError</span><span class="p">:</span> <span class="kt">LocalizedError</span></code></pre>
 
                 </div>
               </div>
-            <p>Protocol for an object that can provide OAuth tokens to Sensory Cloud</p>
-
-<p><code><a href="../Classes/TokenManager.html">TokenManager</a></code> already conforms to this protocol and is used by default if <code><a href="../Classes/Service.html#/s:12SensoryCloud7ServiceC18credentialProviderAA010CredentialE0_pvp">Service.credentialProvider</a></code> is not changed
-Clients may use their own token management if they desire. These token managers would be responsible for:</p>
-
-<ul>
-<li>Generating their own clientIDs and client secrets
-
-<ul>
-<li>clientIDs should be a UUID</li>
-<li>client secrets should be at least 10 hexadecimal characters that are generated in a cryptographically secure way</li>
-</ul></li>
-<li>Storing these credentials as well as any requested access tokens in a secure way (i.e. Apple Keychain)</li>
-<li>Requesting new access tokens and refreshing the access token when they expire
-
-<ul>
-<li><code><a href="../Classes/OAuthService.html">OAuthService</a></code> provides the grpc calls to request new tokens</li>
-</ul></li>
-<li>Setting <code><a href="../Classes/Service.html#/s:12SensoryCloud7ServiceC18credentialProviderAA010CredentialE0_pvp">Service.credentialProvider</a></code> with their token management solution</li>
-</ul>
+            <p>Possible errors that may occur during transcript aggregation</p>
 
           </section>
           <section class="section task-group-section">
@@ -196,9 +178,9 @@ Clients may use their own token management if they desire. These token managers 
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud18CredentialProviderP14getAccessTokenSSyKF"></a>
-                    <a name="//apple_ref/swift/Method/getAccessToken()" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud18CredentialProviderP14getAccessTokenSSyKF">getAccessToken()</a>
+                    <a name="/s:12SensoryCloud15AggregatorErrorO11outOfBoundsyA2CmF"></a>
+                    <a name="//apple_ref/swift/Element/outOfBounds" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud15AggregatorErrorO11outOfBoundsyA2CmF">outOfBounds</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -206,22 +188,42 @@ Clients may use their own token management if they desire. These token managers 
                     <section class="section">
                       <div class="pointer"></div>
                       <div class="abstract">
-                        <p>Provides a valid OAuth token</p>
-
-<p>This call may block the current thread if a new token needs to be requested</p>
+                        <p>A transcribed word in the response has an index greater than <code>response.lastWordIndex</code></p>
 
                       </div>
                       <div class="declaration">
                         <h4>Declaration</h4>
                         <div class="language">
                           <p class="aside-title">Swift</p>
-                          <pre class="highlight swift"><code><span class="kd">func</span> <span class="nf">getAccessToken</span><span class="p">()</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">String</span></code></pre>
+                          <pre class="highlight swift"><code><span class="k">case</span> <span class="n">outOfBounds</span></code></pre>
 
                         </div>
                       </div>
-                      <div>
-                        <h4>Return Value</h4>
-                        <p>A valid OAuth token</p>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:10Foundation14LocalizedErrorP16errorDescriptionSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/errorDescription" class="dashAnchor"></a>
+                    <a class="token" href="#/s:10Foundation14LocalizedErrorP16errorDescriptionSSSgvp">errorDescription</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">errorDescription</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="p">{</span> <span class="k">get</span> <span class="p">}</span></code></pre>
+
+                        </div>
                       </div>
                     </section>
                   </div>

@@ -79,6 +79,9 @@
             <a href="Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a href="Enums/AggregatorError.html">AggregatorError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="Enums/AudioStreamError.html">AudioStreamError</a>
               </li>
               <li class="nav-group-task">
@@ -354,7 +357,6 @@ func audioEnrollment() throws {
     // Open the grpc stream
     let stream = try service.createEnrollment(
         modelName: modelName,
-        sampleRate: 16000, // TODO: no input on sample rate
         userID: userID,
         description: enrollmentDescription,
         isLivenessEnabled: isLivenessEnabled
@@ -415,7 +417,6 @@ func audioAuthentication() throws {
     // Open the grpc stream
     let stream = try service.authenticate(
         enrollment: .enrollmentID(enrollmentID),
-        sampleRate: 16000, // TODO: no input on sample rate
         isLivenessEnabled: isLivenessEnabled
     ) { [weak self] response in
         // The response contains information about the authentication audio such as:
@@ -473,7 +474,6 @@ func audioEvent() throws {
     // Open the grpc stream
     let stream = try service.validateTrigger(
         modelName: modelName,
-        sampleRate: 16000, // TODO: no input on sample rate
         userID: userID,
         sensitivity: sensitivity
     ) {  response in
@@ -509,7 +509,7 @@ func stopAudioEvents() {
     AudioStreamInteractor.shared.stopRecording()
 }
 </code></pre>
-<h3 id='transcription' class='heading'>Transcription</h3>
+<h3 id='transcription-sliding-window-transcript' class='heading'>Transcription (Sliding Window Transcript)</h3>
 
 <p>Transcription is used to convert audio to text.</p>
 <pre class="highlight plaintext"><code>var grpcStream: BidirectionalStreamingCall&lt;
@@ -530,14 +530,68 @@ func startAudioTranscription() throws {
     // Open the grpc stream
     let stream = try service.transcribeAudio(
         modelName: modelName,
-        sampleRate: 16000, // TODO: no input on sample rate
         userID: userID
     ) {  response in
         // Response contains information about the audio such as:
         // * audioEnergy
 
-        // Transcript contains the current running transcript of the data
+        // Transcript contains the current running transcript of the last 7 seconds of processed audio
+        // If you want a full transcript, see the below example
         let transcript = response.transcript
+    }
+
+    // Save the open grpc stream and start audio recording
+    grpcStream = stream
+    try AudioStreamInteractor.shared.startRecording()
+}
+
+// Delegate method for AudioStreamInteractor
+func didProcessAudio(_ data: Data) {
+    if let stream = grpcStream {
+        // (Make sure you use the proper type for the grpc stream you're using)
+        var request = Sensory_Api_V1_Audio_TranscribeRequest()
+        request.audioContent = data
+        stream.sendMessage(request, promise: nil)
+    } else {
+        NSLog("Recording without an open grpc stream, stopping recording")
+        AudioStreamInteractor.shared.stopRecording()
+    }
+}
+
+// The SDK implementer can decide when they want to close the stream
+func stopAudioTranscription() {
+    _ = grpcStream?.sendEnd()
+    AudioStreamInteractor.shared.stopRecording()
+}
+</code></pre>
+<h3 id='transcription-full-transcript' class='heading'>Transcription (Full Transcript)</h3>
+<pre class="highlight plaintext"><code>var grpcStream: BidirectionalStreamingCall&lt;
+    Sensory_Api_V1_Audio_TranscribeRequest,
+    Sensory_Api_V1_Audio_TranscribeResponse
+&gt;?
+let aggregator = TranscriptAggregator()
+
+func startAudioTranscription() throws {
+    let userID = "72f286b8-173f-436a-8869-6f7887789ee9"
+    let modelName = "wakeword-16kHz-open_sesame.ubm"
+
+    // Get an audio service
+    let service = AudioService()
+
+    // Set the delegate for AudioStreamInteractor
+    AudioStreamInteractor.shared.delegate = self
+
+    // Open the grpc stream
+    let stream = try service.transcribeAudio(
+        modelName: modelName,
+        userID: userID
+    ) {  response in
+        // Response contains information about the audio such as:
+        // * audioEnergy
+
+        // The transcript aggregator will collect all of the server responses and save a full transcript
+        try? aggregator.processResponse(response.getWordList())
+        transcript = aggregator.getTranscript()
     }
 
     // Save the open grpc stream and start audio recording
@@ -810,7 +864,7 @@ func stopValidatingLiveness() {
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-30)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-07-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
