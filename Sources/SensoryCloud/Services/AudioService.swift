@@ -263,7 +263,6 @@ public class AudioService {
     ///   - userID: Unique user identifier
     ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - description: User supplied description of the enrollment
-    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -295,7 +294,6 @@ public class AudioService {
         config.modelName = modelName
         config.userID = userID
         config.description_p = description
-        config.disableServerEnrollmentTemplateStorage = disableServerEnrollmentStorage
 
         var request = Sensory_Api_V1_Audio_CreateEnrolledEventRequest()
         request.config = config
