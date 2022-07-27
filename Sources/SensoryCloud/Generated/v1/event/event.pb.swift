@@ -139,6 +139,9 @@ public struct Sensory_Api_V1_Event_UsageEventResponse {
   /// Billable function, if applicable
   public var billableFunction: Sensory_Api_Common_ModelType = .unknown
 
+  /// Credits used by this event
+  public var credits: Double = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -250,6 +253,9 @@ public struct Sensory_Api_V1_Event_UsageEventModelSummary {
 
   /// The number of events included in the summary
   public var count: Int64 = 0
+
+  /// Credits used by this event
+  public var credits: Double = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -431,6 +437,7 @@ extension Sensory_Api_V1_Event_UsageEventResponse: SwiftProtobuf.Message, SwiftP
     10: .same(proto: "billableUnits"),
     11: .same(proto: "tenantId"),
     12: .same(proto: "billableFunction"),
+    13: .same(proto: "credits"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -451,6 +458,7 @@ extension Sensory_Api_V1_Event_UsageEventResponse: SwiftProtobuf.Message, SwiftP
       case 10: try { try decoder.decodeSingularStringField(value: &self.billableUnits) }()
       case 11: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
       case 12: try { try decoder.decodeSingularEnumField(value: &self.billableFunction) }()
+      case 13: try { try decoder.decodeSingularDoubleField(value: &self.credits) }()
       default: break
       }
     }
@@ -497,6 +505,9 @@ extension Sensory_Api_V1_Event_UsageEventResponse: SwiftProtobuf.Message, SwiftP
     if self.billableFunction != .unknown {
       try visitor.visitSingularEnumField(value: self.billableFunction, fieldNumber: 12)
     }
+    if self.credits != 0 {
+      try visitor.visitSingularDoubleField(value: self.credits, fieldNumber: 13)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -513,6 +524,7 @@ extension Sensory_Api_V1_Event_UsageEventResponse: SwiftProtobuf.Message, SwiftP
     if lhs.billableUnits != rhs.billableUnits {return false}
     if lhs.tenantID != rhs.tenantID {return false}
     if lhs.billableFunction != rhs.billableFunction {return false}
+    if lhs.credits != rhs.credits {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -659,6 +671,7 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
     2: .same(proto: "units"),
     3: .same(proto: "value"),
     4: .same(proto: "count"),
+    5: .same(proto: "credits"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -671,6 +684,7 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
       case 2: try { try decoder.decodeSingularStringField(value: &self.units) }()
       case 3: try { try decoder.decodeSingularInt64Field(value: &self.value) }()
       case 4: try { try decoder.decodeSingularInt64Field(value: &self.count) }()
+      case 5: try { try decoder.decodeSingularDoubleField(value: &self.credits) }()
       default: break
       }
     }
@@ -689,6 +703,9 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
     if self.count != 0 {
       try visitor.visitSingularInt64Field(value: self.count, fieldNumber: 4)
     }
+    if self.credits != 0 {
+      try visitor.visitSingularDoubleField(value: self.credits, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -697,6 +714,7 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
     if lhs.units != rhs.units {return false}
     if lhs.value != rhs.value {return false}
     if lhs.count != rhs.count {return false}
+    if lhs.credits != rhs.credits {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

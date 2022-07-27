@@ -682,6 +682,8 @@ public struct Sensory_Api_Common_ServerHealthResponse {
   /// The type of server that is sending the health response
   public var serverType: Sensory_Api_Common_ServerType = .titan
 
+  public var isLeader: Bool = false
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1169,6 +1171,7 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
     3: .same(proto: "id"),
     4: .same(proto: "services"),
     5: .same(proto: "serverType"),
+    6: .same(proto: "isLeader"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1182,6 +1185,7 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
       case 3: try { try decoder.decodeSingularStringField(value: &self.id) }()
       case 4: try { try decoder.decodeRepeatedMessageField(value: &self.services) }()
       case 5: try { try decoder.decodeSingularEnumField(value: &self.serverType) }()
+      case 6: try { try decoder.decodeSingularBoolField(value: &self.isLeader) }()
       default: break
       }
     }
@@ -1203,6 +1207,9 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
     if self.serverType != .titan {
       try visitor.visitSingularEnumField(value: self.serverType, fieldNumber: 5)
     }
+    if self.isLeader != false {
+      try visitor.visitSingularBoolField(value: self.isLeader, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1212,6 +1219,7 @@ extension Sensory_Api_Common_ServerHealthResponse: SwiftProtobuf.Message, SwiftP
     if lhs.id != rhs.id {return false}
     if lhs.services != rhs.services {return false}
     if lhs.serverType != rhs.serverType {return false}
+    if lhs.isLeader != rhs.isLeader {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

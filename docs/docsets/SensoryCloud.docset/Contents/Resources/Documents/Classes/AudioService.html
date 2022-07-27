@@ -80,6 +80,9 @@
             <a href="../Enums.html">Enumerations</a>
             <ul class="nav-group-tasks">
               <li class="nav-group-task">
+                <a href="../Enums/AggregatorError.html">AggregatorError</a>
+              </li>
+              <li class="nav-group-task">
                 <a href="../Enums/AudioStreamError.html">AudioStreamError</a>
               </li>
               <li class="nav-group-task">
@@ -725,18 +728,6 @@
                             <tr>
                               <td>
                                 <code>
-                                <em>disableServerEnrollmentStorage</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
                                 <em>onStreamReceive</em>
                                 </code>
                               </td>
@@ -975,12 +966,108 @@
                     </section>
                   </div>
                 </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud12AudioServiceC16synthesizeSpeech6phrase9voiceName12languageCode15onStreamReceive4GRPC19ServerStreamingCallVyAA0a8_Api_V1_c11_SynthesizeF7RequestVAA0a1_s1_t1_c1_uF8ResponseVGSS_S2SSgyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/synthesizeSpeech(phrase:voiceName:languageCode:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16synthesizeSpeech6phrase9voiceName12languageCode15onStreamReceive4GRPC19ServerStreamingCallVyAA0a8_Api_V1_c11_SynthesizeF7RequestVAA0a1_s1_t1_c1_uF8ResponseVGSS_S2SSgyAOctKF">synthesizeSpeech(phrase:<wbr>voiceName:<wbr>languageCode:<wbr>onStreamReceive:<wbr>)</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Sends a request to Sensory Cloud to synthesize speech</p>
+
+<p>Concatenating all of the <code>audioContent</code> of the responses passed to the <code>onStreamReceive</code> handler will result in a complete WAV file of the resultant audio</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">synthesizeSpeech</span><span class="p">(</span>
+    <span class="nv">phrase</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">voiceName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_SynthesizeSpeechResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
+<span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">ServerStreamingCall</span><span class="o">&lt;</span>
+    <span class="kt">Sensory_Api_V1_Audio_SynthesizeSpeechRequest</span><span class="p">,</span>
+    <span class="kt">Sensory_Api_V1_Audio_SynthesizeSpeechResponse</span>
+<span class="o">&gt;</span></code></pre>
+
+                        </div>
+                      </div>
+                      <div>
+                        <h4>Parameters</h4>
+                        <table class="graybox">
+                          <tbody>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>phrase</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The text phrase to synthesize a voice saying</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>voiceName</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The name of the voice to use during speech synthesis</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>languageCode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Preferred language code, pass nil to use the value from config</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>onStreamReceive</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Handler function to handle responses sent from the server</p>
+                                </div>
+                              </td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                      <div>
+                        <h4>Return Value</h4>
+                        <p>ServerStreamingCall object, can be used to prematurely close the grpc stream.</p>
+                      </div>
+                    </section>
+                  </div>
+                </li>
               </ul>
             </div>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-06-30)</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-07-25)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
