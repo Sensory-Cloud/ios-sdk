@@ -22,6 +22,7 @@
 //
 import GRPC
 import NIO
+import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
@@ -65,7 +66,7 @@ extension Sensory_Api_V1_Event_EventServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.event.EventService/PublishUsageEvents",
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makePublishUsageEventsInterceptors() ?? []
@@ -84,7 +85,7 @@ extension Sensory_Api_V1_Event_EventServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.event.EventService/GetUsageEventList",
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetUsageEventListInterceptors() ?? []
@@ -103,7 +104,7 @@ extension Sensory_Api_V1_Event_EventServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.event.EventService/GetUsageEventSummary",
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
@@ -111,20 +112,45 @@ extension Sensory_Api_V1_Event_EventServiceClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Event_EventServiceClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'publishUsageEvents'.
-  func makePublishUsageEventsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Event_EventServiceNIOClient")
+public final class Sensory_Api_V1_Event_EventServiceClient: Sensory_Api_V1_Event_EventServiceClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
 
-  /// - Returns: Interceptors to use when invoking 'getUsageEventList'.
-  func makeGetUsageEventListInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'getUsageEventSummary'.
-  func makeGetUsageEventSummaryInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>]
+  /// Creates a client for the sensory.api.v1.event.EventService service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Event_EventServiceClient: Sensory_Api_V1_Event_EventServiceClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Event_EventServiceNIOClient: Sensory_Api_V1_Event_EventServiceClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol?
 
@@ -145,6 +171,184 @@ public final class Sensory_Api_V1_Event_EventServiceClient: Sensory_Api_V1_Event
   }
 }
 
+#if compiler(>=5.6)
+/// Service to publish events to the cloud
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Event_EventServiceAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol? { get }
+
+  func makePublishUsageEventsCall(
+    _ request: Sensory_Api_V1_Event_PublishUsageEventsRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse>
+
+  func makeGetUsageEventListCall(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse>
+
+  func makeGetUsageEventSummaryCall(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Event_EventServiceAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Event_EventServiceClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makePublishUsageEventsCall(
+    _ request: Sensory_Api_V1_Event_PublishUsageEventsRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePublishUsageEventsInterceptors() ?? []
+    )
+  }
+
+  public func makeGetUsageEventListCall(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetUsageEventListInterceptors() ?? []
+    )
+  }
+
+  public func makeGetUsageEventSummaryCall(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Event_EventServiceAsyncClientProtocol {
+  public func publishUsageEvents(
+    _ request: Sensory_Api_V1_Event_PublishUsageEventsRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_Event_PublishUsageEventsResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makePublishUsageEventsInterceptors() ?? []
+    )
+  }
+
+  public func getUsageEventList(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_Event_UsageEventListResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetUsageEventListInterceptors() ?? []
+    )
+  }
+
+  public func getUsageEventSummary(
+    _ request: Sensory_Api_V1_Event_UsageEventListRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_Event_UsageEventSummary {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Event_EventServiceAsyncClient: Sensory_Api_V1_Event_EventServiceAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'publishUsageEvents'.
+  func makePublishUsageEventsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getUsageEventList'.
+  func makeGetUsageEventListInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getUsageEventSummary'.
+  func makeGetUsageEventSummaryInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>]
+}
+
+public enum Sensory_Api_V1_Event_EventServiceClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "EventService",
+    fullName: "sensory.api.v1.event.EventService",
+    methods: [
+      Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents,
+      Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList,
+      Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary,
+    ]
+  )
+
+  public enum Methods {
+    public static let publishUsageEvents = GRPCMethodDescriptor(
+      name: "PublishUsageEvents",
+      path: "/sensory.api.v1.event.EventService/PublishUsageEvents",
+      type: GRPCCallType.unary
+    )
+
+    public static let getUsageEventList = GRPCMethodDescriptor(
+      name: "GetUsageEventList",
+      path: "/sensory.api.v1.event.EventService/GetUsageEventList",
+      type: GRPCCallType.unary
+    )
+
+    public static let getUsageEventSummary = GRPCMethodDescriptor(
+      name: "GetUsageEventSummary",
+      path: "/sensory.api.v1.event.EventService/GetUsageEventSummary",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Event_EventServiceTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_Event_EventServiceClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -171,13 +375,13 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
   public func makePublishUsageEventsResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_PublishUsageEventsRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.event.EventService/PublishUsageEvents", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents.path, requestHandler: requestHandler)
   }
 
   public func enqueuePublishUsageEventsResponse(
     _ response: Sensory_Api_V1_Event_PublishUsageEventsResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_PublishUsageEventsRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makePublishUsageEventsResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -185,7 +389,7 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
 
   /// Returns true if there are response streams enqueued for 'PublishUsageEvents'
   public var hasPublishUsageEventsResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.event.EventService/PublishUsageEvents")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents.path)
   }
 
   /// Make a unary response for the GetUsageEventList RPC. This must be called
@@ -195,13 +399,13 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
   public func makeGetUsageEventListResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.event.EventService/GetUsageEventList", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetUsageEventListResponse(
     _ response: Sensory_Api_V1_Event_UsageEventListResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetUsageEventListResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -209,7 +413,7 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
 
   /// Returns true if there are response streams enqueued for 'GetUsageEventList'
   public var hasGetUsageEventListResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.event.EventService/GetUsageEventList")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList.path)
   }
 
   /// Make a unary response for the GetUsageEventSummary RPC. This must be called
@@ -219,13 +423,13 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
   public func makeGetUsageEventSummaryResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.event.EventService/GetUsageEventSummary", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetUsageEventSummaryResponse(
     _ response: Sensory_Api_V1_Event_UsageEventSummary,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Event_UsageEventListRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetUsageEventSummaryResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -233,7 +437,7 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
 
   /// Returns true if there are response streams enqueued for 'GetUsageEventSummary'
   public var hasGetUsageEventSummaryResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.event.EventService/GetUsageEventSummary")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary.path)
   }
 }
 

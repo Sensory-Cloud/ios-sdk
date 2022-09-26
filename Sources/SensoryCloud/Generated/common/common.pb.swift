@@ -434,8 +434,8 @@ extension Sensory_Api_Common_CompressionType: CaseIterable {
 public enum Sensory_Api_Common_ClientType: SwiftProtobuf.Enum {
   public typealias RawValue = Int
 
-  /// Sensory Root Token
-  case root // = 0
+  /// Invalid, not set role
+  case invalid // = 0
 
   /// User End Device       (E.G. Sensory SDK on Smartphone)
   case device // = 1
@@ -451,32 +451,42 @@ public enum Sensory_Api_Common_ClientType: SwiftProtobuf.Enum {
 
   /// Billing User Account   (E.G. CFO)
   case billingUser // = 5
+
+  /// Read-Only Account
+  case readOnlyUser // = 6
+
+  /// Sensory Root Token
+  case root // = 100
   case UNRECOGNIZED(Int)
 
   public init() {
-    self = .root
+    self = .invalid
   }
 
   public init?(rawValue: Int) {
     switch rawValue {
-    case 0: self = .root
+    case 0: self = .invalid
     case 1: self = .device
     case 2: self = .cluster
     case 3: self = .user
     case 4: self = .superUser
     case 5: self = .billingUser
+    case 6: self = .readOnlyUser
+    case 100: self = .root
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
 
   public var rawValue: Int {
     switch self {
-    case .root: return 0
+    case .invalid: return 0
     case .device: return 1
     case .cluster: return 2
     case .user: return 3
     case .superUser: return 4
     case .billingUser: return 5
+    case .readOnlyUser: return 6
+    case .root: return 100
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -488,12 +498,14 @@ public enum Sensory_Api_Common_ClientType: SwiftProtobuf.Enum {
 extension Sensory_Api_Common_ClientType: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   public static var allCases: [Sensory_Api_Common_ClientType] = [
-    .root,
+    .invalid,
     .device,
     .cluster,
     .user,
     .superUser,
     .billingUser,
+    .readOnlyUser,
+    .root,
   ]
 }
 
@@ -917,6 +929,60 @@ public struct Sensory_Api_Common_EnrollmentToken {
   public init() {}
 }
 
+/// Response to a key request. Holds a byte array representing the key value.
+/// Also should we add a "userCreated" boolean or enum to the keys?
+public struct Sensory_Api_Common_CreateKeyRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The name you'd like to associate with this key
+  public var name: String = String()
+
+  /// The key type
+  public var keyType: Sensory_Api_Common_KeyType = .publicKey
+
+  /// The value of the key as a string
+  public var value: String = String()
+
+  /// Optional seconds until this key expires
+  public var expiration: Int64 = 0
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
+/// Response to a key request. Holds a byte array representing the key value.
+public struct Sensory_Api_Common_KeyResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The the uuid associated with this key
+  public var id: String = String()
+
+  /// The name associated with this key
+  public var name: String = String()
+
+  /// The key type
+  public var keyType: Sensory_Api_Common_KeyType = .publicKey
+
+  /// Optional seconds until this key expires.
+  /// If this value is 0, this key will never expire
+  public var expiration: Int64 = 0
+
+  /// TenantId for this key
+  public var tenantID: String = String()
+
+  /// Indicates if this key is disabled
+  public var disabled: Bool = false
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 #if swift(>=5.5) && canImport(_Concurrency)
 extension Sensory_Api_Common_Void: @unchecked Sendable {}
 extension Sensory_Api_Common_KeyType: @unchecked Sendable {}
@@ -939,6 +1005,8 @@ extension Sensory_Api_Common_TenantResponse: @unchecked Sendable {}
 extension Sensory_Api_Common_PaginationOptions: @unchecked Sendable {}
 extension Sensory_Api_Common_PaginationResponse: @unchecked Sendable {}
 extension Sensory_Api_Common_EnrollmentToken: @unchecked Sendable {}
+extension Sensory_Api_Common_CreateKeyRequest: @unchecked Sendable {}
+extension Sensory_Api_Common_KeyResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
@@ -1011,12 +1079,14 @@ extension Sensory_Api_Common_CompressionType: SwiftProtobuf._ProtoNameProviding 
 
 extension Sensory_Api_Common_ClientType: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "ROOT"),
+    0: .same(proto: "INVALID"),
     1: .same(proto: "DEVICE"),
     2: .same(proto: "CLUSTER"),
     3: .same(proto: "USER"),
     4: .same(proto: "SUPER_USER"),
     5: .same(proto: "BILLING_USER"),
+    6: .same(proto: "READ_ONLY_USER"),
+    100: .same(proto: "ROOT"),
   ]
 }
 
@@ -1646,6 +1716,118 @@ extension Sensory_Api_Common_EnrollmentToken: SwiftProtobuf.Message, SwiftProtob
   public static func ==(lhs: Sensory_Api_Common_EnrollmentToken, rhs: Sensory_Api_Common_EnrollmentToken) -> Bool {
     if lhs.token != rhs.token {return false}
     if lhs.expiration != rhs.expiration {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_CreateKeyRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".CreateKeyRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "name"),
+    2: .same(proto: "keyType"),
+    3: .same(proto: "value"),
+    4: .same(proto: "expiration"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 2: try { try decoder.decodeSingularEnumField(value: &self.keyType) }()
+      case 3: try { try decoder.decodeSingularStringField(value: &self.value) }()
+      case 4: try { try decoder.decodeSingularInt64Field(value: &self.expiration) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
+    }
+    if self.keyType != .publicKey {
+      try visitor.visitSingularEnumField(value: self.keyType, fieldNumber: 2)
+    }
+    if !self.value.isEmpty {
+      try visitor.visitSingularStringField(value: self.value, fieldNumber: 3)
+    }
+    if self.expiration != 0 {
+      try visitor.visitSingularInt64Field(value: self.expiration, fieldNumber: 4)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_CreateKeyRequest, rhs: Sensory_Api_Common_CreateKeyRequest) -> Bool {
+    if lhs.name != rhs.name {return false}
+    if lhs.keyType != rhs.keyType {return false}
+    if lhs.value != rhs.value {return false}
+    if lhs.expiration != rhs.expiration {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
+extension Sensory_Api_Common_KeyResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".KeyResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "id"),
+    2: .same(proto: "name"),
+    3: .same(proto: "keyType"),
+    4: .same(proto: "expiration"),
+    5: .same(proto: "tenantId"),
+    6: .same(proto: "disabled"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.id) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.name) }()
+      case 3: try { try decoder.decodeSingularEnumField(value: &self.keyType) }()
+      case 4: try { try decoder.decodeSingularInt64Field(value: &self.expiration) }()
+      case 5: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
+      case 6: try { try decoder.decodeSingularBoolField(value: &self.disabled) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.id.isEmpty {
+      try visitor.visitSingularStringField(value: self.id, fieldNumber: 1)
+    }
+    if !self.name.isEmpty {
+      try visitor.visitSingularStringField(value: self.name, fieldNumber: 2)
+    }
+    if self.keyType != .publicKey {
+      try visitor.visitSingularEnumField(value: self.keyType, fieldNumber: 3)
+    }
+    if self.expiration != 0 {
+      try visitor.visitSingularInt64Field(value: self.expiration, fieldNumber: 4)
+    }
+    if !self.tenantID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tenantID, fieldNumber: 5)
+    }
+    if self.disabled != false {
+      try visitor.visitSingularBoolField(value: self.disabled, fieldNumber: 6)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_Common_KeyResponse, rhs: Sensory_Api_Common_KeyResponse) -> Bool {
+    if lhs.id != rhs.id {return false}
+    if lhs.name != rhs.name {return false}
+    if lhs.keyType != rhs.keyType {return false}
+    if lhs.expiration != rhs.expiration {return false}
+    if lhs.tenantID != rhs.tenantID {return false}
+    if lhs.disabled != rhs.disabled {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

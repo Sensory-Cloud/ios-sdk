@@ -1026,6 +1026,9 @@ public struct Sensory_Api_V1_Audio_TranscribeResponse {
   /// Clears the value of `wordList`. Subsequent reads from it will return its default value.
   public mutating func clearWordList() {self._wordList = nil}
 
+  /// Tells if any voice activity was detected for the most recently proccessed audio segment
+  public var hasVoiceActivity_p: Bool = false
+
   /// If a post processing audio action was requested, this will be populated with the specific
   /// action that was completed along with the actionId optionally set by the client.
   public var postProcessingAction: Sensory_Api_V1_Audio_AudioResponsePostProcessingAction {
@@ -1585,6 +1588,20 @@ public struct Sensory_Api_V1_Audio_TranscribeConfig {
 
   /// The unique user Identifer
   public var userID: String = String()
+
+  /// A flag indicating if the transcription session should use punctuation and capitalization support
+  public var enablePunctuationCapitalization: Bool = false
+
+  /// If enabled, the server will automatically close the stream once the user has stopped speaking
+  public var doSingleUtterance: Bool = false
+
+  /// How sensitive the voice activiy detector should be when single utterance mode is enabled
+  /// LOW is the recommended sensitivity to use
+  public var vadSensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .lowest
+
+  /// The number of seconds of silence to detect before automatically ending the stream when single utterance mode is enabled
+  /// If not specified, 1 second is used by default
+  public var vadDuration: Float = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -2799,6 +2816,7 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
     2: .same(proto: "transcript"),
     3: .same(proto: "isPartialResult"),
     4: .same(proto: "wordList"),
+    5: .same(proto: "hasVoiceActivity"),
     10: .same(proto: "postProcessingAction"),
   ]
 
@@ -2812,6 +2830,7 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
       case 2: try { try decoder.decodeSingularStringField(value: &self.transcript) }()
       case 3: try { try decoder.decodeSingularBoolField(value: &self.isPartialResult) }()
       case 4: try { try decoder.decodeSingularMessageField(value: &self._wordList) }()
+      case 5: try { try decoder.decodeSingularBoolField(value: &self.hasVoiceActivity_p) }()
       case 10: try { try decoder.decodeSingularMessageField(value: &self._postProcessingAction) }()
       default: break
       }
@@ -2835,6 +2854,9 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
     try { if let v = self._wordList {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
     } }()
+    if self.hasVoiceActivity_p != false {
+      try visitor.visitSingularBoolField(value: self.hasVoiceActivity_p, fieldNumber: 5)
+    }
     try { if let v = self._postProcessingAction {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
     } }()
@@ -2846,6 +2868,7 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
     if lhs.transcript != rhs.transcript {return false}
     if lhs.isPartialResult != rhs.isPartialResult {return false}
     if lhs._wordList != rhs._wordList {return false}
+    if lhs.hasVoiceActivity_p != rhs.hasVoiceActivity_p {return false}
     if lhs._postProcessingAction != rhs._postProcessingAction {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3356,6 +3379,10 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     1: .same(proto: "audio"),
     2: .same(proto: "modelName"),
     3: .same(proto: "userId"),
+    4: .same(proto: "enablePunctuationCapitalization"),
+    5: .same(proto: "doSingleUtterance"),
+    6: .same(proto: "vadSensitivity"),
+    7: .same(proto: "vadDuration"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3367,6 +3394,10 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
       case 1: try { try decoder.decodeSingularMessageField(value: &self._audio) }()
       case 2: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.userID) }()
+      case 4: try { try decoder.decodeSingularBoolField(value: &self.enablePunctuationCapitalization) }()
+      case 5: try { try decoder.decodeSingularBoolField(value: &self.doSingleUtterance) }()
+      case 6: try { try decoder.decodeSingularEnumField(value: &self.vadSensitivity) }()
+      case 7: try { try decoder.decodeSingularFloatField(value: &self.vadDuration) }()
       default: break
       }
     }
@@ -3386,6 +3417,18 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     if !self.userID.isEmpty {
       try visitor.visitSingularStringField(value: self.userID, fieldNumber: 3)
     }
+    if self.enablePunctuationCapitalization != false {
+      try visitor.visitSingularBoolField(value: self.enablePunctuationCapitalization, fieldNumber: 4)
+    }
+    if self.doSingleUtterance != false {
+      try visitor.visitSingularBoolField(value: self.doSingleUtterance, fieldNumber: 5)
+    }
+    if self.vadSensitivity != .lowest {
+      try visitor.visitSingularEnumField(value: self.vadSensitivity, fieldNumber: 6)
+    }
+    if self.vadDuration != 0 {
+      try visitor.visitSingularFloatField(value: self.vadDuration, fieldNumber: 7)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3393,6 +3436,10 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     if lhs._audio != rhs._audio {return false}
     if lhs.modelName != rhs.modelName {return false}
     if lhs.userID != rhs.userID {return false}
+    if lhs.enablePunctuationCapitalization != rhs.enablePunctuationCapitalization {return false}
+    if lhs.doSingleUtterance != rhs.doSingleUtterance {return false}
+    if lhs.vadSensitivity != rhs.vadSensitivity {return false}
+    if lhs.vadDuration != rhs.vadDuration {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

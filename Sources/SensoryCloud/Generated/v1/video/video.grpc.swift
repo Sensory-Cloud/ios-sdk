@@ -22,6 +22,7 @@
 //
 import GRPC
 import NIO
+import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
@@ -55,7 +56,7 @@ extension Sensory_Api_V1_Video_VideoModelsClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.video.VideoModels/GetModels",
+      path: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetModelsInterceptors() ?? []
@@ -63,14 +64,45 @@ extension Sensory_Api_V1_Video_VideoModelsClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Video_VideoModelsClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'getModels'.
-  func makeGetModelsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Video_VideoModelsNIOClient")
+public final class Sensory_Api_V1_Video_VideoModelsClient: Sensory_Api_V1_Video_VideoModelsClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the sensory.api.v1.video.VideoModels service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Video_VideoModelsClient: Sensory_Api_V1_Video_VideoModelsClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Video_VideoModelsNIOClient: Sensory_Api_V1_Video_VideoModelsClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol?
 
@@ -91,6 +123,106 @@ public final class Sensory_Api_V1_Video_VideoModelsClient: Sensory_Api_V1_Video_
   }
 }
 
+#if compiler(>=5.6)
+/// Handles the retrieval and management of video models
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Video_VideoModelsAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol? { get }
+
+  func makeGetModelsCall(
+    _ request: Sensory_Api_V1_Video_GetModelsRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoModelsAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Video_VideoModelsClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeGetModelsCall(
+    _ request: Sensory_Api_V1_Video_GetModelsRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetModelsInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoModelsAsyncClientProtocol {
+  public func getModels(
+    _ request: Sensory_Api_V1_Video_GetModelsRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_Video_GetModelsResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetModelsInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Video_VideoModelsAsyncClient: Sensory_Api_V1_Video_VideoModelsAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'getModels'.
+  func makeGetModelsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse>]
+}
+
+public enum Sensory_Api_V1_Video_VideoModelsClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "VideoModels",
+    fullName: "sensory.api.v1.video.VideoModels",
+    methods: [
+      Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels,
+    ]
+  )
+
+  public enum Methods {
+    public static let getModels = GRPCMethodDescriptor(
+      name: "GetModels",
+      path: "/sensory.api.v1.video.VideoModels/GetModels",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Video_VideoModelsTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Video_VideoModelsTestClient: Sensory_Api_V1_Video_VideoModelsClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -117,13 +249,13 @@ public final class Sensory_Api_V1_Video_VideoModelsTestClient: Sensory_Api_V1_Vi
   public func makeGetModelsResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_GetModelsRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.video.VideoModels/GetModels", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetModelsResponse(
     _ response: Sensory_Api_V1_Video_GetModelsResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_GetModelsRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetModelsResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -131,7 +263,7 @@ public final class Sensory_Api_V1_Video_VideoModelsTestClient: Sensory_Api_V1_Vi
 
   /// Returns true if there are response streams enqueued for 'GetModels'
   public var hasGetModelsResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.video.VideoModels/GetModels")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path)
   }
 }
 
@@ -174,7 +306,7 @@ extension Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Video_CreateEnrollmentResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.video.VideoBiometrics/CreateEnrollment",
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? [],
       handler: handler
@@ -197,7 +329,7 @@ extension Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Video_AuthenticateResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.video.VideoBiometrics/Authenticate",
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? [],
       handler: handler
@@ -205,17 +337,45 @@ extension Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Video_VideoBiometricsClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'createEnrollment'.
-  func makeCreateEnrollmentInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Video_VideoBiometricsNIOClient")
+public final class Sensory_Api_V1_Video_VideoBiometricsClient: Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
 
-  /// - Returns: Interceptors to use when invoking 'authenticate'.
-  func makeAuthenticateInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse>]
+  /// Creates a client for the sensory.api.v1.video.VideoBiometrics service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Video_VideoBiometricsClient: Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Video_VideoBiometricsNIOClient: Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol?
 
@@ -236,6 +396,163 @@ public final class Sensory_Api_V1_Video_VideoBiometricsClient: Sensory_Api_V1_Vi
   }
 }
 
+#if compiler(>=5.6)
+/// Handles all video-related biometrics
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Video_VideoBiometricsAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol? { get }
+
+  func makeCreateEnrollmentCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse>
+
+  func makeAuthenticateCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoBiometricsAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Video_VideoBiometricsClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeCreateEnrollmentCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  public func makeAuthenticateCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoBiometricsAsyncClientProtocol {
+  public func createEnrollment<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Video_CreateEnrollmentResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Video_CreateEnrollmentRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  public func createEnrollment<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Video_CreateEnrollmentResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Video_CreateEnrollmentRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  public func authenticate<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Video_AuthenticateResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Video_AuthenticateRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? []
+    )
+  }
+
+  public func authenticate<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Video_AuthenticateResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Video_AuthenticateRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Video_VideoBiometricsAsyncClient: Sensory_Api_V1_Video_VideoBiometricsAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'createEnrollment'.
+  func makeCreateEnrollmentInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'authenticate'.
+  func makeAuthenticateInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse>]
+}
+
+public enum Sensory_Api_V1_Video_VideoBiometricsClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "VideoBiometrics",
+    fullName: "sensory.api.v1.video.VideoBiometrics",
+    methods: [
+      Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment,
+      Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate,
+    ]
+  )
+
+  public enum Methods {
+    public static let createEnrollment = GRPCMethodDescriptor(
+      name: "CreateEnrollment",
+      path: "/sensory.api.v1.video.VideoBiometrics/CreateEnrollment",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let authenticate = GRPCMethodDescriptor(
+      name: "Authenticate",
+      path: "/sensory.api.v1.video.VideoBiometrics/Authenticate",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Video_VideoBiometricsTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Video_VideoBiometricsTestClient: Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -262,13 +579,13 @@ public final class Sensory_Api_V1_Video_VideoBiometricsTestClient: Sensory_Api_V
   public func makeCreateEnrollmentResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_CreateEnrollmentRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.video.VideoBiometrics/CreateEnrollment", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path, requestHandler: requestHandler)
   }
 
   public func enqueueCreateEnrollmentResponses(
     _ responses: [Sensory_Api_V1_Video_CreateEnrollmentResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_CreateEnrollmentRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeCreateEnrollmentResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -277,7 +594,7 @@ public final class Sensory_Api_V1_Video_VideoBiometricsTestClient: Sensory_Api_V
 
   /// Returns true if there are response streams enqueued for 'CreateEnrollment'
   public var hasCreateEnrollmentResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.video.VideoBiometrics/CreateEnrollment")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path)
   }
 
   /// Make a streaming response for the Authenticate RPC. This must be called
@@ -287,13 +604,13 @@ public final class Sensory_Api_V1_Video_VideoBiometricsTestClient: Sensory_Api_V
   public func makeAuthenticateResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_AuthenticateRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.video.VideoBiometrics/Authenticate", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path, requestHandler: requestHandler)
   }
 
   public func enqueueAuthenticateResponses(
     _ responses: [Sensory_Api_V1_Video_AuthenticateResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_AuthenticateRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeAuthenticateResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -302,7 +619,7 @@ public final class Sensory_Api_V1_Video_VideoBiometricsTestClient: Sensory_Api_V
 
   /// Returns true if there are response streams enqueued for 'Authenticate'
   public var hasAuthenticateResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.video.VideoBiometrics/Authenticate")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path)
   }
 }
 
@@ -340,7 +657,7 @@ extension Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
     handler: @escaping (Sensory_Api_V1_Video_LivenessRecognitionResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.video.VideoRecognition/ValidateLiveness",
+      path: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeValidateLivenessInterceptors() ?? [],
       handler: handler
@@ -348,14 +665,45 @@ extension Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Video_VideoRecognitionClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'validateLiveness'.
-  func makeValidateLivenessInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Video_VideoRecognitionNIOClient")
+public final class Sensory_Api_V1_Video_VideoRecognitionClient: Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the sensory.api.v1.video.VideoRecognition service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Video_VideoRecognitionClient: Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Video_VideoRecognitionNIOClient: Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol?
 
@@ -376,6 +724,115 @@ public final class Sensory_Api_V1_Video_VideoRecognitionClient: Sensory_Api_V1_V
   }
 }
 
+#if compiler(>=5.6)
+/// Handles all video recognition endpoints
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Video_VideoRecognitionAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol? { get }
+
+  func makeValidateLivenessCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoRecognitionAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Video_VideoRecognitionClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeValidateLivenessCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateLivenessInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoRecognitionAsyncClientProtocol {
+  public func validateLiveness<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Video_LivenessRecognitionResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Video_ValidateRecognitionRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateLivenessInterceptors() ?? []
+    )
+  }
+
+  public func validateLiveness<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Video_LivenessRecognitionResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Video_ValidateRecognitionRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateLivenessInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Video_VideoRecognitionAsyncClient: Sensory_Api_V1_Video_VideoRecognitionAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'validateLiveness'.
+  func makeValidateLivenessInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse>]
+}
+
+public enum Sensory_Api_V1_Video_VideoRecognitionClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "VideoRecognition",
+    fullName: "sensory.api.v1.video.VideoRecognition",
+    methods: [
+      Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness,
+    ]
+  )
+
+  public enum Methods {
+    public static let validateLiveness = GRPCMethodDescriptor(
+      name: "ValidateLiveness",
+      path: "/sensory.api.v1.video.VideoRecognition/ValidateLiveness",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Video_VideoRecognitionTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Video_VideoRecognitionTestClient: Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -402,13 +859,13 @@ public final class Sensory_Api_V1_Video_VideoRecognitionTestClient: Sensory_Api_
   public func makeValidateLivenessResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_ValidateRecognitionRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.video.VideoRecognition/ValidateLiveness", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path, requestHandler: requestHandler)
   }
 
   public func enqueueValidateLivenessResponses(
     _ responses: [Sensory_Api_V1_Video_LivenessRecognitionResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_ValidateRecognitionRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeValidateLivenessResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -417,7 +874,7 @@ public final class Sensory_Api_V1_Video_VideoRecognitionTestClient: Sensory_Api_
 
   /// Returns true if there are response streams enqueued for 'ValidateLiveness'
   public var hasValidateLivenessResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.video.VideoRecognition/ValidateLiveness")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path)
   }
 }
 

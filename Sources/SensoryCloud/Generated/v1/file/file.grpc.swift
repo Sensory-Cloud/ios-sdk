@@ -22,6 +22,7 @@
 //
 import GRPC
 import NIO
+import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
@@ -71,7 +72,7 @@ extension Sensory_Api_V1_File_FileClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.file.File/GetInfo",
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getInfo.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetInfoInterceptors() ?? []
@@ -90,7 +91,7 @@ extension Sensory_Api_V1_File_FileClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.file.File/GetCatalog",
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCatalog.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetCatalogInterceptors() ?? []
@@ -109,7 +110,7 @@ extension Sensory_Api_V1_File_FileClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.file.File/GetCompleteCatalog",
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCompleteCatalog.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetCompleteCatalogInterceptors() ?? []
@@ -131,7 +132,7 @@ extension Sensory_Api_V1_File_FileClientProtocol {
     handler: @escaping (Sensory_Api_V1_File_FileResponse) -> Void
   ) -> ServerStreamingCall<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse> {
     return self.makeServerStreamingCall(
-      path: "/sensory.api.v1.file.File/Download",
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.download.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeDownloadInterceptors() ?? [],
@@ -140,23 +141,45 @@ extension Sensory_Api_V1_File_FileClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_File_FileClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'getInfo'.
-  func makeGetInfoInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_File_FileNIOClient")
+public final class Sensory_Api_V1_File_FileClient: Sensory_Api_V1_File_FileClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
 
-  /// - Returns: Interceptors to use when invoking 'getCatalog'.
-  func makeGetCatalogInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'getCompleteCatalog'.
-  func makeGetCompleteCatalogInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'download'.
-  func makeDownloadInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse>]
+  /// Creates a client for the sensory.api.v1.file.File service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_File_FileClient: Sensory_Api_V1_File_FileClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_File_FileNIOClient: Sensory_Api_V1_File_FileClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol?
 
@@ -177,6 +200,223 @@ public final class Sensory_Api_V1_File_FileClient: Sensory_Api_V1_File_FileClien
   }
 }
 
+#if compiler(>=5.6)
+/// Handles all file-related functions
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_File_FileAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol? { get }
+
+  func makeGetInfoCall(
+    _ request: Sensory_Api_V1_File_FileRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo>
+
+  func makeGetCatalogCall(
+    _ request: Sensory_Api_V1_File_FileCatalogRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>
+
+  func makeGetCompleteCatalogCall(
+    _ request: Sensory_Api_V1_File_FileCompleteCatalogRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>
+
+  func makeDownloadCall(
+    _ request: Sensory_Api_V1_File_FileRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_File_FileAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_File_FileClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeGetInfoCall(
+    _ request: Sensory_Api_V1_File_FileRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getInfo.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetInfoInterceptors() ?? []
+    )
+  }
+
+  public func makeGetCatalogCall(
+    _ request: Sensory_Api_V1_File_FileCatalogRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCatalog.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetCatalogInterceptors() ?? []
+    )
+  }
+
+  public func makeGetCompleteCatalogCall(
+    _ request: Sensory_Api_V1_File_FileCompleteCatalogRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCompleteCatalog.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetCompleteCatalogInterceptors() ?? []
+    )
+  }
+
+  public func makeDownloadCall(
+    _ request: Sensory_Api_V1_File_FileRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse> {
+    return self.makeAsyncServerStreamingCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.download.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDownloadInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_File_FileAsyncClientProtocol {
+  public func getInfo(
+    _ request: Sensory_Api_V1_File_FileRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_File_FileInfo {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getInfo.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetInfoInterceptors() ?? []
+    )
+  }
+
+  public func getCatalog(
+    _ request: Sensory_Api_V1_File_FileCatalogRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_File_FileCatalogResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCatalog.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetCatalogInterceptors() ?? []
+    )
+  }
+
+  public func getCompleteCatalog(
+    _ request: Sensory_Api_V1_File_FileCompleteCatalogRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_File_FileCatalogResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCompleteCatalog.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetCompleteCatalogInterceptors() ?? []
+    )
+  }
+
+  public func download(
+    _ request: Sensory_Api_V1_File_FileRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_File_FileResponse> {
+    return self.performAsyncServerStreamingCall(
+      path: Sensory_Api_V1_File_FileClientMetadata.Methods.download.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeDownloadInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_File_FileAsyncClient: Sensory_Api_V1_File_FileAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_File_FileClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'getInfo'.
+  func makeGetInfoInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo>]
+
+  /// - Returns: Interceptors to use when invoking 'getCatalog'.
+  func makeGetCatalogInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getCompleteCatalog'.
+  func makeGetCompleteCatalogInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'download'.
+  func makeDownloadInterceptors() -> [ClientInterceptor<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse>]
+}
+
+public enum Sensory_Api_V1_File_FileClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "File",
+    fullName: "sensory.api.v1.file.File",
+    methods: [
+      Sensory_Api_V1_File_FileClientMetadata.Methods.getInfo,
+      Sensory_Api_V1_File_FileClientMetadata.Methods.getCatalog,
+      Sensory_Api_V1_File_FileClientMetadata.Methods.getCompleteCatalog,
+      Sensory_Api_V1_File_FileClientMetadata.Methods.download,
+    ]
+  )
+
+  public enum Methods {
+    public static let getInfo = GRPCMethodDescriptor(
+      name: "GetInfo",
+      path: "/sensory.api.v1.file.File/GetInfo",
+      type: GRPCCallType.unary
+    )
+
+    public static let getCatalog = GRPCMethodDescriptor(
+      name: "GetCatalog",
+      path: "/sensory.api.v1.file.File/GetCatalog",
+      type: GRPCCallType.unary
+    )
+
+    public static let getCompleteCatalog = GRPCMethodDescriptor(
+      name: "GetCompleteCatalog",
+      path: "/sensory.api.v1.file.File/GetCompleteCatalog",
+      type: GRPCCallType.unary
+    )
+
+    public static let download = GRPCMethodDescriptor(
+      name: "Download",
+      path: "/sensory.api.v1.file.File/Download",
+      type: GRPCCallType.serverStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_File_FileTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -203,13 +443,13 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
   public func makeGetInfoResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.file.File/GetInfo", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_File_FileClientMetadata.Methods.getInfo.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetInfoResponse(
     _ response: Sensory_Api_V1_File_FileInfo,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetInfoResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -217,7 +457,7 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
 
   /// Returns true if there are response streams enqueued for 'GetInfo'
   public var hasGetInfoResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.file.File/GetInfo")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_File_FileClientMetadata.Methods.getInfo.path)
   }
 
   /// Make a unary response for the GetCatalog RPC. This must be called
@@ -227,13 +467,13 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
   public func makeGetCatalogResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileCatalogRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.file.File/GetCatalog", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCatalog.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetCatalogResponse(
     _ response: Sensory_Api_V1_File_FileCatalogResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileCatalogRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetCatalogResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -241,7 +481,7 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
 
   /// Returns true if there are response streams enqueued for 'GetCatalog'
   public var hasGetCatalogResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.file.File/GetCatalog")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_File_FileClientMetadata.Methods.getCatalog.path)
   }
 
   /// Make a unary response for the GetCompleteCatalog RPC. This must be called
@@ -251,13 +491,13 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
   public func makeGetCompleteCatalogResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileCompleteCatalogRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.file.File/GetCompleteCatalog", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_File_FileClientMetadata.Methods.getCompleteCatalog.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetCompleteCatalogResponse(
     _ response: Sensory_Api_V1_File_FileCatalogResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileCompleteCatalogRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetCompleteCatalogResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -265,7 +505,7 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
 
   /// Returns true if there are response streams enqueued for 'GetCompleteCatalog'
   public var hasGetCompleteCatalogResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.file.File/GetCompleteCatalog")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_File_FileClientMetadata.Methods.getCompleteCatalog.path)
   }
 
   /// Make a streaming response for the Download RPC. This must be called
@@ -275,13 +515,13 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
   public func makeDownloadResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.file.File/Download", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_File_FileClientMetadata.Methods.download.path, requestHandler: requestHandler)
   }
 
   public func enqueueDownloadResponses(
     _ responses: [Sensory_Api_V1_File_FileResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_File_FileRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeDownloadResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -290,7 +530,7 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
 
   /// Returns true if there are response streams enqueued for 'Download'
   public var hasDownloadResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.file.File/Download")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_File_FileClientMetadata.Methods.download.path)
   }
 }
 

@@ -12,7 +12,7 @@ let package = Package(
             targets: ["SensoryCloud"])
     ],
     dependencies: [
-        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.0.0")
+        .package(url: "https://github.com/grpc/grpc-swift.git", from: "1.9.0")
     ],
     targets: [
         .target(

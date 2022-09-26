@@ -22,6 +22,7 @@
 //
 import GRPC
 import NIO
+import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
@@ -55,7 +56,7 @@ extension Sensory_Api_V1_Audio_AudioModelsClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.v1.audio.AudioModels/GetModels",
+      path: Sensory_Api_V1_Audio_AudioModelsClientMetadata.Methods.getModels.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetModelsInterceptors() ?? []
@@ -63,14 +64,45 @@ extension Sensory_Api_V1_Audio_AudioModelsClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Audio_AudioModelsClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'getModels'.
-  func makeGetModelsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Audio_AudioModelsNIOClient")
+public final class Sensory_Api_V1_Audio_AudioModelsClient: Sensory_Api_V1_Audio_AudioModelsClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the sensory.api.v1.audio.AudioModels service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Audio_AudioModelsClient: Sensory_Api_V1_Audio_AudioModelsClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Audio_AudioModelsNIOClient: Sensory_Api_V1_Audio_AudioModelsClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol?
 
@@ -91,6 +123,106 @@ public final class Sensory_Api_V1_Audio_AudioModelsClient: Sensory_Api_V1_Audio_
   }
 }
 
+#if compiler(>=5.6)
+/// Handles the retrieval and management of audio models
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioModelsAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol? { get }
+
+  func makeGetModelsCall(
+    _ request: Sensory_Api_V1_Audio_GetModelsRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioModelsAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioModelsClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeGetModelsCall(
+    _ request: Sensory_Api_V1_Audio_GetModelsRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Audio_AudioModelsClientMetadata.Methods.getModels.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetModelsInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioModelsAsyncClientProtocol {
+  public func getModels(
+    _ request: Sensory_Api_V1_Audio_GetModelsRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_Audio_GetModelsResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Audio_AudioModelsClientMetadata.Methods.getModels.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetModelsInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Audio_AudioModelsAsyncClient: Sensory_Api_V1_Audio_AudioModelsAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioModelsClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'getModels'.
+  func makeGetModelsInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioModelsClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioModels",
+    fullName: "sensory.api.v1.audio.AudioModels",
+    methods: [
+      Sensory_Api_V1_Audio_AudioModelsClientMetadata.Methods.getModels,
+    ]
+  )
+
+  public enum Methods {
+    public static let getModels = GRPCMethodDescriptor(
+      name: "GetModels",
+      path: "/sensory.api.v1.audio.AudioModels/GetModels",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Audio_AudioModelsTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Audio_AudioModelsTestClient: Sensory_Api_V1_Audio_AudioModelsClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -117,13 +249,13 @@ public final class Sensory_Api_V1_Audio_AudioModelsTestClient: Sensory_Api_V1_Au
   public func makeGetModelsResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_GetModelsRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.v1.audio.AudioModels/GetModels", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_Audio_AudioModelsClientMetadata.Methods.getModels.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetModelsResponse(
     _ response: Sensory_Api_V1_Audio_GetModelsResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_GetModelsRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetModelsResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -131,7 +263,7 @@ public final class Sensory_Api_V1_Audio_AudioModelsTestClient: Sensory_Api_V1_Au
 
   /// Returns true if there are response streams enqueued for 'GetModels'
   public var hasGetModelsResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioModels/GetModels")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioModelsClientMetadata.Methods.getModels.path)
   }
 }
 
@@ -174,7 +306,7 @@ extension Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.audio.AudioBiometrics/CreateEnrollment",
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? [],
       handler: handler
@@ -198,7 +330,7 @@ extension Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_AuthenticateResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.audio.AudioBiometrics/Authenticate",
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? [],
       handler: handler
@@ -206,17 +338,45 @@ extension Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Audio_AudioBiometricsClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'createEnrollment'.
-  func makeCreateEnrollmentInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Audio_AudioBiometricsNIOClient")
+public final class Sensory_Api_V1_Audio_AudioBiometricsClient: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
 
-  /// - Returns: Interceptors to use when invoking 'authenticate'.
-  func makeAuthenticateInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse>]
+  /// Creates a client for the sensory.api.v1.audio.AudioBiometrics service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Audio_AudioBiometricsClient: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Audio_AudioBiometricsNIOClient: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol?
 
@@ -237,6 +397,163 @@ public final class Sensory_Api_V1_Audio_AudioBiometricsClient: Sensory_Api_V1_Au
   }
 }
 
+#if compiler(>=5.6)
+/// Handles all audio-related biometrics
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioBiometricsAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol? { get }
+
+  func makeCreateEnrollmentCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>
+
+  func makeAuthenticateCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioBiometricsAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeCreateEnrollmentCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  public func makeAuthenticateCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioBiometricsAsyncClientProtocol {
+  public func createEnrollment<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_CreateEnrollmentResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Audio_CreateEnrollmentRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  public func createEnrollment<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_CreateEnrollmentResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Audio_CreateEnrollmentRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? []
+    )
+  }
+
+  public func authenticate<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_AuthenticateResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Audio_AuthenticateRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? []
+    )
+  }
+
+  public func authenticate<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_AuthenticateResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Audio_AuthenticateRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Audio_AudioBiometricsAsyncClient: Sensory_Api_V1_Audio_AudioBiometricsAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioBiometricsClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'createEnrollment'.
+  func makeCreateEnrollmentInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'authenticate'.
+  func makeAuthenticateInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioBiometricsClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioBiometrics",
+    fullName: "sensory.api.v1.audio.AudioBiometrics",
+    methods: [
+      Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment,
+      Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate,
+    ]
+  )
+
+  public enum Methods {
+    public static let createEnrollment = GRPCMethodDescriptor(
+      name: "CreateEnrollment",
+      path: "/sensory.api.v1.audio.AudioBiometrics/CreateEnrollment",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let authenticate = GRPCMethodDescriptor(
+      name: "Authenticate",
+      path: "/sensory.api.v1.audio.AudioBiometrics/Authenticate",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Audio_AudioBiometricsTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Audio_AudioBiometricsTestClient: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -263,13 +580,13 @@ public final class Sensory_Api_V1_Audio_AudioBiometricsTestClient: Sensory_Api_V
   public func makeCreateEnrollmentResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_CreateEnrollmentRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioBiometrics/CreateEnrollment", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment.path, requestHandler: requestHandler)
   }
 
   public func enqueueCreateEnrollmentResponses(
     _ responses: [Sensory_Api_V1_Audio_CreateEnrollmentResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_CreateEnrollmentRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeCreateEnrollmentResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -278,7 +595,7 @@ public final class Sensory_Api_V1_Audio_AudioBiometricsTestClient: Sensory_Api_V
 
   /// Returns true if there are response streams enqueued for 'CreateEnrollment'
   public var hasCreateEnrollmentResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioBiometrics/CreateEnrollment")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.createEnrollment.path)
   }
 
   /// Make a streaming response for the Authenticate RPC. This must be called
@@ -288,13 +605,13 @@ public final class Sensory_Api_V1_Audio_AudioBiometricsTestClient: Sensory_Api_V
   public func makeAuthenticateResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_AuthenticateRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioBiometrics/Authenticate", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate.path, requestHandler: requestHandler)
   }
 
   public func enqueueAuthenticateResponses(
     _ responses: [Sensory_Api_V1_Audio_AuthenticateResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_AuthenticateRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeAuthenticateResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -303,7 +620,7 @@ public final class Sensory_Api_V1_Audio_AudioBiometricsTestClient: Sensory_Api_V
 
   /// Returns true if there are response streams enqueued for 'Authenticate'
   public var hasAuthenticateResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioBiometrics/Authenticate")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioBiometricsClientMetadata.Methods.authenticate.path)
   }
 }
 
@@ -351,7 +668,7 @@ extension Sensory_Api_V1_Audio_AudioEventsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_ValidateEventResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.audio.AudioEvents/ValidateEvent",
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeValidateEventInterceptors() ?? [],
       handler: handler
@@ -374,7 +691,7 @@ extension Sensory_Api_V1_Audio_AudioEventsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_CreateEnrollmentResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent",
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? [],
       handler: handler
@@ -397,7 +714,7 @@ extension Sensory_Api_V1_Audio_AudioEventsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_ValidateEnrolledEventResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent",
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? [],
       handler: handler
@@ -405,20 +722,45 @@ extension Sensory_Api_V1_Audio_AudioEventsClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Audio_AudioEventsClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'validateEvent'.
-  func makeValidateEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Audio_AudioEventsNIOClient")
+public final class Sensory_Api_V1_Audio_AudioEventsClient: Sensory_Api_V1_Audio_AudioEventsClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
 
-  /// - Returns: Interceptors to use when invoking 'createEnrolledEvent'.
-  func makeCreateEnrolledEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'validateEnrolledEvent'.
-  func makeValidateEnrolledEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>]
+  /// Creates a client for the sensory.api.v1.audio.AudioEvents service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Audio_AudioEventsClient: Sensory_Api_V1_Audio_AudioEventsClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Audio_AudioEventsNIOClient: Sensory_Api_V1_Audio_AudioEventsClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol?
 
@@ -439,6 +781,211 @@ public final class Sensory_Api_V1_Audio_AudioEventsClient: Sensory_Api_V1_Audio_
   }
 }
 
+#if compiler(>=5.6)
+/// Handles all audio event processing
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioEventsAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol? { get }
+
+  func makeValidateEventCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse>
+
+  func makeCreateEnrolledEventCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>
+
+  func makeValidateEnrolledEventCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioEventsAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioEventsClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeValidateEventCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEventInterceptors() ?? []
+    )
+  }
+
+  public func makeCreateEnrolledEventCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? []
+    )
+  }
+
+  public func makeValidateEnrolledEventCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioEventsAsyncClientProtocol {
+  public func validateEvent<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_ValidateEventResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Audio_ValidateEventRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEventInterceptors() ?? []
+    )
+  }
+
+  public func validateEvent<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_ValidateEventResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Audio_ValidateEventRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEventInterceptors() ?? []
+    )
+  }
+
+  public func createEnrolledEvent<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_CreateEnrollmentResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Audio_CreateEnrolledEventRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? []
+    )
+  }
+
+  public func createEnrolledEvent<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_CreateEnrollmentResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Audio_CreateEnrolledEventRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? []
+    )
+  }
+
+  public func validateEnrolledEvent<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Audio_ValidateEnrolledEventRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? []
+    )
+  }
+
+  public func validateEnrolledEvent<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Audio_ValidateEnrolledEventRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Audio_AudioEventsAsyncClient: Sensory_Api_V1_Audio_AudioEventsAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioEventsClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'validateEvent'.
+  func makeValidateEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'createEnrolledEvent'.
+  func makeCreateEnrolledEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'validateEnrolledEvent'.
+  func makeValidateEnrolledEventInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioEventsClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioEvents",
+    fullName: "sensory.api.v1.audio.AudioEvents",
+    methods: [
+      Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent,
+      Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent,
+      Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent,
+    ]
+  )
+
+  public enum Methods {
+    public static let validateEvent = GRPCMethodDescriptor(
+      name: "ValidateEvent",
+      path: "/sensory.api.v1.audio.AudioEvents/ValidateEvent",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let createEnrolledEvent = GRPCMethodDescriptor(
+      name: "CreateEnrolledEvent",
+      path: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let validateEnrolledEvent = GRPCMethodDescriptor(
+      name: "ValidateEnrolledEvent",
+      path: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Audio_AudioEventsTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Audio_AudioEventsClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -465,13 +1012,13 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
   public func makeValidateEventResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_ValidateEventRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioEvents/ValidateEvent", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent.path, requestHandler: requestHandler)
   }
 
   public func enqueueValidateEventResponses(
     _ responses: [Sensory_Api_V1_Audio_ValidateEventResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_ValidateEventRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeValidateEventResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -480,7 +1027,7 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
 
   /// Returns true if there are response streams enqueued for 'ValidateEvent'
   public var hasValidateEventResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioEvents/ValidateEvent")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEvent.path)
   }
 
   /// Make a streaming response for the CreateEnrolledEvent RPC. This must be called
@@ -490,13 +1037,13 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
   public func makeCreateEnrolledEventResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent.path, requestHandler: requestHandler)
   }
 
   public func enqueueCreateEnrolledEventResponses(
     _ responses: [Sensory_Api_V1_Audio_CreateEnrollmentResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeCreateEnrolledEventResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -505,7 +1052,7 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
 
   /// Returns true if there are response streams enqueued for 'CreateEnrolledEvent'
   public var hasCreateEnrolledEventResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.createEnrolledEvent.path)
   }
 
   /// Make a streaming response for the ValidateEnrolledEvent RPC. This must be called
@@ -515,13 +1062,13 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
   public func makeValidateEnrolledEventResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent.path, requestHandler: requestHandler)
   }
 
   public func enqueueValidateEnrolledEventResponses(
     _ responses: [Sensory_Api_V1_Audio_ValidateEnrolledEventResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeValidateEnrolledEventResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -530,7 +1077,7 @@ public final class Sensory_Api_V1_Audio_AudioEventsTestClient: Sensory_Api_V1_Au
 
   /// Returns true if there are response streams enqueued for 'ValidateEnrolledEvent'
   public var hasValidateEnrolledEventResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioEventsClientMetadata.Methods.validateEnrolledEvent.path)
   }
 }
 
@@ -567,7 +1114,7 @@ extension Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_TranscribeResponse) -> Void
   ) -> BidirectionalStreamingCall<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse> {
     return self.makeBidirectionalStreamingCall(
-      path: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe",
+      path: Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe.path,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeTranscribeInterceptors() ?? [],
       handler: handler
@@ -575,14 +1122,45 @@ extension Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Audio_AudioTranscriptionsClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'transcribe'.
-  func makeTranscribeInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Audio_AudioTranscriptionsNIOClient")
+public final class Sensory_Api_V1_Audio_AudioTranscriptionsClient: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the sensory.api.v1.audio.AudioTranscriptions service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Audio_AudioTranscriptionsClient: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Audio_AudioTranscriptionsNIOClient: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol?
 
@@ -603,6 +1181,115 @@ public final class Sensory_Api_V1_Audio_AudioTranscriptionsClient: Sensory_Api_V
   }
 }
 
+#if compiler(>=5.6)
+/// Handles all audio transcriptions
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? { get }
+
+  func makeTranscribeCall(
+    callOptions: CallOptions?
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioTranscriptionsAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeTranscribeCall(
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse> {
+    return self.makeAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe.path,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTranscribeInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioTranscriptionsAsyncClientProtocol {
+  public func transcribe<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_TranscribeResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Audio_TranscribeRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTranscribeInterceptors() ?? []
+    )
+  }
+
+  public func transcribe<RequestStream>(
+    _ requests: RequestStream,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_TranscribeResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Audio_TranscribeRequest {
+    return self.performAsyncBidirectionalStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe.path,
+      requests: requests,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeTranscribeInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Audio_AudioTranscriptionsAsyncClient: Sensory_Api_V1_Audio_AudioTranscriptionsAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'transcribe'.
+  func makeTranscribeInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioTranscriptions",
+    fullName: "sensory.api.v1.audio.AudioTranscriptions",
+    methods: [
+      Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe,
+    ]
+  )
+
+  public enum Methods {
+    public static let transcribe = GRPCMethodDescriptor(
+      name: "Transcribe",
+      path: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Audio_AudioTranscriptionsTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Audio_AudioTranscriptionsTestClient: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -629,13 +1316,13 @@ public final class Sensory_Api_V1_Audio_AudioTranscriptionsTestClient: Sensory_A
   public func makeTranscribeResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_TranscribeRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe.path, requestHandler: requestHandler)
   }
 
   public func enqueueTranscribeResponses(
     _ responses: [Sensory_Api_V1_Audio_TranscribeResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_TranscribeRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeTranscribeResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -644,7 +1331,7 @@ public final class Sensory_Api_V1_Audio_AudioTranscriptionsTestClient: Sensory_A
 
   /// Returns true if there are response streams enqueued for 'Transcribe'
   public var hasTranscribeResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioTranscriptionsClientMetadata.Methods.transcribe.path)
   }
 }
 
@@ -681,7 +1368,7 @@ extension Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
     handler: @escaping (Sensory_Api_V1_Audio_SynthesizeSpeechResponse) -> Void
   ) -> ServerStreamingCall<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse> {
     return self.makeServerStreamingCall(
-      path: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech",
+      path: Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.Methods.synthesizeSpeech.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeSynthesizeSpeechInterceptors() ?? [],
@@ -690,14 +1377,45 @@ extension Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
   }
 }
 
-public protocol Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_V1_Audio_AudioSynthesisClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'synthesizeSpeech'.
-  func makeSynthesizeSpeechInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_V1_Audio_AudioSynthesisNIOClient")
+public final class Sensory_Api_V1_Audio_AudioSynthesisClient: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the sensory.api.v1.audio.AudioSynthesis service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_V1_Audio_AudioSynthesisClient: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_V1_Audio_AudioSynthesisNIOClient: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol?
 
@@ -718,6 +1436,106 @@ public final class Sensory_Api_V1_Audio_AudioSynthesisClient: Sensory_Api_V1_Aud
   }
 }
 
+#if compiler(>=5.6)
+/// Handles synthesizing audio from text
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioSynthesisAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? { get }
+
+  func makeSynthesizeSpeechCall(
+    _ request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncServerStreamingCall<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioSynthesisAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeSynthesizeSpeechCall(
+    _ request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncServerStreamingCall<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse> {
+    return self.makeAsyncServerStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.Methods.synthesizeSpeech.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSynthesizeSpeechInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioSynthesisAsyncClientProtocol {
+  public func synthesizeSpeech(
+    _ request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Audio_SynthesizeSpeechResponse> {
+    return self.performAsyncServerStreamingCall(
+      path: Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.Methods.synthesizeSpeech.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSynthesizeSpeechInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_V1_Audio_AudioSynthesisAsyncClient: Sensory_Api_V1_Audio_AudioSynthesisAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioSynthesisClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'synthesizeSpeech'.
+  func makeSynthesizeSpeechInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioSynthesisClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioSynthesis",
+    fullName: "sensory.api.v1.audio.AudioSynthesis",
+    methods: [
+      Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.Methods.synthesizeSpeech,
+    ]
+  )
+
+  public enum Methods {
+    public static let synthesizeSpeech = GRPCMethodDescriptor(
+      name: "SynthesizeSpeech",
+      path: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech",
+      type: GRPCCallType.serverStreaming
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_V1_Audio_AudioSynthesisTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_V1_Audio_AudioSynthesisTestClient: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -744,13 +1562,13 @@ public final class Sensory_Api_V1_Audio_AudioSynthesisTestClient: Sensory_Api_V1
   public func makeSynthesizeSpeechResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_SynthesizeSpeechRequest>) -> () = { _ in }
   ) -> FakeStreamingResponse<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.Methods.synthesizeSpeech.path, requestHandler: requestHandler)
   }
 
   public func enqueueSynthesizeSpeechResponses(
     _ responses: [Sensory_Api_V1_Audio_SynthesizeSpeechResponse],
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Audio_SynthesizeSpeechRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeSynthesizeSpeechResponseStream(requestHandler)
     // These are the only operation on the stream; try! is fine.
     responses.forEach { try! stream.sendMessage($0) }
@@ -759,7 +1577,7 @@ public final class Sensory_Api_V1_Audio_AudioSynthesisTestClient: Sensory_Api_V1
 
   /// Returns true if there are response streams enqueued for 'SynthesizeSpeech'
   public var hasSynthesizeSpeechResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Audio_AudioSynthesisClientMetadata.Methods.synthesizeSpeech.path)
   }
 }
 

@@ -22,6 +22,7 @@
 //
 import GRPC
 import NIO
+import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
@@ -54,7 +55,7 @@ extension Sensory_Api_Health_HealthServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.health.HealthService/GetHealth",
+      path: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetHealthInterceptors() ?? []
@@ -62,14 +63,45 @@ extension Sensory_Api_Health_HealthServiceClientProtocol {
   }
 }
 
-public protocol Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_Health_HealthServiceClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'getHealth'.
-  func makeGetHealthInterceptors() -> [ClientInterceptor<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_Health_HealthServiceNIOClient")
+public final class Sensory_Api_Health_HealthServiceClient: Sensory_Api_Health_HealthServiceClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
+
+  /// Creates a client for the sensory.api.health.HealthService service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_Health_HealthServiceClient: Sensory_Api_Health_HealthServiceClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_Health_HealthServiceNIOClient: Sensory_Api_Health_HealthServiceClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol?
 
@@ -90,6 +122,106 @@ public final class Sensory_Api_Health_HealthServiceClient: Sensory_Api_Health_He
   }
 }
 
+#if compiler(>=5.6)
+/// Service for Health function
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_Health_HealthServiceAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol? { get }
+
+  func makeGetHealthCall(
+    _ request: Sensory_Api_Health_HealthRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_Health_HealthServiceAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_Health_HealthServiceClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeGetHealthCall(
+    _ request: Sensory_Api_Health_HealthRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetHealthInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_Health_HealthServiceAsyncClientProtocol {
+  public func getHealth(
+    _ request: Sensory_Api_Health_HealthRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_Common_ServerHealthResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetHealthInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_Health_HealthServiceAsyncClient: Sensory_Api_Health_HealthServiceAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'getHealth'.
+  func makeGetHealthInterceptors() -> [ClientInterceptor<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse>]
+}
+
+public enum Sensory_Api_Health_HealthServiceClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "HealthService",
+    fullName: "sensory.api.health.HealthService",
+    methods: [
+      Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth,
+    ]
+  )
+
+  public enum Methods {
+    public static let getHealth = GRPCMethodDescriptor(
+      name: "GetHealth",
+      path: "/sensory.api.health.HealthService/GetHealth",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_Health_HealthServiceTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_Health_HealthServiceTestClient: Sensory_Api_Health_HealthServiceClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -116,13 +248,13 @@ public final class Sensory_Api_Health_HealthServiceTestClient: Sensory_Api_Healt
   public func makeGetHealthResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Health_HealthRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.health.HealthService/GetHealth", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetHealthResponse(
     _ response: Sensory_Api_Common_ServerHealthResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Health_HealthRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetHealthResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -130,7 +262,7 @@ public final class Sensory_Api_Health_HealthServiceTestClient: Sensory_Api_Healt
 
   /// Returns true if there are response streams enqueued for 'GetHealth'
   public var hasGetHealthResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.health.HealthService/GetHealth")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path)
   }
 }
 

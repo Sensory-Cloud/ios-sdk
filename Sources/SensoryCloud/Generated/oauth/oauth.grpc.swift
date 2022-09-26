@@ -22,6 +22,7 @@
 //
 import GRPC
 import NIO
+import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
@@ -70,7 +71,7 @@ extension Sensory_Api_Oauth_OauthServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.oauth.OauthService/GetToken",
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getToken.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetTokenInterceptors() ?? []
@@ -93,7 +94,7 @@ extension Sensory_Api_Oauth_OauthServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.oauth.OauthService/SignToken",
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.signToken.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeSignTokenInterceptors() ?? []
@@ -112,7 +113,7 @@ extension Sensory_Api_Oauth_OauthServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.oauth.OauthService/GetWhoAmI",
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getWhoAmI.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? []
@@ -131,7 +132,7 @@ extension Sensory_Api_Oauth_OauthServiceClientProtocol {
     callOptions: CallOptions? = nil
   ) -> UnaryCall<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse> {
     return self.makeUnaryCall(
-      path: "/sensory.api.oauth.OauthService/GetPublicKey",
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getPublicKey.path,
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetPublicKeyInterceptors() ?? []
@@ -139,23 +140,45 @@ extension Sensory_Api_Oauth_OauthServiceClientProtocol {
   }
 }
 
-public protocol Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol {
+#if compiler(>=5.6)
+@available(*, deprecated)
+extension Sensory_Api_Oauth_OauthServiceClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
 
-  /// - Returns: Interceptors to use when invoking 'getToken'.
-  func makeGetTokenInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse>]
+@available(*, deprecated, renamed: "Sensory_Api_Oauth_OauthServiceNIOClient")
+public final class Sensory_Api_Oauth_OauthServiceClient: Sensory_Api_Oauth_OauthServiceClientProtocol {
+  private let lock = Lock()
+  private var _defaultCallOptions: CallOptions
+  private var _interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol?
+  public let channel: GRPCChannel
+  public var defaultCallOptions: CallOptions {
+    get { self.lock.withLock { return self._defaultCallOptions } }
+    set { self.lock.withLockVoid { self._defaultCallOptions = newValue } }
+  }
+  public var interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol? {
+    get { self.lock.withLock { return self._interceptors } }
+    set { self.lock.withLockVoid { self._interceptors = newValue } }
+  }
 
-  /// - Returns: Interceptors to use when invoking 'signToken'.
-  func makeSignTokenInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'getWhoAmI'.
-  func makeGetWhoAmIInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse>]
-
-  /// - Returns: Interceptors to use when invoking 'getPublicKey'.
-  func makeGetPublicKeyInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse>]
+  /// Creates a client for the sensory.api.oauth.OauthService service.
+  ///
+  /// - Parameters:
+  ///   - channel: `GRPCChannel` to the service host.
+  ///   - defaultCallOptions: Options to use for each service call if the user doesn't provide them.
+  ///   - interceptors: A factory providing interceptors for each RPC.
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self._defaultCallOptions = defaultCallOptions
+    self._interceptors = interceptors
+  }
 }
 
-public final class Sensory_Api_Oauth_OauthServiceClient: Sensory_Api_Oauth_OauthServiceClientProtocol {
-  public let channel: GRPCChannel
+public struct Sensory_Api_Oauth_OauthServiceNIOClient: Sensory_Api_Oauth_OauthServiceClientProtocol {
+  public var channel: GRPCChannel
   public var defaultCallOptions: CallOptions
   public var interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol?
 
@@ -176,6 +199,223 @@ public final class Sensory_Api_Oauth_OauthServiceClient: Sensory_Api_Oauth_Oauth
   }
 }
 
+#if compiler(>=5.6)
+/// Service for OAuth function
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_Oauth_OauthServiceAsyncClientProtocol: GRPCClient {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol? { get }
+
+  func makeGetTokenCall(
+    _ request: Sensory_Api_Oauth_TokenRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse>
+
+  func makeSignTokenCall(
+    _ request: Sensory_Api_Oauth_SignTokenRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse>
+
+  func makeGetWhoAmICall(
+    _ request: Sensory_Api_Oauth_WhoAmIRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse>
+
+  func makeGetPublicKeyCall(
+    _ request: Sensory_Api_Oauth_PublicKeyRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse>
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_Oauth_OauthServiceAsyncClientProtocol {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_Oauth_OauthServiceClientMetadata.serviceDescriptor
+  }
+
+  public var interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func makeGetTokenCall(
+    _ request: Sensory_Api_Oauth_TokenRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetTokenInterceptors() ?? []
+    )
+  }
+
+  public func makeSignTokenCall(
+    _ request: Sensory_Api_Oauth_SignTokenRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.signToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSignTokenInterceptors() ?? []
+    )
+  }
+
+  public func makeGetWhoAmICall(
+    _ request: Sensory_Api_Oauth_WhoAmIRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getWhoAmI.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? []
+    )
+  }
+
+  public func makeGetPublicKeyCall(
+    _ request: Sensory_Api_Oauth_PublicKeyRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getPublicKey.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetPublicKeyInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_Oauth_OauthServiceAsyncClientProtocol {
+  public func getToken(
+    _ request: Sensory_Api_Oauth_TokenRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_Common_TokenResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetTokenInterceptors() ?? []
+    )
+  }
+
+  public func signToken(
+    _ request: Sensory_Api_Oauth_SignTokenRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_Common_TokenResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.signToken.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeSignTokenInterceptors() ?? []
+    )
+  }
+
+  public func getWhoAmI(
+    _ request: Sensory_Api_Oauth_WhoAmIRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_Oauth_WhoAmIResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getWhoAmI.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? []
+    )
+  }
+
+  public func getPublicKey(
+    _ request: Sensory_Api_Oauth_PublicKeyRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_Oauth_PublicKeyResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getPublicKey.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetPublicKeyInterceptors() ?? []
+    )
+  }
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public struct Sensory_Api_Oauth_OauthServiceAsyncClient: Sensory_Api_Oauth_OauthServiceAsyncClientProtocol {
+  public var channel: GRPCChannel
+  public var defaultCallOptions: CallOptions
+  public var interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol?
+
+  public init(
+    channel: GRPCChannel,
+    defaultCallOptions: CallOptions = CallOptions(),
+    interceptors: Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol? = nil
+  ) {
+    self.channel = channel
+    self.defaultCallOptions = defaultCallOptions
+    self.interceptors = interceptors
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_Oauth_OauthServiceClientInterceptorFactoryProtocol: GRPCSendable {
+
+  /// - Returns: Interceptors to use when invoking 'getToken'.
+  func makeGetTokenInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'signToken'.
+  func makeSignTokenInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getWhoAmI'.
+  func makeGetWhoAmIInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse>]
+
+  /// - Returns: Interceptors to use when invoking 'getPublicKey'.
+  func makeGetPublicKeyInterceptors() -> [ClientInterceptor<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse>]
+}
+
+public enum Sensory_Api_Oauth_OauthServiceClientMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "OauthService",
+    fullName: "sensory.api.oauth.OauthService",
+    methods: [
+      Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getToken,
+      Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.signToken,
+      Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getWhoAmI,
+      Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getPublicKey,
+    ]
+  )
+
+  public enum Methods {
+    public static let getToken = GRPCMethodDescriptor(
+      name: "GetToken",
+      path: "/sensory.api.oauth.OauthService/GetToken",
+      type: GRPCCallType.unary
+    )
+
+    public static let signToken = GRPCMethodDescriptor(
+      name: "SignToken",
+      path: "/sensory.api.oauth.OauthService/SignToken",
+      type: GRPCCallType.unary
+    )
+
+    public static let getWhoAmI = GRPCMethodDescriptor(
+      name: "GetWhoAmI",
+      path: "/sensory.api.oauth.OauthService/GetWhoAmI",
+      type: GRPCCallType.unary
+    )
+
+    public static let getPublicKey = GRPCMethodDescriptor(
+      name: "GetPublicKey",
+      path: "/sensory.api.oauth.OauthService/GetPublicKey",
+      type: GRPCCallType.unary
+    )
+  }
+}
+
+#if compiler(>=5.6)
+@available(swift, deprecated: 5.6)
+extension Sensory_Api_Oauth_OauthServiceTestClient: @unchecked Sendable {}
+#endif // compiler(>=5.6)
+
+@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
 public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_OauthServiceClientProtocol {
   private let fakeChannel: FakeChannel
   public var defaultCallOptions: CallOptions
@@ -202,13 +442,13 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
   public func makeGetTokenResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_TokenRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.oauth.OauthService/GetToken", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getToken.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetTokenResponse(
     _ response: Sensory_Api_Common_TokenResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_TokenRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetTokenResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -216,7 +456,7 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
 
   /// Returns true if there are response streams enqueued for 'GetToken'
   public var hasGetTokenResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.oauth.OauthService/GetToken")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getToken.path)
   }
 
   /// Make a unary response for the SignToken RPC. This must be called
@@ -226,13 +466,13 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
   public func makeSignTokenResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_SignTokenRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.oauth.OauthService/SignToken", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.signToken.path, requestHandler: requestHandler)
   }
 
   public func enqueueSignTokenResponse(
     _ response: Sensory_Api_Common_TokenResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_SignTokenRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeSignTokenResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -240,7 +480,7 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
 
   /// Returns true if there are response streams enqueued for 'SignToken'
   public var hasSignTokenResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.oauth.OauthService/SignToken")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.signToken.path)
   }
 
   /// Make a unary response for the GetWhoAmI RPC. This must be called
@@ -250,13 +490,13 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
   public func makeGetWhoAmIResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_WhoAmIRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.oauth.OauthService/GetWhoAmI", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getWhoAmI.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetWhoAmIResponse(
     _ response: Sensory_Api_Oauth_WhoAmIResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_WhoAmIRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetWhoAmIResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -264,7 +504,7 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
 
   /// Returns true if there are response streams enqueued for 'GetWhoAmI'
   public var hasGetWhoAmIResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.oauth.OauthService/GetWhoAmI")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getWhoAmI.path)
   }
 
   /// Make a unary response for the GetPublicKey RPC. This must be called
@@ -274,13 +514,13 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
   public func makeGetPublicKeyResponseStream(
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_PublicKeyRequest>) -> () = { _ in }
   ) -> FakeUnaryResponse<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: "/sensory.api.oauth.OauthService/GetPublicKey", requestHandler: requestHandler)
+    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getPublicKey.path, requestHandler: requestHandler)
   }
 
   public func enqueueGetPublicKeyResponse(
     _ response: Sensory_Api_Oauth_PublicKeyResponse,
     _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Oauth_PublicKeyRequest>) -> () = { _ in }
-  )  {
+  ) {
     let stream = self.makeGetPublicKeyResponseStream(requestHandler)
     // This is the only operation on the stream; try! is fine.
     try! stream.sendMessage(response)
@@ -288,7 +528,7 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
 
   /// Returns true if there are response streams enqueued for 'GetPublicKey'
   public var hasGetPublicKeyResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: "/sensory.api.oauth.OauthService/GetPublicKey")
+    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_Oauth_OauthServiceClientMetadata.Methods.getPublicKey.path)
   }
 }
 

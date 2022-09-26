@@ -70,7 +70,7 @@ case "$1" in
     xcodebuild \
       -scheme SensoryCloud \
       -sdk iphoneos \
-      -destination 'platform=iOS Simulator,name=iPhone 8' \
+      -destination 'platform=iOS Simulator,name=iPhone 14' \
       test
     exit 0;
     ;;
@@ -79,7 +79,7 @@ case "$1" in
     xcodebuild \
       -scheme SensoryCloud \
       -sdk iphoneos \
-      -destination 'platform=iOS Simulator,name=iPhone 8' \
+      -destination 'platform=iOS Simulator,name=iPhone 14' \
       test | xcpretty
     exit 0;
     ;;
@@ -109,7 +109,7 @@ case "$1" in
        --module SensoryCloud \
        --exclude=/*/Generated* \
        --swift-build-tool xcodebuild \
-       --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'name=iPhone 8'
+       --build-tool-arguments -scheme,SensoryCloud,-sdk,iphoneos,-destination,'name=iPhone 14'
     exit 0;
     ;;
 
