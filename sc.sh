@@ -63,6 +63,8 @@ release_version() {
   version=$1
   regex_version='^[0-9]+\.[0-9]+\.[0-9]+$'
 
+  echo $1
+
   if [[ ! ${version} =~ ${regex_version} ]]; then
     echo "Version string should be of the format {Major}.{Minor}.{Trivial} ex: 1.2.3"
     exit 1
@@ -128,7 +130,13 @@ case "$1" in
     ;;
 
   "release"|"rv")
-    release_version
+
+    if [[ $# -ne 2 ]]; then
+        echo "Please supply a version string in the format {Major}.{Minor}.{Trivial} ex: 1.2.3"
+        exit 1;
+    fi
+
+    release_version $2
     exit 0;
     ;;
 

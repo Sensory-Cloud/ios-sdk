@@ -864,9 +864,9 @@
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_S2SSgyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:userID:languageCode:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a1_s1_t1_c1_U8ResponseVGSS_S2SSgyAOctKF">transcribeAudio(modelName:<wbr>userID:<wbr>languageCode:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode31enablePunctuationCapitalization17doSingleUtterance14vadSensitivity0R8Duration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a8_Api_V1_C19_TranscribeResponseVGSS_S2SSgS2bAA0a8_Api_V1_c10_ThresholdS0OSfyASctKF"></a>
+                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:userID:languageCode:enablePunctuationCapitalization:doSingleUtterance:vadSensitivity:vadDuration:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode31enablePunctuationCapitalization17doSingleUtterance14vadSensitivity0R8Duration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a8_Api_V1_C19_TranscribeResponseVGSS_S2SSgS2bAA0a8_Api_V1_c10_ThresholdS0OSfyASctKF">transcribeAudio(modelName:<wbr>userID:<wbr>languageCode:<wbr>enablePunctuationCapitalization:<wbr>doSingleUtterance:<wbr>vadSensitivity:<wbr>vadDuration:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -896,6 +896,10 @@
     <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">enablePunctuationCapitalization</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">doSingleUtterance</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">vadSensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
+    <span class="nv">vadDuration</span><span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_TranscribeResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_TranscribeRequest</span><span class="p">,</span>
@@ -941,6 +945,54 @@
                               <td>
                                 <div>
                                   <p>Preferred language code for the user, pass in nil to use the value from config</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>enablePunctuationCapitalization</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, the resulting transcript will include punctuation and capitalization</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>doSingleUtterance</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>If true, the server will automatically close the stream once the user stops talking</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>vadSensitivity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The sensitivity of the voice activity detector. Defaults to <code>low</code></p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>vadDuration</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The duration of silence to detect before automatically closing the stream as a number of seconds. Defaults to 1</p>
                                 </div>
                               </td>
                             </tr>
@@ -1067,8 +1119,8 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-07-25)</p>
-          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.2</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
+          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-09-26)</p>
+          <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
     </div>
