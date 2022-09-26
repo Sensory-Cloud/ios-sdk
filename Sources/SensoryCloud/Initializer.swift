@@ -111,7 +111,6 @@ public class Initializer {
         }
 
         rsp.whenFailure { error in
-            NSLog("Login Failure")
             unsetConfigChanges()
             let delErr = tokenManager.deleteCredentials()
             if delErr != nil {

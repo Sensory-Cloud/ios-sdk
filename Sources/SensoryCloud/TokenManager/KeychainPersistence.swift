@@ -29,7 +29,6 @@ class KeychainPersistence {
     ///   - data: Data to save to Apple Keychain
     func save(id: String, data: Data) throws {
         try delete(id: id)
-        NSLog("Saving item to keychain with tag: %@", id)
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
@@ -63,7 +62,6 @@ class KeychainPersistence {
     /// - Parameter id: Keychain id to fetch data for
     /// - Returns: Data found in Apple Keychain
     func getData(id: String) throws -> Data {
-        NSLog("Getting item from keychain with tag: %@", id)
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,
@@ -87,7 +85,6 @@ class KeychainPersistence {
     /// No error will be thrown if the specified item cannot be found in Apple Keychain
     /// - Parameter id: Keychain id to delete data for
     func delete(id: String) throws {
-        NSLog("Deleting item from keychain with tag: %@", id)
 
         let query: [String: Any] = [
             kSecClass as String: kSecClassKey,

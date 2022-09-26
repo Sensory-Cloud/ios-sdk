@@ -347,6 +347,8 @@ final class AudioServiceTests: XCTestCase {
         transcriptConfig.audio = mockAudioConfig
         transcriptConfig.modelName = "Transcript Model"
         transcriptConfig.userID = "Some User"
+        transcriptConfig.vadSensitivity = .low
+        transcriptConfig.vadDuration = 1
         var expectedRequest = Sensory_Api_V1_Audio_TranscribeRequest()
         expectedRequest.config = transcriptConfig
 

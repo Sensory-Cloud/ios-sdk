@@ -49,8 +49,6 @@ public class OAuthService {
         clientID: String,
         clientSecret: String
     ) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse> {
-        NSLog("Enrolling device: %@", name)
-
         do {
             guard let deviceID = Config.deviceID, let tenantID = Config.tenantID, let host = Config.getCloudHost() else {
                 throw NetworkError.notInitialized
@@ -81,7 +79,6 @@ public class OAuthService {
     ///   - secret: Client secret to use in token request
     /// - Returns: Future to be fulfilled with the new access token, or the network error that occurred
     public func getToken(clientID: String, secret: String) -> EventLoopFuture<Sensory_Api_Common_TokenResponse> {
-        NSLog("Requesting OAuth Token with clientID %@", clientID)
         do {
             guard let host = Config.getCloudHost() else {
                 throw NetworkError.notInitialized

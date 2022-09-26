@@ -42,8 +42,6 @@ public class ManagementService {
     /// - Parameter userID: userID to fetch enrollments for
     /// - Returns: A future to be fulfilled with either a list of enrollments, or the network error that occurred
     public func getEnrollments(for userID: String) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentsResponse> {
-        NSLog("Requesting current enrollments from server with userID: %@", userID)
-
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -61,8 +59,6 @@ public class ManagementService {
     /// - Parameter userID: userID to fetch enrollment groups for
     /// - Returns: A future to be fulfilled with either a list of enrollment groups, or the network error that occurred
     public func getEnrollmentGroups(for userID: String) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentGroupsResponse> {
-        NSLog("Requesting current enrollment groups from server with userID: %@", userID)
-
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -93,8 +89,6 @@ public class ManagementService {
         description: String,
         modelName: String
     ) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
-        NSLog("Requesting enrollment group creation with name: %@", groupName)
-
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -120,8 +114,6 @@ public class ManagementService {
         groupId: String,
         enrollments: [String]
     ) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
-        NSLog("Requesting to append enrollments to enrollment group: %@", groupId)
-
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -141,8 +133,6 @@ public class ManagementService {
     /// - Parameter enrollmentID: enrollmentID for the enrollment to delete
     /// - Returns: A future to be fulfilled with either the deleted enrollment, or the network error that occurred
     public func deleteEnrollment(with enrollmentID: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse> {
-        NSLog("Requesting to delete enrollment: %@", enrollmentID)
-
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -162,8 +152,6 @@ public class ManagementService {
     /// - Parameter ids: List of enrollment ids to delete from the server
     /// - Returns: A future that will either contain a list of all server responses, or the first error to occur.
     public func deleteEnrollments(with ids: [String]) -> EventLoopFuture<[Sensory_Api_V1_Management_EnrollmentResponse]> {
-        NSLog("Deleting %d enrollments", ids.count)
-
         var futures: [EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse>] = []
         for id in ids {
             futures.append(deleteEnrollment(with: id))
@@ -177,8 +165,6 @@ public class ManagementService {
     /// - Parameter id: group ID to delete
     /// - Returns: A future to be fulfilled with either the deleted enrollment group, or the network error that occurred
     public func deleteEnrollmentGroup(with id: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
-        NSLog("Requesting to delete enrollment group: %@", id)
-
         do {
             let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)

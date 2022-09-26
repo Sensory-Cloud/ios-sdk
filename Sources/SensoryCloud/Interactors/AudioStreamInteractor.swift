@@ -219,7 +219,6 @@ func recordingCallback(
     }
 
     guard let remoteIOUnit = AudioStreamInteractor.shared.microphoneUnit else {
-        NSLog("Shared audio stream interactor is missing reference to microphone unit")
         return AVFoundation.errSecCallbackFailed
     }
     status = AudioUnitRender(remoteIOUnit, ioActionFlags, inTimeStamp, inBusNumber, inNumberFrames, &bufferList)
@@ -235,8 +234,6 @@ func recordingCallback(
             DispatchQueue.main.async {
                 AudioStreamInteractor.shared.delegate?.didProcessAudio(data)
             }
-        } else {
-            NSLog("No data received from audio stream callback")
         }
     }
 

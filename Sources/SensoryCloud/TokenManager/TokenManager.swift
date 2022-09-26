@@ -71,10 +71,7 @@ public class TokenManager {
             try _ = keychain.getString(id: KeychainTag.clientID)
             try _ = keychain.getString(id: KeychainTag.clientSecret)
             return true
-        } catch KeychainError.itemNotFound {
-            return false
         } catch {
-            NSLog("An error occurred while reading OAuth credentials: %@", error.localizedDescription)
             return false
         }
     }
@@ -98,7 +95,6 @@ public class TokenManager {
             try accessToken = keychain.getString(id: KeychainTag.accessToken)
             try expirationData = keychain.getData(id: KeychainTag.expiration)
         } catch KeychainError.itemNotFound {
-            NSLog("Could not find saved access token, fetching new token")
             return try fetchNewAccessToken()
         } catch {
             throw error
@@ -108,11 +104,9 @@ public class TokenManager {
         let now = Date().timeIntervalSince1970
 
         if now > expiration - tokenExpirationBuffer {
-            NSLog("Cached access token has expired, requesting new token")
             return try fetchNewAccessToken()
         }
 
-        NSLog("Returning cached access token")
         return accessToken
     }
 

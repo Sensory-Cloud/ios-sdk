@@ -66,8 +66,6 @@ public class AudioService {
     /// Fetches a list of the current audio models supported by the cloud host
     ///  - Returns: A future to be fulfilled with either a list of available models, or the network error that occurred
     public func getModels() -> EventLoopFuture<Sensory_Api_V1_Audio_GetModelsResponse> {
-        NSLog("Requesting voice biometric models from server")
-
         do {
             let client: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -111,7 +109,6 @@ public class AudioService {
         Sensory_Api_V1_Audio_CreateEnrollmentRequest,
         Sensory_Api_V1_Audio_CreateEnrollmentResponse
     > {
-        NSLog("Starting audio enrollment stream")
         guard let deviceID = Config.deviceID else {
             throw NetworkError.notInitialized
         }
@@ -171,8 +168,6 @@ public class AudioService {
         Sensory_Api_V1_Audio_AuthenticateRequest,
         Sensory_Api_V1_Audio_AuthenticateResponse
     > {
-        NSLog("Starting audio authentication stream")
-
         // Establish grpc streaming
         let client: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
@@ -227,8 +222,6 @@ public class AudioService {
         Sensory_Api_V1_Audio_ValidateEventRequest,
         Sensory_Api_V1_Audio_ValidateEventResponse
     > {
-        NSLog("Requesting validate trigger stream from server")
-
         // Establish grpc streaming
         let client: Sensory_Api_V1_Audio_AudioEventsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
@@ -277,8 +270,6 @@ public class AudioService {
         Sensory_Api_V1_Audio_CreateEnrolledEventRequest,
         Sensory_Api_V1_Audio_CreateEnrollmentResponse
     > {
-        NSLog("Requesting creation of an event enrollment")
-
         let client: Sensory_Api_V1_Audio_AudioEventsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.createEnrolledEvent(callOptions: metadata, handler: onStreamReceive)
@@ -324,8 +315,6 @@ public class AudioService {
         Sensory_Api_V1_Audio_ValidateEnrolledEventRequest,
         Sensory_Api_V1_Audio_ValidateEnrolledEventResponse
     > {
-        NSLog("Requesting validation of an enrolled event")
-
         let client: Sensory_Api_V1_Audio_AudioEventsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.validateEnrolledEvent(callOptions: metadata, handler: onStreamReceive)
@@ -364,6 +353,10 @@ public class AudioService {
     ///   - modelName: Name of model to validate
     ///   - userID: Unique user identifier
     ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
+    ///   - enablePunctuationCapitalization: If true, the resulting transcript will include punctuation and capitalization
+    ///   - doSingleUtterance: If true, the server will automatically close the stream once the user stops talking
+    ///   - vadSensitivity: The sensitivity of the voice activity detector. Defaults to `low`
+    ///   - vadDuration: The duration of silence to detect before automatically closing the stream as a number of seconds. Defaults to 1
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -371,13 +364,15 @@ public class AudioService {
         modelName: String,
         userID: String,
         languageCode: String? = nil,
+        enablePunctuationCapitalization: Bool = false,
+        doSingleUtterance: Bool = false,
+        vadSensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .low,
+        vadDuration: Float = 1,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_TranscribeResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_TranscribeRequest,
         Sensory_Api_V1_Audio_TranscribeResponse
     > {
-        NSLog("Requesting to transcribe audio")
-
         // Establish grpc streaming
         let client: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
@@ -394,6 +389,10 @@ public class AudioService {
         config.audio = audioConfig
         config.modelName = modelName
         config.userID = userID
+        config.enablePunctuationCapitalization = enablePunctuationCapitalization
+        config.doSingleUtterance = doSingleUtterance
+        config.vadSensitivity = vadSensitivity
+        config.vadDuration = vadDuration
 
         var request = Sensory_Api_V1_Audio_TranscribeRequest()
         request.config = config

@@ -95,7 +95,6 @@ public class VideoStreamInteractor: NSObject {
         if session.canAddInput(camera) {
             session.addInput(camera)
         } else {
-            NSLog("Could not set the camera input")
             throw VideoStreamError.cameraInputError
         }
     }
@@ -107,7 +106,6 @@ public class VideoStreamInteractor: NSObject {
     public func takePhoto() {
 
         if !session.isRunning {
-            NSLog("Cannot take a photo while not recording")
             delegate?.takePhotoDidFail(VideoStreamError.notRecording)
             return
         }
@@ -129,7 +127,6 @@ public class VideoStreamInteractor: NSObject {
         if session.canAddInput(videoDeviceInput) {
             session.addInput(videoDeviceInput)
         } else {
-            NSLog("Could not add the camera input")
             throw VideoStreamError.cameraInputError
         }
 
@@ -140,7 +137,6 @@ public class VideoStreamInteractor: NSObject {
         if session.canAddOutput(output) {
             session.addOutput(output)
         } else {
-            NSLog("Could not set the video output")
             throw VideoStreamError.cameraOutputError
         }
         configured = true
@@ -158,7 +154,6 @@ public class VideoStreamInteractor: NSObject {
         }
 
         guard let cameraInput = AVCaptureDevice.default(.builtInWideAngleCamera, for: .video, position: avPosition) else {
-            NSLog("Could not get the camera input")
             throw VideoStreamError.cameraInputError
         }
 
@@ -178,13 +173,11 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         if delegate == nil { return }
 
         guard let image = getImage(from: sampleBuffer) else {
-            NSLog("Could not get image from buffer")
             delegate?.takePhotoDidFail(VideoStreamError.photoExportError)
             return
         }
 
         guard let data = imagePostProcessing(on: image) else {
-            NSLog("Could not process the collected image")
             delegate?.takePhotoDidFail(VideoStreamError.photoExportError)
             return
         }
@@ -194,7 +187,6 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
 
     func getImage(from sampleBuffer: CMSampleBuffer) -> CGImage? {
         guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            NSLog("Could not get image buffer")
             return nil
         }
 
@@ -209,12 +201,10 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue).rawValue
         ) else {
-            NSLog("Could not get context")
             return nil
         }
 
         guard let cgImage = context.makeImage() else {
-            NSLog("Could not make image")
             return nil
         }
 
@@ -253,7 +243,6 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         }
 
         guard let cropped = croppedOpt else {
-            NSLog("Could not get cropped image")
             return nil
         }
 
@@ -267,13 +256,11 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
             space: CGColorSpaceCreateDeviceRGB(),
             bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue).rawValue
         ) else {
-            NSLog("Could not get context")
             return nil
         }
         context.draw(cropped, in: CGRect(x: 0, y: 0, width: height, height: width))
 
         guard let resized = context.makeImage() else {
-            NSLog("Cant make image")
             return nil
         }
 

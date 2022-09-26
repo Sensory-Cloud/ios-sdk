@@ -46,8 +46,6 @@ public class VideoService {
     /// Fetches a list of the current vision models supported by the cloud host
     ///  - Returns: A future to be fulfilled with either a list of available models, or the network error that occurred
     public func getModels() -> EventLoopFuture<Sensory_Api_V1_Video_GetModelsResponse> {
-        NSLog("Requesting video models from server")
-
         do {
             let client: Sensory_Api_V1_Video_VideoModelsClientProtocol = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
@@ -88,7 +86,6 @@ public class VideoService {
         Sensory_Api_V1_Video_CreateEnrollmentRequest,
         Sensory_Api_V1_Video_CreateEnrollmentResponse
     > {
-        NSLog("Starting video enrollment stream")
         guard let deviceID = Config.deviceID else {
             throw NetworkError.notInitialized
         }
@@ -138,8 +135,6 @@ public class VideoService {
         Sensory_Api_V1_Video_AuthenticateRequest,
         Sensory_Api_V1_Video_AuthenticateResponse
     > {
-        NSLog("Starting video authentication stream")
-
         // Establish grpc streaming
         let client: Sensory_Api_V1_Video_VideoBiometricsClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
@@ -186,8 +181,6 @@ public class VideoService {
         Sensory_Api_V1_Video_ValidateRecognitionRequest,
         Sensory_Api_V1_Video_LivenessRecognitionResponse
     > {
-        NSLog("Requesting Liveness stream from server")
-
         // Establish grpc streaming
         let client: Sensory_Api_V1_Video_VideoRecognitionClientProtocol = try service.getClient()
         let metadata = try service.getDefaultMetadata()
