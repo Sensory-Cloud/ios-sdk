@@ -12,7 +12,7 @@ COMMANDS="
     test | t\t\t Run Unit Tests\n
     testpretty | tp\t Run Unit Tests using xcpretty output\n
     genproto | gp [tag]\t Pulls and generates proto files from master or from an optional git tag\n
-    release | rv [version]\ Releases and tags the SDK
+    release | rv [version]\t Releases and tags the SDK\n
     doc | d\t\t Generate Documentation\n
     help | h\t\t Display This Help Message\n
 "
