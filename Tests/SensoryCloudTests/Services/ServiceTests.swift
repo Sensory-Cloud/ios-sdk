@@ -40,35 +40,27 @@ final class ServiceTests: XCTestCase {
         let service = Service.shared
 
         do {
-            let _: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
+            let _: Sensory_Api_V1_Audio_AudioModelsNIOClient = try service.getClient()
             XCTFail("Error should occur when no cloud host is set")
         } catch {
             // Expected Error case
         }
 
         Config.setCloudHost(host: "host", port: 443)
-        do {
-            let _: Sensory_Api_V1_Audio_AudioModelsClient = try service.getClient()
-            XCTFail("Error should occur when client type is passed, instead of protocol")
-        } catch {
-            // Expected Error case
-        }
-
-
-        let _: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
+        let _: Sensory_Api_V1_Audio_AudioModelsNIOClient = try service.getClient()
         XCTAssertEqual(service.cachedClients.count, 1)
         XCTAssertEqual(service.cacheHost, CloudHost("host", 443, true))
 
         // Ensure cache is being used
-        let _: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
+        let _: Sensory_Api_V1_Audio_AudioModelsNIOClient = try service.getClient()
         XCTAssertEqual(service.cachedClients.count, 1)
 
-        let _: Sensory_Api_V1_Video_VideoModelsClientProtocol = try service.getClient()
+        let _: Sensory_Api_V1_Video_VideoModelsNIOClient = try service.getClient()
         XCTAssertEqual(service.cachedClients.count, 2)
 
         // Ensure cache gets reset when the cloud host changes
         Config.setCloudHost(host: "NewHost", port: 444)
-        let _: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
+        let _: Sensory_Api_V1_Audio_AudioModelsNIOClient = try service.getClient()
         XCTAssertEqual(service.cachedClients.count, 1)
     }
 

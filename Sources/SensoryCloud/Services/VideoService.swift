@@ -10,20 +10,20 @@ import GRPC
 import NIO
 import NIOHPACK
 
-extension Sensory_Api_V1_Video_VideoModelsClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Video_VideoModelsNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
 
-extension Sensory_Api_V1_Video_VideoBiometricsClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Video_VideoBiometricsNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
 
-extension Sensory_Api_V1_Video_VideoRecognitionClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Video_VideoRecognitionNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
@@ -38,16 +38,11 @@ public class VideoService {
         self.service = Service.shared
     }
 
-    /// Internal initializer, used for unit testing
-    init(service: Service) {
-        self.service = service
-    }
-
     /// Fetches a list of the current vision models supported by the cloud host
     ///  - Returns: A future to be fulfilled with either a list of available models, or the network error that occurred
     public func getModels() -> EventLoopFuture<Sensory_Api_V1_Video_GetModelsResponse> {
         do {
-            let client: Sensory_Api_V1_Video_VideoModelsClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Video_VideoModelsNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             let request = Sensory_Api_V1_Video_GetModelsRequest()
@@ -68,7 +63,8 @@ public class VideoService {
     ///   - livenessThreshold: Liveness threshold for the potential liveness check
     ///   - numLiveFramesRequired: The number of frames that need to pass the liveness check for a successful enrollment (if liveness is enabled).
     ///         A value of 0 means that *all * frames need to pass the liveness check
-    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration
+    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to
+    ///         return a token upon successful enrollment regardless of server configuration
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
@@ -91,7 +87,7 @@ public class VideoService {
         }
 
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Video_VideoBiometricsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Video_VideoBiometricsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.createEnrollment(callOptions: metadata, handler: onStreamReceive)
 
@@ -136,7 +132,7 @@ public class VideoService {
         Sensory_Api_V1_Video_AuthenticateResponse
     > {
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Video_VideoBiometricsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Video_VideoBiometricsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.authenticate(callOptions: metadata, handler: onStreamReceive)
 
@@ -182,7 +178,7 @@ public class VideoService {
         Sensory_Api_V1_Video_LivenessRecognitionResponse
     > {
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Video_VideoRecognitionClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Video_VideoRecognitionNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.validateLiveness(callOptions: metadata, handler: onStreamReceive)
 

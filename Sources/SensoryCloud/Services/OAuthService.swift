@@ -123,24 +123,24 @@ public class OAuthService {
     }
 
     /// Fetches the grpc client class, `Service.getClient()` is not used to prevent a circular dependency between `Service` and `TokenManager`
-    func getOAuthClient(host: CloudHost) throws -> Sensory_Api_Oauth_OauthServiceClientProtocol {
+    func getOAuthClient(host: CloudHost) throws -> Sensory_Api_Oauth_OauthServiceNIOClient {
         let channel = try GRPCChannelPool.with(
             target: .host(host.host, port: host.port),
             transportSecurity: host.isSecure ? .tls(GRPCTLSConfiguration.makeClientConfigurationBackedByNIOSSL()) : .plaintext,
             eventLoopGroup: group
         )
 
-        return Sensory_Api_Oauth_OauthServiceClient(channel: channel)
+        return Sensory_Api_Oauth_OauthServiceNIOClient(channel: channel)
     }
 
     /// Fetches the grpc client class, `Service.getClient()` is not used to prevent a circular dependency between `Service` and `TokenManager`
-    func getEnrollmentClient(host: CloudHost) throws -> Sensory_Api_V1_Management_DeviceServiceClientProtocol {
+    func getEnrollmentClient(host: CloudHost) throws -> Sensory_Api_V1_Management_DeviceServiceNIOClient {
         let channel = try GRPCChannelPool.with(
             target: .host(host.host, port: host.port),
             transportSecurity: host.isSecure ? .tls(GRPCTLSConfiguration.makeClientConfigurationBackedByNIOSSL()) : .plaintext,
             eventLoopGroup: group
         )
 
-        return Sensory_Api_V1_Management_DeviceServiceClient(channel: channel)
+        return Sensory_Api_V1_Management_DeviceServiceNIOClient(channel: channel)
     }
 }

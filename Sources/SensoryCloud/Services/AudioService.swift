@@ -18,32 +18,32 @@ public enum EnrollmentIdentifier {
     case enrollmentGroupID(String)
 }
 
-extension Sensory_Api_V1_Audio_AudioModelsClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Audio_AudioModelsNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
 
-extension Sensory_Api_V1_Audio_AudioBiometricsClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Audio_AudioBiometricsNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
 
-extension Sensory_Api_V1_Audio_AudioEventsClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Audio_AudioEventsNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
 
-extension Sensory_Api_V1_Audio_AudioTranscriptionsClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Audio_AudioTranscriptionsNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
 
-extension Sensory_Api_V1_Audio_AudioSynthesisClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Audio_AudioSynthesisNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
@@ -58,16 +58,11 @@ public class AudioService {
         self.service = Service.shared
     }
 
-    /// Internal initializer, used for unit testing
-    init(service: Service) {
-        self.service = service
-    }
-
     /// Fetches a list of the current audio models supported by the cloud host
     ///  - Returns: A future to be fulfilled with either a list of available models, or the network error that occurred
     public func getModels() -> EventLoopFuture<Sensory_Api_V1_Audio_GetModelsResponse> {
         do {
-            let client: Sensory_Api_V1_Audio_AudioModelsClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Audio_AudioModelsNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             let request = Sensory_Api_V1_Audio_GetModelsRequest()
@@ -87,10 +82,11 @@ public class AudioService {
     ///   - description: User supplied description of the enrollment
     ///   - isLivenessEnabled: Verifies liveness during the enrollment process
     ///   - numUtterances: Sets how many utterances should be required for text-dependent enrollments, defaults to 4 if not specified.
-    ///                    This parameter should be left `nil` for text-independent enrollments
+    ///         This parameter should be left `nil` for text-independent enrollments
     ///   - enrollmentDuration: Sets the duration in seconds for text-independent enrollments, defaults to 12.5 without liveness enabled and 8 with liveness enabled.
-    ///                         This parameter should be left `nil` for text-dependent enrollments
-    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to return a token upon successful enrollment regardless of server configuration
+    ///         This parameter should be left `nil` for text-dependent enrollments
+    ///   - disableServerEnrollmentStorage: If true this will prevent the server from storing enrollment tokens locally and always force it to
+    ///         return a token upon successful enrollment regardless of server configuration
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Throws: `NetworkError.notInitialized` if `Config.deviceID` has not been set
@@ -114,7 +110,7 @@ public class AudioService {
         }
 
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioBiometricsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.createEnrollment(callOptions: metadata, handler: onStreamReceive)
 
@@ -169,7 +165,7 @@ public class AudioService {
         Sensory_Api_V1_Audio_AuthenticateResponse
     > {
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Audio_AudioBiometricsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioBiometricsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.authenticate(callOptions: metadata, handler: onStreamReceive)
 
@@ -223,7 +219,7 @@ public class AudioService {
         Sensory_Api_V1_Audio_ValidateEventResponse
     > {
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Audio_AudioEventsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioEventsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.validateEvent(callOptions: metadata, handler: onStreamReceive)
 
@@ -270,7 +266,7 @@ public class AudioService {
         Sensory_Api_V1_Audio_CreateEnrolledEventRequest,
         Sensory_Api_V1_Audio_CreateEnrollmentResponse
     > {
-        let client: Sensory_Api_V1_Audio_AudioEventsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioEventsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.createEnrolledEvent(callOptions: metadata, handler: onStreamReceive)
 
@@ -315,7 +311,7 @@ public class AudioService {
         Sensory_Api_V1_Audio_ValidateEnrolledEventRequest,
         Sensory_Api_V1_Audio_ValidateEnrolledEventResponse
     > {
-        let client: Sensory_Api_V1_Audio_AudioEventsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioEventsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.validateEnrolledEvent(callOptions: metadata, handler: onStreamReceive)
 
@@ -374,7 +370,7 @@ public class AudioService {
         Sensory_Api_V1_Audio_TranscribeResponse
     > {
         // Establish grpc streaming
-        let client: Sensory_Api_V1_Audio_AudioTranscriptionsClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioTranscriptionsNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.transcribe(callOptions: metadata, handler: onStreamReceive)
 
@@ -436,7 +432,7 @@ public class AudioService {
         request.config = voiceConfig
 
         // Open grpc stream
-        let client: Sensory_Api_V1_Audio_AudioSynthesisClientProtocol = try service.getClient()
+        let client: Sensory_Api_V1_Audio_AudioSynthesisNIOClient = try service.getClient()
         let metadata = try service.getDefaultMetadata()
         let call = client.synthesizeSpeech(request, callOptions: metadata, handler: onStreamReceive)
 

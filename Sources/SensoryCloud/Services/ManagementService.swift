@@ -10,14 +10,8 @@ import GRPC
 import NIO
 import NIOHPACK
 
-extension Sensory_Api_V1_Management_EnrollmentServiceClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
-        self.init(channel: grpcChannel)
-    }
-}
-
-extension Sensory_Api_V1_Management_DeviceServiceClient: GrpcClient {
-    convenience init(grpcChannel: GRPCChannel) {
+extension Sensory_Api_V1_Management_EnrollmentServiceNIOClient: GrpcClient {
+    init(grpcChannel: GRPCChannel) {
         self.init(channel: grpcChannel)
     }
 }
@@ -32,18 +26,13 @@ public class ManagementService {
         self.service = Service.shared
     }
 
-    /// Internal initializer, used for unit testing
-    init(service: Service) {
-        self.service = service
-    }
-
     /// Fetches a list of the current enrollments for the given userID
     ///
     /// - Parameter userID: userID to fetch enrollments for
     /// - Returns: A future to be fulfilled with either a list of enrollments, or the network error that occurred
     public func getEnrollments(for userID: String) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentsResponse> {
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_GetEnrollmentsRequest()
@@ -60,7 +49,7 @@ public class ManagementService {
     /// - Returns: A future to be fulfilled with either a list of enrollment groups, or the network error that occurred
     public func getEnrollmentGroups(for userID: String) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentGroupsResponse> {
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_GetEnrollmentsRequest()
@@ -90,7 +79,7 @@ public class ManagementService {
         modelName: String
     ) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_CreateEnrollmentGroupRequest()
@@ -115,7 +104,7 @@ public class ManagementService {
         enrollments: [String]
     ) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_AppendEnrollmentGroupRequest()
@@ -134,7 +123,7 @@ public class ManagementService {
     /// - Returns: A future to be fulfilled with either the deleted enrollment, or the network error that occurred
     public func deleteEnrollment(with enrollmentID: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse> {
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_DeleteEnrollmentRequest()
@@ -166,7 +155,7 @@ public class ManagementService {
     /// - Returns: A future to be fulfilled with either the deleted enrollment group, or the network error that occurred
     public func deleteEnrollmentGroup(with id: String) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse> {
         do {
-            let client: Sensory_Api_V1_Management_EnrollmentServiceClientProtocol = try service.getClient()
+            let client: Sensory_Api_V1_Management_EnrollmentServiceNIOClient = try service.getClient()
             let metadata = try service.getDefaultMetadata(isUnary: true)
 
             var request = Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest()
