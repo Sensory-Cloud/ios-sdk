@@ -52,7 +52,7 @@ gen_proto() {
       --swift_opt="Visibility=Public" \
       --swift_out="${GEN_PATH}" \
       --grpc-swift_opt="Visibility=Public" \
-      --grpc-swift_out="Client=true,TestClient=true,Server=false:${GEN_PATH}" \
+      --grpc-swift_out="Client=true,TestClient=true,Server=true:${GEN_PATH}" \
       $x;
 
     echo "Generated grpc code for $x";

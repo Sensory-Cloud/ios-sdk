@@ -266,3 +266,117 @@ public final class Sensory_Api_Health_HealthServiceTestClient: Sensory_Api_Healt
   }
 }
 
+/// Service for Health function
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_Health_HealthServiceProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_Health_HealthServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Obtain an Health and Server status information
+  func getHealth(request: Sensory_Api_Health_HealthRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_Common_ServerHealthResponse>
+}
+
+extension Sensory_Api_Health_HealthServiceProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_Health_HealthServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetHealth":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Health_HealthRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Common_ServerHealthResponse>(),
+        interceptors: self.interceptors?.makeGetHealthInterceptors() ?? [],
+        userFunction: self.getHealth(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Service for Health function
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_Health_HealthServiceAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_Health_HealthServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Obtain an Health and Server status information
+  @Sendable func getHealth(
+    request: Sensory_Api_Health_HealthRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_Common_ServerHealthResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_Health_HealthServiceAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_Health_HealthServiceServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_Health_HealthServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_Health_HealthServiceServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetHealth":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Health_HealthRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Common_ServerHealthResponse>(),
+        interceptors: self.interceptors?.makeGetHealthInterceptors() ?? [],
+        wrapping: self.getHealth(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_Health_HealthServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'getHealth'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetHealthInterceptors() -> [ServerInterceptor<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse>]
+}
+
+public enum Sensory_Api_Health_HealthServiceServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "HealthService",
+    fullName: "sensory.api.health.HealthService",
+    methods: [
+      Sensory_Api_Health_HealthServiceServerMetadata.Methods.getHealth,
+    ]
+  )
+
+  public enum Methods {
+    public static let getHealth = GRPCMethodDescriptor(
+      name: "GetHealth",
+      path: "/sensory.api.health.HealthService/GetHealth",
+      type: GRPCCallType.unary
+    )
+  }
+}

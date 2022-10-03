@@ -1581,3 +1581,722 @@ public final class Sensory_Api_V1_Audio_AudioSynthesisTestClient: Sensory_Api_V1
   }
 }
 
+/// Handles the retrieval and management of audio models
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Audio_AudioModelsProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Audio_AudioModelsServerInterceptorFactoryProtocol? { get }
+
+  /// Get available models for enrollment and authentication
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getModels(request: Sensory_Api_V1_Audio_GetModelsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Audio_GetModelsResponse>
+}
+
+extension Sensory_Api_V1_Audio_AudioModelsProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioModelsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetModels":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_GetModelsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_GetModelsResponse>(),
+        interceptors: self.interceptors?.makeGetModelsInterceptors() ?? [],
+        userFunction: self.getModels(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles the retrieval and management of audio models
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioModelsAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioModelsServerInterceptorFactoryProtocol? { get }
+
+  /// Get available models for enrollment and authentication
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getModels(
+    request: Sensory_Api_V1_Audio_GetModelsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Audio_GetModelsResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioModelsAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioModelsServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioModelsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioModelsServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetModels":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_GetModelsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_GetModelsResponse>(),
+        interceptors: self.interceptors?.makeGetModelsInterceptors() ?? [],
+        wrapping: self.getModels(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioModelsServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'getModels'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetModelsInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_GetModelsRequest, Sensory_Api_V1_Audio_GetModelsResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioModelsServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioModels",
+    fullName: "sensory.api.v1.audio.AudioModels",
+    methods: [
+      Sensory_Api_V1_Audio_AudioModelsServerMetadata.Methods.getModels,
+    ]
+  )
+
+  public enum Methods {
+    public static let getModels = GRPCMethodDescriptor(
+      name: "GetModels",
+      path: "/sensory.api.v1.audio.AudioModels/GetModels",
+      type: GRPCCallType.unary
+    )
+  }
+}
+/// Handles all audio-related biometrics
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Audio_AudioBiometricsProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Audio_AudioBiometricsServerInterceptorFactoryProtocol? { get }
+
+  /// Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse as the audio is processed.
+  /// CreateEnrollment only supports biometric-enabled models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func createEnrollment(context: StreamingResponseCallContext<Sensory_Api_V1_Audio_CreateEnrollmentResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Audio_CreateEnrollmentRequest>) -> Void>
+
+  /// Authenticates a user with a stream of audio against an existing enrollment.
+  /// Streams an AuthenticateResponse as the audio is processed.
+  /// Authenticate only supports biometric-enabled models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func authenticate(context: StreamingResponseCallContext<Sensory_Api_V1_Audio_AuthenticateResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Audio_AuthenticateRequest>) -> Void>
+}
+
+extension Sensory_Api_V1_Audio_AudioBiometricsProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioBiometricsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "CreateEnrollment":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_CreateEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_CreateEnrollmentResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? [],
+        observerFactory: self.createEnrollment(context:)
+      )
+
+    case "Authenticate":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_AuthenticateRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_AuthenticateResponse>(),
+        interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? [],
+        observerFactory: self.authenticate(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles all audio-related biometrics
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioBiometricsAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioBiometricsServerInterceptorFactoryProtocol? { get }
+
+  /// Enrolls a user with a stream of audio. Streams a CreateEnrollmentResponse as the audio is processed.
+  /// CreateEnrollment only supports biometric-enabled models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func createEnrollment(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Audio_CreateEnrollmentRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_CreateEnrollmentResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  /// Authenticates a user with a stream of audio against an existing enrollment.
+  /// Streams an AuthenticateResponse as the audio is processed.
+  /// Authenticate only supports biometric-enabled models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func authenticate(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Audio_AuthenticateRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_AuthenticateResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioBiometricsAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioBiometricsServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioBiometricsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioBiometricsServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "CreateEnrollment":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_CreateEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_CreateEnrollmentResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? [],
+        wrapping: self.createEnrollment(requestStream:responseStream:context:)
+      )
+
+    case "Authenticate":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_AuthenticateRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_AuthenticateResponse>(),
+        interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? [],
+        wrapping: self.authenticate(requestStream:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioBiometricsServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'createEnrollment'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeCreateEnrollmentInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_CreateEnrollmentRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when handling 'authenticate'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeAuthenticateInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_AuthenticateRequest, Sensory_Api_V1_Audio_AuthenticateResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioBiometricsServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioBiometrics",
+    fullName: "sensory.api.v1.audio.AudioBiometrics",
+    methods: [
+      Sensory_Api_V1_Audio_AudioBiometricsServerMetadata.Methods.createEnrollment,
+      Sensory_Api_V1_Audio_AudioBiometricsServerMetadata.Methods.authenticate,
+    ]
+  )
+
+  public enum Methods {
+    public static let createEnrollment = GRPCMethodDescriptor(
+      name: "CreateEnrollment",
+      path: "/sensory.api.v1.audio.AudioBiometrics/CreateEnrollment",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let authenticate = GRPCMethodDescriptor(
+      name: "Authenticate",
+      path: "/sensory.api.v1.audio.AudioBiometrics/Authenticate",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+/// Handles all audio event processing
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Audio_AudioEventsProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Audio_AudioEventsServerInterceptorFactoryProtocol? { get }
+
+  /// Validates a phrase or sound with a stream of audio.
+  /// Streams a ValidateEventResponse as the audio is processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func validateEvent(context: StreamingResponseCallContext<Sensory_Api_V1_Audio_ValidateEventResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Audio_ValidateEventRequest>) -> Void>
+
+  /// Enrolls a sound or voice. Streams a CreateEnrollmentResponse as the audio is processed.
+  /// CreateEnrollment supports all enrollable models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func createEnrolledEvent(context: StreamingResponseCallContext<Sensory_Api_V1_Audio_CreateEnrollmentResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>) -> Void>
+
+  /// Authenticates a sound or voice. Streams a ValidateEventResponse as the audio is processed.
+  /// ValidateEnrolledEvent supports all enrollable models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func validateEnrolledEvent(context: StreamingResponseCallContext<Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>) -> Void>
+}
+
+extension Sensory_Api_V1_Audio_AudioEventsProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioEventsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ValidateEvent":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_ValidateEventRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_ValidateEventResponse>(),
+        interceptors: self.interceptors?.makeValidateEventInterceptors() ?? [],
+        observerFactory: self.validateEvent(context:)
+      )
+
+    case "CreateEnrolledEvent":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_CreateEnrollmentResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? [],
+        observerFactory: self.createEnrolledEvent(context:)
+      )
+
+    case "ValidateEnrolledEvent":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>(),
+        interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? [],
+        observerFactory: self.validateEnrolledEvent(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles all audio event processing
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioEventsAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioEventsServerInterceptorFactoryProtocol? { get }
+
+  /// Validates a phrase or sound with a stream of audio.
+  /// Streams a ValidateEventResponse as the audio is processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func validateEvent(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Audio_ValidateEventRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_ValidateEventResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  /// Enrolls a sound or voice. Streams a CreateEnrollmentResponse as the audio is processed.
+  /// CreateEnrollment supports all enrollable models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func createEnrolledEvent(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_CreateEnrollmentResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  /// Authenticates a sound or voice. Streams a ValidateEventResponse as the audio is processed.
+  /// ValidateEnrolledEvent supports all enrollable models
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func validateEnrolledEvent(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioEventsAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioEventsServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioEventsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioEventsServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ValidateEvent":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_ValidateEventRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_ValidateEventResponse>(),
+        interceptors: self.interceptors?.makeValidateEventInterceptors() ?? [],
+        wrapping: self.validateEvent(requestStream:responseStream:context:)
+      )
+
+    case "CreateEnrolledEvent":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_CreateEnrolledEventRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_CreateEnrollmentResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrolledEventInterceptors() ?? [],
+        wrapping: self.createEnrolledEvent(requestStream:responseStream:context:)
+      )
+
+    case "ValidateEnrolledEvent":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>(),
+        interceptors: self.interceptors?.makeValidateEnrolledEventInterceptors() ?? [],
+        wrapping: self.validateEnrolledEvent(requestStream:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioEventsServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'validateEvent'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeValidateEventInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_ValidateEventRequest, Sensory_Api_V1_Audio_ValidateEventResponse>]
+
+  /// - Returns: Interceptors to use when handling 'createEnrolledEvent'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeCreateEnrolledEventInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_CreateEnrolledEventRequest, Sensory_Api_V1_Audio_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when handling 'validateEnrolledEvent'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeValidateEnrolledEventInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_ValidateEnrolledEventRequest, Sensory_Api_V1_Audio_ValidateEnrolledEventResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioEventsServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioEvents",
+    fullName: "sensory.api.v1.audio.AudioEvents",
+    methods: [
+      Sensory_Api_V1_Audio_AudioEventsServerMetadata.Methods.validateEvent,
+      Sensory_Api_V1_Audio_AudioEventsServerMetadata.Methods.createEnrolledEvent,
+      Sensory_Api_V1_Audio_AudioEventsServerMetadata.Methods.validateEnrolledEvent,
+    ]
+  )
+
+  public enum Methods {
+    public static let validateEvent = GRPCMethodDescriptor(
+      name: "ValidateEvent",
+      path: "/sensory.api.v1.audio.AudioEvents/ValidateEvent",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let createEnrolledEvent = GRPCMethodDescriptor(
+      name: "CreateEnrolledEvent",
+      path: "/sensory.api.v1.audio.AudioEvents/CreateEnrolledEvent",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let validateEnrolledEvent = GRPCMethodDescriptor(
+      name: "ValidateEnrolledEvent",
+      path: "/sensory.api.v1.audio.AudioEvents/ValidateEnrolledEvent",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+/// Handles all audio transcriptions
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsServerInterceptorFactoryProtocol? { get }
+
+  /// Transcribes voice into text.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func transcribe(context: StreamingResponseCallContext<Sensory_Api_V1_Audio_TranscribeResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Audio_TranscribeRequest>) -> Void>
+}
+
+extension Sensory_Api_V1_Audio_AudioTranscriptionsProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioTranscriptionsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "Transcribe":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_TranscribeRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_TranscribeResponse>(),
+        interceptors: self.interceptors?.makeTranscribeInterceptors() ?? [],
+        observerFactory: self.transcribe(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles all audio transcriptions
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsServerInterceptorFactoryProtocol? { get }
+
+  /// Transcribes voice into text.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func transcribe(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Audio_TranscribeRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_TranscribeResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioTranscriptionsAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioTranscriptionsServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioTranscriptionsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioTranscriptionsServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "Transcribe":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_TranscribeRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_TranscribeResponse>(),
+        interceptors: self.interceptors?.makeTranscribeInterceptors() ?? [],
+        wrapping: self.transcribe(requestStream:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioTranscriptionsServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'transcribe'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeTranscribeInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_TranscribeRequest, Sensory_Api_V1_Audio_TranscribeResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioTranscriptionsServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioTranscriptions",
+    fullName: "sensory.api.v1.audio.AudioTranscriptions",
+    methods: [
+      Sensory_Api_V1_Audio_AudioTranscriptionsServerMetadata.Methods.transcribe,
+    ]
+  )
+
+  public enum Methods {
+    public static let transcribe = GRPCMethodDescriptor(
+      name: "Transcribe",
+      path: "/sensory.api.v1.audio.AudioTranscriptions/Transcribe",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+/// Handles synthesizing audio from text
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Audio_AudioSynthesisProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Audio_AudioSynthesisServerInterceptorFactoryProtocol? { get }
+
+  /// Synthesizes speech from text
+  /// Authorization metadata is required {"authorization": "Bearer <TOKNE>"}
+  func synthesizeSpeech(request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest, context: StreamingResponseCallContext<Sensory_Api_V1_Audio_SynthesizeSpeechResponse>) -> EventLoopFuture<GRPCStatus>
+}
+
+extension Sensory_Api_V1_Audio_AudioSynthesisProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioSynthesisServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "SynthesizeSpeech":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_SynthesizeSpeechRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_SynthesizeSpeechResponse>(),
+        interceptors: self.interceptors?.makeSynthesizeSpeechInterceptors() ?? [],
+        userFunction: self.synthesizeSpeech(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles synthesizing audio from text
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Audio_AudioSynthesisAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Audio_AudioSynthesisServerInterceptorFactoryProtocol? { get }
+
+  /// Synthesizes speech from text
+  /// Authorization metadata is required {"authorization": "Bearer <TOKNE>"}
+  @Sendable func synthesizeSpeech(
+    request: Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Audio_SynthesizeSpeechResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Audio_AudioSynthesisAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Audio_AudioSynthesisServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Audio_AudioSynthesisServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Audio_AudioSynthesisServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "SynthesizeSpeech":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Audio_SynthesizeSpeechRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Audio_SynthesizeSpeechResponse>(),
+        interceptors: self.interceptors?.makeSynthesizeSpeechInterceptors() ?? [],
+        wrapping: self.synthesizeSpeech(request:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Audio_AudioSynthesisServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'synthesizeSpeech'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeSynthesizeSpeechInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Audio_SynthesizeSpeechRequest, Sensory_Api_V1_Audio_SynthesizeSpeechResponse>]
+}
+
+public enum Sensory_Api_V1_Audio_AudioSynthesisServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AudioSynthesis",
+    fullName: "sensory.api.v1.audio.AudioSynthesis",
+    methods: [
+      Sensory_Api_V1_Audio_AudioSynthesisServerMetadata.Methods.synthesizeSpeech,
+    ]
+  )
+
+  public enum Methods {
+    public static let synthesizeSpeech = GRPCMethodDescriptor(
+      name: "SynthesizeSpeech",
+      path: "/sensory.api.v1.audio.AudioSynthesis/SynthesizeSpeech",
+      type: GRPCCallType.serverStreaming
+    )
+  }
+}

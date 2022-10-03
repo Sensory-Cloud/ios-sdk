@@ -532,3 +532,247 @@ public final class Sensory_Api_Oauth_OauthServiceTestClient: Sensory_Api_Oauth_O
   }
 }
 
+/// Service for OAuth function
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_Oauth_OauthServiceProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_Oauth_OauthServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Obtain an OAuth token for the given credentials
+  /// Endpoint does not require an authorization token
+  func getToken(request: Sensory_Api_Oauth_TokenRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_Common_TokenResponse>
+
+  /// Sign and return an OAuth token. The passed authorization token must have the SignToken authority.
+  /// Therefore, Devices are not allowed to make this request.
+  /// Sign does not validate credentials, and therefore should be used in specific circumstances where credentials are not required.
+  /// One common usecase for the Sign request is an Io server issuing a user-scoped token after a successful authentication.
+  /// Only a limited subset of of scopes may be requested from the SignToken request.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func signToken(request: Sensory_Api_Oauth_SignTokenRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_Common_TokenResponse>
+
+  /// Obtain information about oneself based on the passed OAuth token
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getWhoAmI(request: Sensory_Api_Oauth_WhoAmIRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_Oauth_WhoAmIResponse>
+
+  /// Retrieve a public key by ID. Public keys retrieved by this endpoint can be used
+  /// to validate tokens signed by the Sensory cloud.
+  func getPublicKey(request: Sensory_Api_Oauth_PublicKeyRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_Oauth_PublicKeyResponse>
+}
+
+extension Sensory_Api_Oauth_OauthServiceProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_Oauth_OauthServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetToken":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_TokenRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Common_TokenResponse>(),
+        interceptors: self.interceptors?.makeGetTokenInterceptors() ?? [],
+        userFunction: self.getToken(request:context:)
+      )
+
+    case "SignToken":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_SignTokenRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Common_TokenResponse>(),
+        interceptors: self.interceptors?.makeSignTokenInterceptors() ?? [],
+        userFunction: self.signToken(request:context:)
+      )
+
+    case "GetWhoAmI":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_WhoAmIRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Oauth_WhoAmIResponse>(),
+        interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? [],
+        userFunction: self.getWhoAmI(request:context:)
+      )
+
+    case "GetPublicKey":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_PublicKeyRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Oauth_PublicKeyResponse>(),
+        interceptors: self.interceptors?.makeGetPublicKeyInterceptors() ?? [],
+        userFunction: self.getPublicKey(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Service for OAuth function
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_Oauth_OauthServiceAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_Oauth_OauthServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Obtain an OAuth token for the given credentials
+  /// Endpoint does not require an authorization token
+  @Sendable func getToken(
+    request: Sensory_Api_Oauth_TokenRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_Common_TokenResponse
+
+  /// Sign and return an OAuth token. The passed authorization token must have the SignToken authority.
+  /// Therefore, Devices are not allowed to make this request.
+  /// Sign does not validate credentials, and therefore should be used in specific circumstances where credentials are not required.
+  /// One common usecase for the Sign request is an Io server issuing a user-scoped token after a successful authentication.
+  /// Only a limited subset of of scopes may be requested from the SignToken request.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func signToken(
+    request: Sensory_Api_Oauth_SignTokenRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_Common_TokenResponse
+
+  /// Obtain information about oneself based on the passed OAuth token
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getWhoAmI(
+    request: Sensory_Api_Oauth_WhoAmIRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_Oauth_WhoAmIResponse
+
+  /// Retrieve a public key by ID. Public keys retrieved by this endpoint can be used
+  /// to validate tokens signed by the Sensory cloud.
+  @Sendable func getPublicKey(
+    request: Sensory_Api_Oauth_PublicKeyRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_Oauth_PublicKeyResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_Oauth_OauthServiceAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_Oauth_OauthServiceServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_Oauth_OauthServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_Oauth_OauthServiceServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetToken":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_TokenRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Common_TokenResponse>(),
+        interceptors: self.interceptors?.makeGetTokenInterceptors() ?? [],
+        wrapping: self.getToken(request:context:)
+      )
+
+    case "SignToken":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_SignTokenRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Common_TokenResponse>(),
+        interceptors: self.interceptors?.makeSignTokenInterceptors() ?? [],
+        wrapping: self.signToken(request:context:)
+      )
+
+    case "GetWhoAmI":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_WhoAmIRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Oauth_WhoAmIResponse>(),
+        interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? [],
+        wrapping: self.getWhoAmI(request:context:)
+      )
+
+    case "GetPublicKey":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_Oauth_PublicKeyRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_Oauth_PublicKeyResponse>(),
+        interceptors: self.interceptors?.makeGetPublicKeyInterceptors() ?? [],
+        wrapping: self.getPublicKey(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_Oauth_OauthServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'getToken'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetTokenInterceptors() -> [ServerInterceptor<Sensory_Api_Oauth_TokenRequest, Sensory_Api_Common_TokenResponse>]
+
+  /// - Returns: Interceptors to use when handling 'signToken'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeSignTokenInterceptors() -> [ServerInterceptor<Sensory_Api_Oauth_SignTokenRequest, Sensory_Api_Common_TokenResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getWhoAmI'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetWhoAmIInterceptors() -> [ServerInterceptor<Sensory_Api_Oauth_WhoAmIRequest, Sensory_Api_Oauth_WhoAmIResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getPublicKey'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetPublicKeyInterceptors() -> [ServerInterceptor<Sensory_Api_Oauth_PublicKeyRequest, Sensory_Api_Oauth_PublicKeyResponse>]
+}
+
+public enum Sensory_Api_Oauth_OauthServiceServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "OauthService",
+    fullName: "sensory.api.oauth.OauthService",
+    methods: [
+      Sensory_Api_Oauth_OauthServiceServerMetadata.Methods.getToken,
+      Sensory_Api_Oauth_OauthServiceServerMetadata.Methods.signToken,
+      Sensory_Api_Oauth_OauthServiceServerMetadata.Methods.getWhoAmI,
+      Sensory_Api_Oauth_OauthServiceServerMetadata.Methods.getPublicKey,
+    ]
+  )
+
+  public enum Methods {
+    public static let getToken = GRPCMethodDescriptor(
+      name: "GetToken",
+      path: "/sensory.api.oauth.OauthService/GetToken",
+      type: GRPCCallType.unary
+    )
+
+    public static let signToken = GRPCMethodDescriptor(
+      name: "SignToken",
+      path: "/sensory.api.oauth.OauthService/SignToken",
+      type: GRPCCallType.unary
+    )
+
+    public static let getWhoAmI = GRPCMethodDescriptor(
+      name: "GetWhoAmI",
+      path: "/sensory.api.oauth.OauthService/GetWhoAmI",
+      type: GRPCCallType.unary
+    )
+
+    public static let getPublicKey = GRPCMethodDescriptor(
+      name: "GetPublicKey",
+      path: "/sensory.api.oauth.OauthService/GetPublicKey",
+      type: GRPCCallType.unary
+    )
+  }
+}

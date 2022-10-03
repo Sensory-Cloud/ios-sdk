@@ -965,3 +965,443 @@ public final class Sensory_Api_V1_Management_EnrollmentServiceTestClient: Sensor
   }
 }
 
+/// Service to manage Enrollments in the database
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Management_EnrollmentServiceProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Management_EnrollmentServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Get enrollments from the database that match the specified criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getEnrollments(request: Sensory_Api_V1_Management_GetEnrollmentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentsResponse>
+
+  /// Get all enrollment groups that match the specified criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getEnrollmentGroups(request: Sensory_Api_V1_Management_GetEnrollmentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_GetEnrollmentGroupsResponse>
+
+  /// Creates a new enrollment group without any associated enrollments
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func createEnrollmentGroup(request: Sensory_Api_V1_Management_CreateEnrollmentGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse>
+
+  /// Appends an enrollment to an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func appendEnrollmentGroup(request: Sensory_Api_V1_Management_AppendEnrollmentGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse>
+
+  /// Deletes an enrollment from the database
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  /// A user may not delete their last enrollment, as this would lead to a situation where a user could
+  /// lock themselves out of the system forever.
+  func deleteEnrollment(request: Sensory_Api_V1_Management_DeleteEnrollmentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse>
+
+  /// Deletes an enrollment group from the database
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func deleteEnrollmentGroup(request: Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse>
+
+  /// Updates the name of an enrollment
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func updateEnrollment(request: Sensory_Api_V1_Management_UpdateEnrollmentRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentResponse>
+
+  /// Updates the name of an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func updateEnrollmentGroup(request: Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse>
+
+  /// Removes a list of enrollments from an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func removeEnrollmentsFromGroup(request: Sensory_Api_V1_Management_RemoveEnrollmentsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_EnrollmentGroupResponse>
+}
+
+extension Sensory_Api_V1_Management_EnrollmentServiceProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetEnrollments":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_GetEnrollmentsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_GetEnrollmentsResponse>(),
+        interceptors: self.interceptors?.makeGetEnrollmentsInterceptors() ?? [],
+        userFunction: self.getEnrollments(request:context:)
+      )
+
+    case "GetEnrollmentGroups":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_GetEnrollmentsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_GetEnrollmentGroupsResponse>(),
+        interceptors: self.interceptors?.makeGetEnrollmentGroupsInterceptors() ?? [],
+        userFunction: self.getEnrollmentGroups(request:context:)
+      )
+
+    case "CreateEnrollmentGroup":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_CreateEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrollmentGroupInterceptors() ?? [],
+        userFunction: self.createEnrollmentGroup(request:context:)
+      )
+
+    case "AppendEnrollmentGroup":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_AppendEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeAppendEnrollmentGroupInterceptors() ?? [],
+        userFunction: self.appendEnrollmentGroup(request:context:)
+      )
+
+    case "DeleteEnrollment":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeleteEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentResponse>(),
+        interceptors: self.interceptors?.makeDeleteEnrollmentInterceptors() ?? [],
+        userFunction: self.deleteEnrollment(request:context:)
+      )
+
+    case "DeleteEnrollmentGroup":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeDeleteEnrollmentGroupInterceptors() ?? [],
+        userFunction: self.deleteEnrollmentGroup(request:context:)
+      )
+
+    case "UpdateEnrollment":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_UpdateEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentResponse>(),
+        interceptors: self.interceptors?.makeUpdateEnrollmentInterceptors() ?? [],
+        userFunction: self.updateEnrollment(request:context:)
+      )
+
+    case "UpdateEnrollmentGroup":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeUpdateEnrollmentGroupInterceptors() ?? [],
+        userFunction: self.updateEnrollmentGroup(request:context:)
+      )
+
+    case "RemoveEnrollmentsFromGroup":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_RemoveEnrollmentsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeRemoveEnrollmentsFromGroupInterceptors() ?? [],
+        userFunction: self.removeEnrollmentsFromGroup(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Service to manage Enrollments in the database
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Management_EnrollmentServiceAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Management_EnrollmentServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Get enrollments from the database that match the specified criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getEnrollments(
+    request: Sensory_Api_V1_Management_GetEnrollmentsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_GetEnrollmentsResponse
+
+  /// Get all enrollment groups that match the specified criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getEnrollmentGroups(
+    request: Sensory_Api_V1_Management_GetEnrollmentsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_GetEnrollmentGroupsResponse
+
+  /// Creates a new enrollment group without any associated enrollments
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func createEnrollmentGroup(
+    request: Sensory_Api_V1_Management_CreateEnrollmentGroupRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentGroupResponse
+
+  /// Appends an enrollment to an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func appendEnrollmentGroup(
+    request: Sensory_Api_V1_Management_AppendEnrollmentGroupRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentGroupResponse
+
+  /// Deletes an enrollment from the database
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  /// A user may not delete their last enrollment, as this would lead to a situation where a user could
+  /// lock themselves out of the system forever.
+  @Sendable func deleteEnrollment(
+    request: Sensory_Api_V1_Management_DeleteEnrollmentRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentResponse
+
+  /// Deletes an enrollment group from the database
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func deleteEnrollmentGroup(
+    request: Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentGroupResponse
+
+  /// Updates the name of an enrollment
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func updateEnrollment(
+    request: Sensory_Api_V1_Management_UpdateEnrollmentRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentResponse
+
+  /// Updates the name of an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func updateEnrollmentGroup(
+    request: Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentGroupResponse
+
+  /// Removes a list of enrollments from an enrollment group
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func removeEnrollmentsFromGroup(
+    request: Sensory_Api_V1_Management_RemoveEnrollmentsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_EnrollmentGroupResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Management_EnrollmentServiceAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Management_EnrollmentServiceServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetEnrollments":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_GetEnrollmentsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_GetEnrollmentsResponse>(),
+        interceptors: self.interceptors?.makeGetEnrollmentsInterceptors() ?? [],
+        wrapping: self.getEnrollments(request:context:)
+      )
+
+    case "GetEnrollmentGroups":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_GetEnrollmentsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_GetEnrollmentGroupsResponse>(),
+        interceptors: self.interceptors?.makeGetEnrollmentGroupsInterceptors() ?? [],
+        wrapping: self.getEnrollmentGroups(request:context:)
+      )
+
+    case "CreateEnrollmentGroup":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_CreateEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrollmentGroupInterceptors() ?? [],
+        wrapping: self.createEnrollmentGroup(request:context:)
+      )
+
+    case "AppendEnrollmentGroup":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_AppendEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeAppendEnrollmentGroupInterceptors() ?? [],
+        wrapping: self.appendEnrollmentGroup(request:context:)
+      )
+
+    case "DeleteEnrollment":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeleteEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentResponse>(),
+        interceptors: self.interceptors?.makeDeleteEnrollmentInterceptors() ?? [],
+        wrapping: self.deleteEnrollment(request:context:)
+      )
+
+    case "DeleteEnrollmentGroup":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeDeleteEnrollmentGroupInterceptors() ?? [],
+        wrapping: self.deleteEnrollmentGroup(request:context:)
+      )
+
+    case "UpdateEnrollment":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_UpdateEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentResponse>(),
+        interceptors: self.interceptors?.makeUpdateEnrollmentInterceptors() ?? [],
+        wrapping: self.updateEnrollment(request:context:)
+      )
+
+    case "UpdateEnrollmentGroup":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeUpdateEnrollmentGroupInterceptors() ?? [],
+        wrapping: self.updateEnrollmentGroup(request:context:)
+      )
+
+    case "RemoveEnrollmentsFromGroup":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_RemoveEnrollmentsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_EnrollmentGroupResponse>(),
+        interceptors: self.interceptors?.makeRemoveEnrollmentsFromGroupInterceptors() ?? [],
+        wrapping: self.removeEnrollmentsFromGroup(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Management_EnrollmentServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'getEnrollments'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetEnrollmentsInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_GetEnrollmentsRequest, Sensory_Api_V1_Management_GetEnrollmentsResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getEnrollmentGroups'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetEnrollmentGroupsInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_GetEnrollmentsRequest, Sensory_Api_V1_Management_GetEnrollmentGroupsResponse>]
+
+  /// - Returns: Interceptors to use when handling 'createEnrollmentGroup'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeCreateEnrollmentGroupInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_CreateEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+
+  /// - Returns: Interceptors to use when handling 'appendEnrollmentGroup'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeAppendEnrollmentGroupInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_AppendEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+
+  /// - Returns: Interceptors to use when handling 'deleteEnrollment'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeDeleteEnrollmentInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_DeleteEnrollmentRequest, Sensory_Api_V1_Management_EnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when handling 'deleteEnrollmentGroup'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeDeleteEnrollmentGroupInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_DeleteEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+
+  /// - Returns: Interceptors to use when handling 'updateEnrollment'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeUpdateEnrollmentInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_UpdateEnrollmentRequest, Sensory_Api_V1_Management_EnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when handling 'updateEnrollmentGroup'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeUpdateEnrollmentGroupInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_UpdateEnrollmentGroupRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+
+  /// - Returns: Interceptors to use when handling 'removeEnrollmentsFromGroup'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeRemoveEnrollmentsFromGroupInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_RemoveEnrollmentsRequest, Sensory_Api_V1_Management_EnrollmentGroupResponse>]
+}
+
+public enum Sensory_Api_V1_Management_EnrollmentServiceServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "EnrollmentService",
+    fullName: "sensory.api.v1.management.EnrollmentService",
+    methods: [
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.getEnrollments,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.getEnrollmentGroups,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.createEnrollmentGroup,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.appendEnrollmentGroup,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.deleteEnrollment,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.deleteEnrollmentGroup,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.updateEnrollment,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.updateEnrollmentGroup,
+      Sensory_Api_V1_Management_EnrollmentServiceServerMetadata.Methods.removeEnrollmentsFromGroup,
+    ]
+  )
+
+  public enum Methods {
+    public static let getEnrollments = GRPCMethodDescriptor(
+      name: "GetEnrollments",
+      path: "/sensory.api.v1.management.EnrollmentService/GetEnrollments",
+      type: GRPCCallType.unary
+    )
+
+    public static let getEnrollmentGroups = GRPCMethodDescriptor(
+      name: "GetEnrollmentGroups",
+      path: "/sensory.api.v1.management.EnrollmentService/GetEnrollmentGroups",
+      type: GRPCCallType.unary
+    )
+
+    public static let createEnrollmentGroup = GRPCMethodDescriptor(
+      name: "CreateEnrollmentGroup",
+      path: "/sensory.api.v1.management.EnrollmentService/CreateEnrollmentGroup",
+      type: GRPCCallType.unary
+    )
+
+    public static let appendEnrollmentGroup = GRPCMethodDescriptor(
+      name: "AppendEnrollmentGroup",
+      path: "/sensory.api.v1.management.EnrollmentService/AppendEnrollmentGroup",
+      type: GRPCCallType.unary
+    )
+
+    public static let deleteEnrollment = GRPCMethodDescriptor(
+      name: "DeleteEnrollment",
+      path: "/sensory.api.v1.management.EnrollmentService/DeleteEnrollment",
+      type: GRPCCallType.unary
+    )
+
+    public static let deleteEnrollmentGroup = GRPCMethodDescriptor(
+      name: "DeleteEnrollmentGroup",
+      path: "/sensory.api.v1.management.EnrollmentService/DeleteEnrollmentGroup",
+      type: GRPCCallType.unary
+    )
+
+    public static let updateEnrollment = GRPCMethodDescriptor(
+      name: "UpdateEnrollment",
+      path: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollment",
+      type: GRPCCallType.unary
+    )
+
+    public static let updateEnrollmentGroup = GRPCMethodDescriptor(
+      name: "UpdateEnrollmentGroup",
+      path: "/sensory.api.v1.management.EnrollmentService/UpdateEnrollmentGroup",
+      type: GRPCCallType.unary
+    )
+
+    public static let removeEnrollmentsFromGroup = GRPCMethodDescriptor(
+      name: "RemoveEnrollmentsFromGroup",
+      path: "/sensory.api.v1.management.EnrollmentService/RemoveEnrollmentsFromGroup",
+      type: GRPCCallType.unary
+    )
+  }
+}

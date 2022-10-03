@@ -878,3 +878,400 @@ public final class Sensory_Api_V1_Video_VideoRecognitionTestClient: Sensory_Api_
   }
 }
 
+/// Handles the retrieval and management of video models
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Video_VideoModelsProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Video_VideoModelsServerInterceptorFactoryProtocol? { get }
+
+  /// Get available models for enrollment and authentication
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getModels(request: Sensory_Api_V1_Video_GetModelsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Video_GetModelsResponse>
+}
+
+extension Sensory_Api_V1_Video_VideoModelsProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Video_VideoModelsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetModels":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_GetModelsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_GetModelsResponse>(),
+        interceptors: self.interceptors?.makeGetModelsInterceptors() ?? [],
+        userFunction: self.getModels(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles the retrieval and management of video models
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Video_VideoModelsAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Video_VideoModelsServerInterceptorFactoryProtocol? { get }
+
+  /// Get available models for enrollment and authentication
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getModels(
+    request: Sensory_Api_V1_Video_GetModelsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Video_GetModelsResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoModelsAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Video_VideoModelsServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Video_VideoModelsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Video_VideoModelsServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetModels":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_GetModelsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_GetModelsResponse>(),
+        interceptors: self.interceptors?.makeGetModelsInterceptors() ?? [],
+        wrapping: self.getModels(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Video_VideoModelsServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'getModels'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetModelsInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse>]
+}
+
+public enum Sensory_Api_V1_Video_VideoModelsServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "VideoModels",
+    fullName: "sensory.api.v1.video.VideoModels",
+    methods: [
+      Sensory_Api_V1_Video_VideoModelsServerMetadata.Methods.getModels,
+    ]
+  )
+
+  public enum Methods {
+    public static let getModels = GRPCMethodDescriptor(
+      name: "GetModels",
+      path: "/sensory.api.v1.video.VideoModels/GetModels",
+      type: GRPCCallType.unary
+    )
+  }
+}
+/// Handles all video-related biometrics
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Video_VideoBiometricsProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Video_VideoBiometricsServerInterceptorFactoryProtocol? { get }
+
+  /// Enrolls a user with a stream of video. Streams a CreateEnrollmentResponse
+  /// as the video is processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func createEnrollment(context: StreamingResponseCallContext<Sensory_Api_V1_Video_CreateEnrollmentResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Video_CreateEnrollmentRequest>) -> Void>
+
+  /// Authenticates a user with a stream of video against an existing enrollment.
+  /// Streams an AuthenticateResponse as the video is processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func authenticate(context: StreamingResponseCallContext<Sensory_Api_V1_Video_AuthenticateResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Video_AuthenticateRequest>) -> Void>
+}
+
+extension Sensory_Api_V1_Video_VideoBiometricsProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Video_VideoBiometricsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "CreateEnrollment":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_CreateEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_CreateEnrollmentResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? [],
+        observerFactory: self.createEnrollment(context:)
+      )
+
+    case "Authenticate":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_AuthenticateRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_AuthenticateResponse>(),
+        interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? [],
+        observerFactory: self.authenticate(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles all video-related biometrics
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Video_VideoBiometricsAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Video_VideoBiometricsServerInterceptorFactoryProtocol? { get }
+
+  /// Enrolls a user with a stream of video. Streams a CreateEnrollmentResponse
+  /// as the video is processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func createEnrollment(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Video_CreateEnrollmentRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Video_CreateEnrollmentResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+
+  /// Authenticates a user with a stream of video against an existing enrollment.
+  /// Streams an AuthenticateResponse as the video is processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func authenticate(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Video_AuthenticateRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Video_AuthenticateResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoBiometricsAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Video_VideoBiometricsServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Video_VideoBiometricsServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Video_VideoBiometricsServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "CreateEnrollment":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_CreateEnrollmentRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_CreateEnrollmentResponse>(),
+        interceptors: self.interceptors?.makeCreateEnrollmentInterceptors() ?? [],
+        wrapping: self.createEnrollment(requestStream:responseStream:context:)
+      )
+
+    case "Authenticate":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_AuthenticateRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_AuthenticateResponse>(),
+        interceptors: self.interceptors?.makeAuthenticateInterceptors() ?? [],
+        wrapping: self.authenticate(requestStream:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Video_VideoBiometricsServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'createEnrollment'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeCreateEnrollmentInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse>]
+
+  /// - Returns: Interceptors to use when handling 'authenticate'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeAuthenticateInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse>]
+}
+
+public enum Sensory_Api_V1_Video_VideoBiometricsServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "VideoBiometrics",
+    fullName: "sensory.api.v1.video.VideoBiometrics",
+    methods: [
+      Sensory_Api_V1_Video_VideoBiometricsServerMetadata.Methods.createEnrollment,
+      Sensory_Api_V1_Video_VideoBiometricsServerMetadata.Methods.authenticate,
+    ]
+  )
+
+  public enum Methods {
+    public static let createEnrollment = GRPCMethodDescriptor(
+      name: "CreateEnrollment",
+      path: "/sensory.api.v1.video.VideoBiometrics/CreateEnrollment",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+
+    public static let authenticate = GRPCMethodDescriptor(
+      name: "Authenticate",
+      path: "/sensory.api.v1.video.VideoBiometrics/Authenticate",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}
+/// Handles all video recognition endpoints
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Video_VideoRecognitionProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Video_VideoRecognitionServerInterceptorFactoryProtocol? { get }
+
+  /// Validates the liveness of a single image or stream of images.
+  /// Streams a ValidateRecognitionResponse as the images are processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func validateLiveness(context: StreamingResponseCallContext<Sensory_Api_V1_Video_LivenessRecognitionResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Video_ValidateRecognitionRequest>) -> Void>
+}
+
+extension Sensory_Api_V1_Video_VideoRecognitionProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Video_VideoRecognitionServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ValidateLiveness":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_ValidateRecognitionRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_LivenessRecognitionResponse>(),
+        interceptors: self.interceptors?.makeValidateLivenessInterceptors() ?? [],
+        observerFactory: self.validateLiveness(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles all video recognition endpoints
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Video_VideoRecognitionAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Video_VideoRecognitionServerInterceptorFactoryProtocol? { get }
+
+  /// Validates the liveness of a single image or stream of images.
+  /// Streams a ValidateRecognitionResponse as the images are processed.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func validateLiveness(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Video_ValidateRecognitionRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Video_LivenessRecognitionResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Video_VideoRecognitionAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Video_VideoRecognitionServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Video_VideoRecognitionServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Video_VideoRecognitionServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ValidateLiveness":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Video_ValidateRecognitionRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Video_LivenessRecognitionResponse>(),
+        interceptors: self.interceptors?.makeValidateLivenessInterceptors() ?? [],
+        wrapping: self.validateLiveness(requestStream:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Video_VideoRecognitionServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'validateLiveness'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeValidateLivenessInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse>]
+}
+
+public enum Sensory_Api_V1_Video_VideoRecognitionServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "VideoRecognition",
+    fullName: "sensory.api.v1.video.VideoRecognition",
+    methods: [
+      Sensory_Api_V1_Video_VideoRecognitionServerMetadata.Methods.validateLiveness,
+    ]
+  )
+
+  public enum Methods {
+    public static let validateLiveness = GRPCMethodDescriptor(
+      name: "ValidateLiveness",
+      path: "/sensory.api.v1.video.VideoRecognition/ValidateLiveness",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}

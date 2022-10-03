@@ -441,3 +441,199 @@ public final class Sensory_Api_V1_Event_EventServiceTestClient: Sensory_Api_V1_E
   }
 }
 
+/// Service to publish events to the cloud
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Event_EventServiceProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Event_EventServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Publishes a list of usage event to the cloud
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func publishUsageEvents(request: Sensory_Api_V1_Event_PublishUsageEventsRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Event_PublishUsageEventsResponse>
+
+  /// Obtains a list of events given the filter criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getUsageEventList(request: Sensory_Api_V1_Event_UsageEventListRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Event_UsageEventListResponse>
+
+  /// Obtains a summary of events given the filter critieria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getUsageEventSummary(request: Sensory_Api_V1_Event_UsageEventListRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Event_UsageEventSummary>
+}
+
+extension Sensory_Api_V1_Event_EventServiceProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Event_EventServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "PublishUsageEvents":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_PublishUsageEventsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_PublishUsageEventsResponse>(),
+        interceptors: self.interceptors?.makePublishUsageEventsInterceptors() ?? [],
+        userFunction: self.publishUsageEvents(request:context:)
+      )
+
+    case "GetUsageEventList":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_UsageEventListRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_UsageEventListResponse>(),
+        interceptors: self.interceptors?.makeGetUsageEventListInterceptors() ?? [],
+        userFunction: self.getUsageEventList(request:context:)
+      )
+
+    case "GetUsageEventSummary":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_UsageEventListRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_UsageEventSummary>(),
+        interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? [],
+        userFunction: self.getUsageEventSummary(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Service to publish events to the cloud
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Event_EventServiceAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Event_EventServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Publishes a list of usage event to the cloud
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func publishUsageEvents(
+    request: Sensory_Api_V1_Event_PublishUsageEventsRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Event_PublishUsageEventsResponse
+
+  /// Obtains a list of events given the filter criteria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getUsageEventList(
+    request: Sensory_Api_V1_Event_UsageEventListRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Event_UsageEventListResponse
+
+  /// Obtains a summary of events given the filter critieria
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getUsageEventSummary(
+    request: Sensory_Api_V1_Event_UsageEventListRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Event_UsageEventSummary
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Event_EventServiceAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Event_EventServiceServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Event_EventServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Event_EventServiceServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "PublishUsageEvents":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_PublishUsageEventsRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_PublishUsageEventsResponse>(),
+        interceptors: self.interceptors?.makePublishUsageEventsInterceptors() ?? [],
+        wrapping: self.publishUsageEvents(request:context:)
+      )
+
+    case "GetUsageEventList":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_UsageEventListRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_UsageEventListResponse>(),
+        interceptors: self.interceptors?.makeGetUsageEventListInterceptors() ?? [],
+        wrapping: self.getUsageEventList(request:context:)
+      )
+
+    case "GetUsageEventSummary":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_UsageEventListRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_UsageEventSummary>(),
+        interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? [],
+        wrapping: self.getUsageEventSummary(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Event_EventServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'publishUsageEvents'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makePublishUsageEventsInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Event_PublishUsageEventsRequest, Sensory_Api_V1_Event_PublishUsageEventsResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getUsageEventList'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetUsageEventListInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventListResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getUsageEventSummary'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetUsageEventSummaryInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>]
+}
+
+public enum Sensory_Api_V1_Event_EventServiceServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "EventService",
+    fullName: "sensory.api.v1.event.EventService",
+    methods: [
+      Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.publishUsageEvents,
+      Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.getUsageEventList,
+      Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.getUsageEventSummary,
+    ]
+  )
+
+  public enum Methods {
+    public static let publishUsageEvents = GRPCMethodDescriptor(
+      name: "PublishUsageEvents",
+      path: "/sensory.api.v1.event.EventService/PublishUsageEvents",
+      type: GRPCCallType.unary
+    )
+
+    public static let getUsageEventList = GRPCMethodDescriptor(
+      name: "GetUsageEventList",
+      path: "/sensory.api.v1.event.EventService/GetUsageEventList",
+      type: GRPCCallType.unary
+    )
+
+    public static let getUsageEventSummary = GRPCMethodDescriptor(
+      name: "GetUsageEventSummary",
+      path: "/sensory.api.v1.event.EventService/GetUsageEventSummary",
+      type: GRPCCallType.unary
+    )
+  }
+}

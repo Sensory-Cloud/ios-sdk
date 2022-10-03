@@ -280,3 +280,120 @@ public final class Sensory_Api_V1_Assistant_AssistantServiceTestClient: Sensory_
   }
 }
 
+/// Serivce to comunicate with an assistant
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Assistant_AssistantServiceProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Sends and process messages from a virtual assistant
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func processMessage(context: StreamingResponseCallContext<Sensory_Api_V1_Assistant_AssistantMessageResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Assistant_AssistantMessageRequest>) -> Void>
+}
+
+extension Sensory_Api_V1_Assistant_AssistantServiceProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Assistant_AssistantServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ProcessMessage":
+      return BidirectionalStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Assistant_AssistantMessageRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Assistant_AssistantMessageResponse>(),
+        interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? [],
+        observerFactory: self.processMessage(context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Serivce to comunicate with an assistant
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Assistant_AssistantServiceAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Sends and process messages from a virtual assistant
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func processMessage(
+    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Assistant_AssistantMessageRequest>,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Assistant_AssistantMessageResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Assistant_AssistantServiceAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Assistant_AssistantServiceServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Assistant_AssistantServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "ProcessMessage":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Assistant_AssistantMessageRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Assistant_AssistantMessageResponse>(),
+        interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? [],
+        wrapping: self.processMessage(requestStream:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'processMessage'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeProcessMessageInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse>]
+}
+
+public enum Sensory_Api_V1_Assistant_AssistantServiceServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "AssistantService",
+    fullName: "sensory.api.v1.assistant.AssistantService",
+    methods: [
+      Sensory_Api_V1_Assistant_AssistantServiceServerMetadata.Methods.processMessage,
+    ]
+  )
+
+  public enum Methods {
+    public static let processMessage = GRPCMethodDescriptor(
+      name: "ProcessMessage",
+      path: "/sensory.api.v1.assistant.AssistantService/ProcessMessage",
+      type: GRPCCallType.bidirectionalStreaming
+    )
+  }
+}

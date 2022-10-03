@@ -534,3 +534,242 @@ public final class Sensory_Api_V1_File_FileTestClient: Sensory_Api_V1_File_FileC
   }
 }
 
+/// Handles all file-related functions
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_File_FileProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_File_FileServerInterceptorFactoryProtocol? { get }
+
+  /// Allows a client to request information about a file in the cloud.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getInfo(request: Sensory_Api_V1_File_FileRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_File_FileInfo>
+
+  /// Allows a client to request a list of all the files it is allowed to access
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getCatalog(request: Sensory_Api_V1_File_FileCatalogRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_File_FileCatalogResponse>
+
+  /// Allows a root client to request the full list of files
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getCompleteCatalog(request: Sensory_Api_V1_File_FileCompleteCatalogRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_File_FileCatalogResponse>
+
+  /// Allows a client to request a file from the cloud.
+  /// Download streams a FileResponse until the entire file is downloaded
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func download(request: Sensory_Api_V1_File_FileRequest, context: StreamingResponseCallContext<Sensory_Api_V1_File_FileResponse>) -> EventLoopFuture<GRPCStatus>
+}
+
+extension Sensory_Api_V1_File_FileProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_File_FileServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetInfo":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileInfo>(),
+        interceptors: self.interceptors?.makeGetInfoInterceptors() ?? [],
+        userFunction: self.getInfo(request:context:)
+      )
+
+    case "GetCatalog":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileCatalogRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileCatalogResponse>(),
+        interceptors: self.interceptors?.makeGetCatalogInterceptors() ?? [],
+        userFunction: self.getCatalog(request:context:)
+      )
+
+    case "GetCompleteCatalog":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileCompleteCatalogRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileCatalogResponse>(),
+        interceptors: self.interceptors?.makeGetCompleteCatalogInterceptors() ?? [],
+        userFunction: self.getCompleteCatalog(request:context:)
+      )
+
+    case "Download":
+      return ServerStreamingServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileResponse>(),
+        interceptors: self.interceptors?.makeDownloadInterceptors() ?? [],
+        userFunction: self.download(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Handles all file-related functions
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_File_FileAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_File_FileServerInterceptorFactoryProtocol? { get }
+
+  /// Allows a client to request information about a file in the cloud.
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getInfo(
+    request: Sensory_Api_V1_File_FileRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_File_FileInfo
+
+  /// Allows a client to request a list of all the files it is allowed to access
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getCatalog(
+    request: Sensory_Api_V1_File_FileCatalogRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_File_FileCatalogResponse
+
+  /// Allows a root client to request the full list of files
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getCompleteCatalog(
+    request: Sensory_Api_V1_File_FileCompleteCatalogRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_File_FileCatalogResponse
+
+  /// Allows a client to request a file from the cloud.
+  /// Download streams a FileResponse until the entire file is downloaded
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func download(
+    request: Sensory_Api_V1_File_FileRequest,
+    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_File_FileResponse>,
+    context: GRPCAsyncServerCallContext
+  ) async throws
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_File_FileAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_File_FileServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_File_FileServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_File_FileServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "GetInfo":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileInfo>(),
+        interceptors: self.interceptors?.makeGetInfoInterceptors() ?? [],
+        wrapping: self.getInfo(request:context:)
+      )
+
+    case "GetCatalog":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileCatalogRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileCatalogResponse>(),
+        interceptors: self.interceptors?.makeGetCatalogInterceptors() ?? [],
+        wrapping: self.getCatalog(request:context:)
+      )
+
+    case "GetCompleteCatalog":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileCompleteCatalogRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileCatalogResponse>(),
+        interceptors: self.interceptors?.makeGetCompleteCatalogInterceptors() ?? [],
+        wrapping: self.getCompleteCatalog(request:context:)
+      )
+
+    case "Download":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_File_FileRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_File_FileResponse>(),
+        interceptors: self.interceptors?.makeDownloadInterceptors() ?? [],
+        wrapping: self.download(request:responseStream:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_File_FileServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'getInfo'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetInfoInterceptors() -> [ServerInterceptor<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileInfo>]
+
+  /// - Returns: Interceptors to use when handling 'getCatalog'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetCatalogInterceptors() -> [ServerInterceptor<Sensory_Api_V1_File_FileCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getCompleteCatalog'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetCompleteCatalogInterceptors() -> [ServerInterceptor<Sensory_Api_V1_File_FileCompleteCatalogRequest, Sensory_Api_V1_File_FileCatalogResponse>]
+
+  /// - Returns: Interceptors to use when handling 'download'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeDownloadInterceptors() -> [ServerInterceptor<Sensory_Api_V1_File_FileRequest, Sensory_Api_V1_File_FileResponse>]
+}
+
+public enum Sensory_Api_V1_File_FileServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "File",
+    fullName: "sensory.api.v1.file.File",
+    methods: [
+      Sensory_Api_V1_File_FileServerMetadata.Methods.getInfo,
+      Sensory_Api_V1_File_FileServerMetadata.Methods.getCatalog,
+      Sensory_Api_V1_File_FileServerMetadata.Methods.getCompleteCatalog,
+      Sensory_Api_V1_File_FileServerMetadata.Methods.download,
+    ]
+  )
+
+  public enum Methods {
+    public static let getInfo = GRPCMethodDescriptor(
+      name: "GetInfo",
+      path: "/sensory.api.v1.file.File/GetInfo",
+      type: GRPCCallType.unary
+    )
+
+    public static let getCatalog = GRPCMethodDescriptor(
+      name: "GetCatalog",
+      path: "/sensory.api.v1.file.File/GetCatalog",
+      type: GRPCCallType.unary
+    )
+
+    public static let getCompleteCatalog = GRPCMethodDescriptor(
+      name: "GetCompleteCatalog",
+      path: "/sensory.api.v1.file.File/GetCompleteCatalog",
+      type: GRPCCallType.unary
+    )
+
+    public static let download = GRPCMethodDescriptor(
+      name: "Download",
+      path: "/sensory.api.v1.file.File/Download",
+      type: GRPCCallType.serverStreaming
+    )
+  }
+}

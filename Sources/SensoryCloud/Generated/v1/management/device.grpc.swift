@@ -784,3 +784,349 @@ public final class Sensory_Api_V1_Management_DeviceServiceTestClient: Sensory_Ap
   }
 }
 
+/// Service to manage Devices in the database
+///
+/// To build a server, implement a class that conforms to this protocol.
+public protocol Sensory_Api_V1_Management_DeviceServiceProvider: CallHandlerProvider {
+  var interceptors: Sensory_Api_V1_Management_DeviceServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Create a new device in the database
+  func enrollDevice(request: Sensory_Api_V1_Management_EnrollDeviceRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse>
+
+  /// Renew a device's credential, which links the device to a key in the database.
+  /// This endpoint can be used to assign a new credential to a device if the old credential has expired.
+  func renewDeviceCredential(request: Sensory_Api_V1_Management_RenewDeviceCredentialRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse>
+
+  /// Allows a device to fetch information about itself
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getWhoAmI(request: Sensory_Api_V1_Management_DeviceGetWhoAmIRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse>
+
+  /// Returns device information
+  func getDevice(request: Sensory_Api_V1_Management_DeviceRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_GetDeviceResponse>
+
+  /// Returns a list of devices associated with the given userId
+  func getDevices(request: Sensory_Api_V1_Management_GetDevicesRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceListResponse>
+
+  /// Allows the name of a device to be updated
+  func updateDevice(request: Sensory_Api_V1_Management_UpdateDeviceRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse>
+
+  /// Allows a device to be deleted
+  func deleteDevice(request: Sensory_Api_V1_Management_DeviceRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Management_DeviceResponse>
+}
+
+extension Sensory_Api_V1_Management_DeviceServiceProvider {
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Management_DeviceServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  /// Determines, calls and returns the appropriate request handler, depending on the request's method.
+  /// Returns nil for methods not handled by this service.
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "EnrollDevice":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_EnrollDeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeEnrollDeviceInterceptors() ?? [],
+        userFunction: self.enrollDevice(request:context:)
+      )
+
+    case "RenewDeviceCredential":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_RenewDeviceCredentialRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeRenewDeviceCredentialInterceptors() ?? [],
+        userFunction: self.renewDeviceCredential(request:context:)
+      )
+
+    case "GetWhoAmI":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeviceGetWhoAmIRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? [],
+        userFunction: self.getWhoAmI(request:context:)
+      )
+
+    case "GetDevice":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_GetDeviceResponse>(),
+        interceptors: self.interceptors?.makeGetDeviceInterceptors() ?? [],
+        userFunction: self.getDevice(request:context:)
+      )
+
+    case "GetDevices":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_GetDevicesRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceListResponse>(),
+        interceptors: self.interceptors?.makeGetDevicesInterceptors() ?? [],
+        userFunction: self.getDevices(request:context:)
+      )
+
+    case "UpdateDevice":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_UpdateDeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeUpdateDeviceInterceptors() ?? [],
+        userFunction: self.updateDevice(request:context:)
+      )
+
+    case "DeleteDevice":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeDeleteDeviceInterceptors() ?? [],
+        userFunction: self.deleteDevice(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#if compiler(>=5.6)
+
+/// Service to manage Devices in the database
+///
+/// To implement a server, implement an object which conforms to this protocol.
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+public protocol Sensory_Api_V1_Management_DeviceServiceAsyncProvider: CallHandlerProvider {
+  static var serviceDescriptor: GRPCServiceDescriptor { get }
+  var interceptors: Sensory_Api_V1_Management_DeviceServiceServerInterceptorFactoryProtocol? { get }
+
+  /// Create a new device in the database
+  @Sendable func enrollDevice(
+    request: Sensory_Api_V1_Management_EnrollDeviceRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_DeviceResponse
+
+  /// Renew a device's credential, which links the device to a key in the database.
+  /// This endpoint can be used to assign a new credential to a device if the old credential has expired.
+  @Sendable func renewDeviceCredential(
+    request: Sensory_Api_V1_Management_RenewDeviceCredentialRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_DeviceResponse
+
+  /// Allows a device to fetch information about itself
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getWhoAmI(
+    request: Sensory_Api_V1_Management_DeviceGetWhoAmIRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_DeviceResponse
+
+  /// Returns device information
+  @Sendable func getDevice(
+    request: Sensory_Api_V1_Management_DeviceRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_GetDeviceResponse
+
+  /// Returns a list of devices associated with the given userId
+  @Sendable func getDevices(
+    request: Sensory_Api_V1_Management_GetDevicesRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_DeviceListResponse
+
+  /// Allows the name of a device to be updated
+  @Sendable func updateDevice(
+    request: Sensory_Api_V1_Management_UpdateDeviceRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_DeviceResponse
+
+  /// Allows a device to be deleted
+  @Sendable func deleteDevice(
+    request: Sensory_Api_V1_Management_DeviceRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Management_DeviceResponse
+}
+
+@available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
+extension Sensory_Api_V1_Management_DeviceServiceAsyncProvider {
+  public static var serviceDescriptor: GRPCServiceDescriptor {
+    return Sensory_Api_V1_Management_DeviceServiceServerMetadata.serviceDescriptor
+  }
+
+  public var serviceName: Substring {
+    return Sensory_Api_V1_Management_DeviceServiceServerMetadata.serviceDescriptor.fullName[...]
+  }
+
+  public var interceptors: Sensory_Api_V1_Management_DeviceServiceServerInterceptorFactoryProtocol? {
+    return nil
+  }
+
+  public func handle(
+    method name: Substring,
+    context: CallHandlerContext
+  ) -> GRPCServerHandlerProtocol? {
+    switch name {
+    case "EnrollDevice":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_EnrollDeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeEnrollDeviceInterceptors() ?? [],
+        wrapping: self.enrollDevice(request:context:)
+      )
+
+    case "RenewDeviceCredential":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_RenewDeviceCredentialRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeRenewDeviceCredentialInterceptors() ?? [],
+        wrapping: self.renewDeviceCredential(request:context:)
+      )
+
+    case "GetWhoAmI":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeviceGetWhoAmIRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeGetWhoAmIInterceptors() ?? [],
+        wrapping: self.getWhoAmI(request:context:)
+      )
+
+    case "GetDevice":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_GetDeviceResponse>(),
+        interceptors: self.interceptors?.makeGetDeviceInterceptors() ?? [],
+        wrapping: self.getDevice(request:context:)
+      )
+
+    case "GetDevices":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_GetDevicesRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceListResponse>(),
+        interceptors: self.interceptors?.makeGetDevicesInterceptors() ?? [],
+        wrapping: self.getDevices(request:context:)
+      )
+
+    case "UpdateDevice":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_UpdateDeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeUpdateDeviceInterceptors() ?? [],
+        wrapping: self.updateDevice(request:context:)
+      )
+
+    case "DeleteDevice":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Management_DeviceRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Management_DeviceResponse>(),
+        interceptors: self.interceptors?.makeDeleteDeviceInterceptors() ?? [],
+        wrapping: self.deleteDevice(request:context:)
+      )
+
+    default:
+      return nil
+    }
+  }
+}
+
+#endif // compiler(>=5.6)
+
+public protocol Sensory_Api_V1_Management_DeviceServiceServerInterceptorFactoryProtocol {
+
+  /// - Returns: Interceptors to use when handling 'enrollDevice'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeEnrollDeviceInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_EnrollDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
+
+  /// - Returns: Interceptors to use when handling 'renewDeviceCredential'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeRenewDeviceCredentialInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_RenewDeviceCredentialRequest, Sensory_Api_V1_Management_DeviceResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getWhoAmI'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetWhoAmIInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_DeviceGetWhoAmIRequest, Sensory_Api_V1_Management_DeviceResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getDevice'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetDeviceInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_GetDeviceResponse>]
+
+  /// - Returns: Interceptors to use when handling 'getDevices'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetDevicesInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_GetDevicesRequest, Sensory_Api_V1_Management_DeviceListResponse>]
+
+  /// - Returns: Interceptors to use when handling 'updateDevice'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeUpdateDeviceInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_UpdateDeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
+
+  /// - Returns: Interceptors to use when handling 'deleteDevice'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeDeleteDeviceInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Management_DeviceRequest, Sensory_Api_V1_Management_DeviceResponse>]
+}
+
+public enum Sensory_Api_V1_Management_DeviceServiceServerMetadata {
+  public static let serviceDescriptor = GRPCServiceDescriptor(
+    name: "DeviceService",
+    fullName: "sensory.api.v1.management.DeviceService",
+    methods: [
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.enrollDevice,
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.renewDeviceCredential,
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.getWhoAmI,
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.getDevice,
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.getDevices,
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.updateDevice,
+      Sensory_Api_V1_Management_DeviceServiceServerMetadata.Methods.deleteDevice,
+    ]
+  )
+
+  public enum Methods {
+    public static let enrollDevice = GRPCMethodDescriptor(
+      name: "EnrollDevice",
+      path: "/sensory.api.v1.management.DeviceService/EnrollDevice",
+      type: GRPCCallType.unary
+    )
+
+    public static let renewDeviceCredential = GRPCMethodDescriptor(
+      name: "RenewDeviceCredential",
+      path: "/sensory.api.v1.management.DeviceService/RenewDeviceCredential",
+      type: GRPCCallType.unary
+    )
+
+    public static let getWhoAmI = GRPCMethodDescriptor(
+      name: "GetWhoAmI",
+      path: "/sensory.api.v1.management.DeviceService/GetWhoAmI",
+      type: GRPCCallType.unary
+    )
+
+    public static let getDevice = GRPCMethodDescriptor(
+      name: "GetDevice",
+      path: "/sensory.api.v1.management.DeviceService/GetDevice",
+      type: GRPCCallType.unary
+    )
+
+    public static let getDevices = GRPCMethodDescriptor(
+      name: "GetDevices",
+      path: "/sensory.api.v1.management.DeviceService/GetDevices",
+      type: GRPCCallType.unary
+    )
+
+    public static let updateDevice = GRPCMethodDescriptor(
+      name: "UpdateDevice",
+      path: "/sensory.api.v1.management.DeviceService/UpdateDevice",
+      type: GRPCCallType.unary
+    )
+
+    public static let deleteDevice = GRPCMethodDescriptor(
+      name: "DeleteDevice",
+      path: "/sensory.api.v1.management.DeviceService/DeleteDevice",
+      type: GRPCCallType.unary
+    )
+  }
+}
