@@ -216,56 +216,6 @@ public enum Sensory_Api_Health_HealthServiceClientMetadata {
   }
 }
 
-#if compiler(>=5.6)
-@available(swift, deprecated: 5.6)
-extension Sensory_Api_Health_HealthServiceTestClient: @unchecked Sendable {}
-#endif // compiler(>=5.6)
-
-@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
-public final class Sensory_Api_Health_HealthServiceTestClient: Sensory_Api_Health_HealthServiceClientProtocol {
-  private let fakeChannel: FakeChannel
-  public var defaultCallOptions: CallOptions
-  public var interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol?
-
-  public var channel: GRPCChannel {
-    return self.fakeChannel
-  }
-
-  public init(
-    fakeChannel: FakeChannel = FakeChannel(),
-    defaultCallOptions callOptions: CallOptions = CallOptions(),
-    interceptors: Sensory_Api_Health_HealthServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.fakeChannel = fakeChannel
-    self.defaultCallOptions = callOptions
-    self.interceptors = interceptors
-  }
-
-  /// Make a unary response for the GetHealth RPC. This must be called
-  /// before calling 'getHealth'. See also 'FakeUnaryResponse'.
-  ///
-  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
-  public func makeGetHealthResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Health_HealthRequest>) -> () = { _ in }
-  ) -> FakeUnaryResponse<Sensory_Api_Health_HealthRequest, Sensory_Api_Common_ServerHealthResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path, requestHandler: requestHandler)
-  }
-
-  public func enqueueGetHealthResponse(
-    _ response: Sensory_Api_Common_ServerHealthResponse,
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_Health_HealthRequest>) -> () = { _ in }
-  ) {
-    let stream = self.makeGetHealthResponseStream(requestHandler)
-    // This is the only operation on the stream; try! is fine.
-    try! stream.sendMessage(response)
-  }
-
-  /// Returns true if there are response streams enqueued for 'GetHealth'
-  public var hasGetHealthResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_Health_HealthServiceClientMetadata.Methods.getHealth.path)
-  }
-}
-
 /// Service for Health function
 ///
 /// To build a server, implement a class that conforms to this protocol.

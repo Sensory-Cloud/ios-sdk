@@ -145,6 +145,9 @@ public enum Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf.Enum {
   /// Expects about 2 False Accepts per day for Fixed-Trigger models,
   /// and about 1 False Accept per day for SoundID models
   case highest // = 4
+
+  /// Turns the model OFF -- this is only supported in certain models and will cause error messages in those models which do not support an OFF setting
+  case off // = 5
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -158,6 +161,7 @@ public enum Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf.Enum {
     case 2: self = .medium
     case 3: self = .high
     case 4: self = .highest
+    case 5: self = .off
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -169,6 +173,7 @@ public enum Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf.Enum {
     case .medium: return 2
     case .high: return 3
     case .highest: return 4
+    case .off: return 5
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -185,6 +190,7 @@ extension Sensory_Api_V1_Audio_ThresholdSensitivity: CaseIterable {
     .medium,
     .high,
     .highest,
+    .off,
   ]
 }
 
@@ -1565,6 +1571,18 @@ public struct Sensory_Api_V1_Audio_ValidateEnrolledEventConfig {
   fileprivate var _audio: Sensory_Api_V1_Audio_AudioConfig? = nil
 }
 
+public struct Sensory_Api_V1_Audio_CustomVocabularyWords {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  public var words: [String] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// Provides information for an audio-based transcription
 public struct Sensory_Api_V1_Audio_TranscribeConfig {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1603,11 +1621,28 @@ public struct Sensory_Api_V1_Audio_TranscribeConfig {
   /// If not specified, 1 second is used by default
   public var vadDuration: Float = 0
 
+  /// Custom vocabulary reward threshold
+  public var customVocabRewardThreshold: Sensory_Api_V1_Audio_ThresholdSensitivity = .lowest
+
+  /// the name of a custom vocabulary list stored on the server to use for this session
+  public var customVocabularyID: String = String()
+
+  /// A list of up to 100 custom vocabulary words in the form <word>, <pronunciation alternative 0>, <alternative 1> etc...
+  public var customWordList: Sensory_Api_V1_Audio_CustomVocabularyWords {
+    get {return _customWordList ?? Sensory_Api_V1_Audio_CustomVocabularyWords()}
+    set {_customWordList = newValue}
+  }
+  /// Returns true if `customWordList` has been explicitly set.
+  public var hasCustomWordList: Bool {return self._customWordList != nil}
+  /// Clears the value of `customWordList`. Subsequent reads from it will return its default value.
+  public mutating func clearCustomWordList() {self._customWordList = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
   fileprivate var _audio: Sensory_Api_V1_Audio_AudioConfig? = nil
+  fileprivate var _customWordList: Sensory_Api_V1_Audio_CustomVocabularyWords? = nil
 }
 
 /// Provides audio configuration information that specifies how to process the request.
@@ -1756,6 +1791,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig: @unchecked Sendable 
 extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig.OneOf_EnrollLength: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig.OneOf_AuthID: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_CustomVocabularyWords: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_TranscribeConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AudioConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: @unchecked Sendable {}
@@ -1789,6 +1825,7 @@ extension Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf._ProtoNamePro
     2: .same(proto: "MEDIUM"),
     3: .same(proto: "HIGH"),
     4: .same(proto: "HIGHEST"),
+    5: .same(proto: "OFF"),
   ]
 }
 
@@ -3373,6 +3410,38 @@ extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: SwiftProtobuf.Messag
   }
 }
 
+extension Sensory_Api_V1_Audio_CustomVocabularyWords: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".CustomVocabularyWords"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "words"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedStringField(value: &self.words) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.words.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.words, fieldNumber: 1)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Audio_CustomVocabularyWords, rhs: Sensory_Api_V1_Audio_CustomVocabularyWords) -> Bool {
+    if lhs.words != rhs.words {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".TranscribeConfig"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -3383,6 +3452,9 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     5: .same(proto: "doSingleUtterance"),
     6: .same(proto: "vadSensitivity"),
     7: .same(proto: "vadDuration"),
+    8: .same(proto: "customVocabRewardThreshold"),
+    9: .same(proto: "customVocabularyId"),
+    10: .same(proto: "customWordList"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3398,6 +3470,9 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
       case 5: try { try decoder.decodeSingularBoolField(value: &self.doSingleUtterance) }()
       case 6: try { try decoder.decodeSingularEnumField(value: &self.vadSensitivity) }()
       case 7: try { try decoder.decodeSingularFloatField(value: &self.vadDuration) }()
+      case 8: try { try decoder.decodeSingularEnumField(value: &self.customVocabRewardThreshold) }()
+      case 9: try { try decoder.decodeSingularStringField(value: &self.customVocabularyID) }()
+      case 10: try { try decoder.decodeSingularMessageField(value: &self._customWordList) }()
       default: break
       }
     }
@@ -3429,6 +3504,15 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     if self.vadDuration != 0 {
       try visitor.visitSingularFloatField(value: self.vadDuration, fieldNumber: 7)
     }
+    if self.customVocabRewardThreshold != .lowest {
+      try visitor.visitSingularEnumField(value: self.customVocabRewardThreshold, fieldNumber: 8)
+    }
+    if !self.customVocabularyID.isEmpty {
+      try visitor.visitSingularStringField(value: self.customVocabularyID, fieldNumber: 9)
+    }
+    try { if let v = self._customWordList {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3440,6 +3524,9 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     if lhs.doSingleUtterance != rhs.doSingleUtterance {return false}
     if lhs.vadSensitivity != rhs.vadSensitivity {return false}
     if lhs.vadDuration != rhs.vadDuration {return false}
+    if lhs.customVocabRewardThreshold != rhs.customVocabRewardThreshold {return false}
+    if lhs.customVocabularyID != rhs.customVocabularyID {return false}
+    if lhs._customWordList != rhs._customWordList {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

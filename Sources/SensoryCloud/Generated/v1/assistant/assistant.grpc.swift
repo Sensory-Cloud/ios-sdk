@@ -229,57 +229,6 @@ public enum Sensory_Api_V1_Assistant_AssistantServiceClientMetadata {
   }
 }
 
-#if compiler(>=5.6)
-@available(swift, deprecated: 5.6)
-extension Sensory_Api_V1_Assistant_AssistantServiceTestClient: @unchecked Sendable {}
-#endif // compiler(>=5.6)
-
-@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
-public final class Sensory_Api_V1_Assistant_AssistantServiceTestClient: Sensory_Api_V1_Assistant_AssistantServiceClientProtocol {
-  private let fakeChannel: FakeChannel
-  public var defaultCallOptions: CallOptions
-  public var interceptors: Sensory_Api_V1_Assistant_AssistantServiceClientInterceptorFactoryProtocol?
-
-  public var channel: GRPCChannel {
-    return self.fakeChannel
-  }
-
-  public init(
-    fakeChannel: FakeChannel = FakeChannel(),
-    defaultCallOptions callOptions: CallOptions = CallOptions(),
-    interceptors: Sensory_Api_V1_Assistant_AssistantServiceClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.fakeChannel = fakeChannel
-    self.defaultCallOptions = callOptions
-    self.interceptors = interceptors
-  }
-
-  /// Make a streaming response for the ProcessMessage RPC. This must be called
-  /// before calling 'processMessage'. See also 'FakeStreamingResponse'.
-  ///
-  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
-  public func makeProcessMessageResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Assistant_AssistantMessageRequest>) -> () = { _ in }
-  ) -> FakeStreamingResponse<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage.path, requestHandler: requestHandler)
-  }
-
-  public func enqueueProcessMessageResponses(
-    _ responses: [Sensory_Api_V1_Assistant_AssistantMessageResponse],
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Assistant_AssistantMessageRequest>) -> () = { _ in }
-  ) {
-    let stream = self.makeProcessMessageResponseStream(requestHandler)
-    // These are the only operation on the stream; try! is fine.
-    responses.forEach { try! stream.sendMessage($0) }
-    try! stream.sendEnd()
-  }
-
-  /// Returns true if there are response streams enqueued for 'ProcessMessage'
-  public var hasProcessMessageResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage.path)
-  }
-}
-
 /// Serivce to comunicate with an assistant
 ///
 /// To build a server, implement a class that conforms to this protocol.

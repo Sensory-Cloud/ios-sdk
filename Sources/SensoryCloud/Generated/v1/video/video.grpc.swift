@@ -217,56 +217,6 @@ public enum Sensory_Api_V1_Video_VideoModelsClientMetadata {
   }
 }
 
-#if compiler(>=5.6)
-@available(swift, deprecated: 5.6)
-extension Sensory_Api_V1_Video_VideoModelsTestClient: @unchecked Sendable {}
-#endif // compiler(>=5.6)
-
-@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
-public final class Sensory_Api_V1_Video_VideoModelsTestClient: Sensory_Api_V1_Video_VideoModelsClientProtocol {
-  private let fakeChannel: FakeChannel
-  public var defaultCallOptions: CallOptions
-  public var interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol?
-
-  public var channel: GRPCChannel {
-    return self.fakeChannel
-  }
-
-  public init(
-    fakeChannel: FakeChannel = FakeChannel(),
-    defaultCallOptions callOptions: CallOptions = CallOptions(),
-    interceptors: Sensory_Api_V1_Video_VideoModelsClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.fakeChannel = fakeChannel
-    self.defaultCallOptions = callOptions
-    self.interceptors = interceptors
-  }
-
-  /// Make a unary response for the GetModels RPC. This must be called
-  /// before calling 'getModels'. See also 'FakeUnaryResponse'.
-  ///
-  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
-  public func makeGetModelsResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_GetModelsRequest>) -> () = { _ in }
-  ) -> FakeUnaryResponse<Sensory_Api_V1_Video_GetModelsRequest, Sensory_Api_V1_Video_GetModelsResponse> {
-    return self.fakeChannel.makeFakeUnaryResponse(path: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path, requestHandler: requestHandler)
-  }
-
-  public func enqueueGetModelsResponse(
-    _ response: Sensory_Api_V1_Video_GetModelsResponse,
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_GetModelsRequest>) -> () = { _ in }
-  ) {
-    let stream = self.makeGetModelsResponseStream(requestHandler)
-    // This is the only operation on the stream; try! is fine.
-    try! stream.sendMessage(response)
-  }
-
-  /// Returns true if there are response streams enqueued for 'GetModels'
-  public var hasGetModelsResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoModelsClientMetadata.Methods.getModels.path)
-  }
-}
-
 /// Handles all video-related biometrics
 ///
 /// Usage: instantiate `Sensory_Api_V1_Video_VideoBiometricsClient`, then call methods of this protocol to make API calls.
@@ -547,82 +497,6 @@ public enum Sensory_Api_V1_Video_VideoBiometricsClientMetadata {
   }
 }
 
-#if compiler(>=5.6)
-@available(swift, deprecated: 5.6)
-extension Sensory_Api_V1_Video_VideoBiometricsTestClient: @unchecked Sendable {}
-#endif // compiler(>=5.6)
-
-@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
-public final class Sensory_Api_V1_Video_VideoBiometricsTestClient: Sensory_Api_V1_Video_VideoBiometricsClientProtocol {
-  private let fakeChannel: FakeChannel
-  public var defaultCallOptions: CallOptions
-  public var interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol?
-
-  public var channel: GRPCChannel {
-    return self.fakeChannel
-  }
-
-  public init(
-    fakeChannel: FakeChannel = FakeChannel(),
-    defaultCallOptions callOptions: CallOptions = CallOptions(),
-    interceptors: Sensory_Api_V1_Video_VideoBiometricsClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.fakeChannel = fakeChannel
-    self.defaultCallOptions = callOptions
-    self.interceptors = interceptors
-  }
-
-  /// Make a streaming response for the CreateEnrollment RPC. This must be called
-  /// before calling 'createEnrollment'. See also 'FakeStreamingResponse'.
-  ///
-  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
-  public func makeCreateEnrollmentResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_CreateEnrollmentRequest>) -> () = { _ in }
-  ) -> FakeStreamingResponse<Sensory_Api_V1_Video_CreateEnrollmentRequest, Sensory_Api_V1_Video_CreateEnrollmentResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path, requestHandler: requestHandler)
-  }
-
-  public func enqueueCreateEnrollmentResponses(
-    _ responses: [Sensory_Api_V1_Video_CreateEnrollmentResponse],
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_CreateEnrollmentRequest>) -> () = { _ in }
-  ) {
-    let stream = self.makeCreateEnrollmentResponseStream(requestHandler)
-    // These are the only operation on the stream; try! is fine.
-    responses.forEach { try! stream.sendMessage($0) }
-    try! stream.sendEnd()
-  }
-
-  /// Returns true if there are response streams enqueued for 'CreateEnrollment'
-  public var hasCreateEnrollmentResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.createEnrollment.path)
-  }
-
-  /// Make a streaming response for the Authenticate RPC. This must be called
-  /// before calling 'authenticate'. See also 'FakeStreamingResponse'.
-  ///
-  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
-  public func makeAuthenticateResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_AuthenticateRequest>) -> () = { _ in }
-  ) -> FakeStreamingResponse<Sensory_Api_V1_Video_AuthenticateRequest, Sensory_Api_V1_Video_AuthenticateResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path, requestHandler: requestHandler)
-  }
-
-  public func enqueueAuthenticateResponses(
-    _ responses: [Sensory_Api_V1_Video_AuthenticateResponse],
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_AuthenticateRequest>) -> () = { _ in }
-  ) {
-    let stream = self.makeAuthenticateResponseStream(requestHandler)
-    // These are the only operation on the stream; try! is fine.
-    responses.forEach { try! stream.sendMessage($0) }
-    try! stream.sendEnd()
-  }
-
-  /// Returns true if there are response streams enqueued for 'Authenticate'
-  public var hasAuthenticateResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoBiometricsClientMetadata.Methods.authenticate.path)
-  }
-}
-
 /// Handles all video recognition endpoints
 ///
 /// Usage: instantiate `Sensory_Api_V1_Video_VideoRecognitionClient`, then call methods of this protocol to make API calls.
@@ -824,57 +698,6 @@ public enum Sensory_Api_V1_Video_VideoRecognitionClientMetadata {
       path: "/sensory.api.v1.video.VideoRecognition/ValidateLiveness",
       type: GRPCCallType.bidirectionalStreaming
     )
-  }
-}
-
-#if compiler(>=5.6)
-@available(swift, deprecated: 5.6)
-extension Sensory_Api_V1_Video_VideoRecognitionTestClient: @unchecked Sendable {}
-#endif // compiler(>=5.6)
-
-@available(swift, deprecated: 5.6, message: "Test clients are not Sendable but the 'GRPCClient' API requires clients to be Sendable. Using a localhost client and server is the recommended alternative.")
-public final class Sensory_Api_V1_Video_VideoRecognitionTestClient: Sensory_Api_V1_Video_VideoRecognitionClientProtocol {
-  private let fakeChannel: FakeChannel
-  public var defaultCallOptions: CallOptions
-  public var interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol?
-
-  public var channel: GRPCChannel {
-    return self.fakeChannel
-  }
-
-  public init(
-    fakeChannel: FakeChannel = FakeChannel(),
-    defaultCallOptions callOptions: CallOptions = CallOptions(),
-    interceptors: Sensory_Api_V1_Video_VideoRecognitionClientInterceptorFactoryProtocol? = nil
-  ) {
-    self.fakeChannel = fakeChannel
-    self.defaultCallOptions = callOptions
-    self.interceptors = interceptors
-  }
-
-  /// Make a streaming response for the ValidateLiveness RPC. This must be called
-  /// before calling 'validateLiveness'. See also 'FakeStreamingResponse'.
-  ///
-  /// - Parameter requestHandler: a handler for request parts sent by the RPC.
-  public func makeValidateLivenessResponseStream(
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_ValidateRecognitionRequest>) -> () = { _ in }
-  ) -> FakeStreamingResponse<Sensory_Api_V1_Video_ValidateRecognitionRequest, Sensory_Api_V1_Video_LivenessRecognitionResponse> {
-    return self.fakeChannel.makeFakeStreamingResponse(path: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path, requestHandler: requestHandler)
-  }
-
-  public func enqueueValidateLivenessResponses(
-    _ responses: [Sensory_Api_V1_Video_LivenessRecognitionResponse],
-    _ requestHandler: @escaping (FakeRequestPart<Sensory_Api_V1_Video_ValidateRecognitionRequest>) -> () = { _ in }
-  ) {
-    let stream = self.makeValidateLivenessResponseStream(requestHandler)
-    // These are the only operation on the stream; try! is fine.
-    responses.forEach { try! stream.sendMessage($0) }
-    try! stream.sendEnd()
-  }
-
-  /// Returns true if there are response streams enqueued for 'ValidateLiveness'
-  public var hasValidateLivenessResponsesRemaining: Bool {
-    return self.fakeChannel.hasFakeResponseEnqueued(forPath: Sensory_Api_V1_Video_VideoRecognitionClientMetadata.Methods.validateLiveness.path)
   }
 }
 
