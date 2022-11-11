@@ -21,34 +21,34 @@ public struct SDKInitConfig: Codable, Equatable {
     }
 
     /// The fully qualified domain name of the Sensory Cloud Server to communicate with
-    var fullyQualifiedDomainName: String
+    public var fullyQualifiedDomainName: String
 
     /// Tells if the SDK should use a secure connection to the Sensory Cloud server or not
-    var isSecure: Bool
+    public var isSecure: Bool
 
     /// The tenant ID to use during device enrollment
-    var tenantID: String
+    public var tenantID: String
 
     /// The level of authentication required to enroll new devices into the Sensory Cloud Server
     ///
     ///  - Note: If the device has already been enrolled during a previous app session, this field is ignored
-    var enrollmentType: EnrollmentType
+    public var enrollmentType: EnrollmentType
 
     /// Credential for device enrollment
     ///
     /// Depending on the `enrollmentType` this may be blank, the shared secret, or the private key to create a JWT with
     ///  - Note: If the device has already been enrolled during a previous app session, this field is ignored
-    var credential: String
+    public var credential: String
 
     /// Unique identifier for the current device
     ///
     /// If this is left blank, the SDK will generate a device ID
-    var deviceID: String?
+    public var deviceID: String?
 
     /// Name of the enrolling device
     ///
     /// If this is left blank, the system device name will be used
-    var deviceName: String?
+    public var deviceName: String?
 
     /// Public initializer
     public init(
