@@ -205,6 +205,211 @@
                 <li class="item">
                   <div>
                     <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV24fullyQualifiedDomainNameSSvp"></a>
+                    <a name="//apple_ref/swift/Property/fullyQualifiedDomainName" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV24fullyQualifiedDomainNameSSvp">fullyQualifiedDomainName</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The fully qualified domain name of the Sensory Cloud Server to communicate with</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">fullyQualifiedDomainName</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV8isSecureSbvp"></a>
+                    <a name="//apple_ref/swift/Property/isSecure" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV8isSecureSbvp">isSecure</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Tells if the SDK should use a secure connection to the Sensory Cloud server or not</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">isSecure</span><span class="p">:</span> <span class="kt">Bool</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV8tenantIDSSvp"></a>
+                    <a name="//apple_ref/swift/Property/tenantID" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV8tenantIDSSvp">tenantID</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The tenant ID to use during device enrollment</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">tenantID</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV14enrollmentTypeAC010EnrollmentF0Ovp"></a>
+                    <a name="//apple_ref/swift/Property/enrollmentType" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV14enrollmentTypeAC010EnrollmentF0Ovp">enrollmentType</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>The level of authentication required to enroll new devices into the Sensory Cloud Server</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    If the device has already been enrolled during a previous app session, this field is ignored
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">enrollmentType</span><span class="p">:</span> <span class="kt"><a href="../Structs/SDKInitConfig/EnrollmentType.html">EnrollmentType</a></span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV10credentialSSvp"></a>
+                    <a name="//apple_ref/swift/Property/credential" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV10credentialSSvp">credential</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Credential for device enrollment</p>
+
+<p>Depending on the <code><a href="../Structs/SDKInitConfig.html#/s:12SensoryCloud13SDKInitConfigV14enrollmentTypeAC010EnrollmentF0Ovp">enrollmentType</a></code> this may be blank, the shared secret, or the private key to create a JWT with</p>
+<div class="aside aside-note">
+    <p class="aside-title">Note</p>
+    If the device has already been enrolled during a previous app session, this field is ignored
+
+</div>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">credential</span><span class="p">:</span> <span class="kt">String</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV8deviceIDSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/deviceID" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV8deviceIDSSSgvp">deviceID</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Unique identifier for the current device</p>
+
+<p>If this is left blank, the SDK will generate a device ID</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">deviceID</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
+                    <a name="/s:12SensoryCloud13SDKInitConfigV10deviceNameSSSgvp"></a>
+                    <a name="//apple_ref/swift/Property/deviceName" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud13SDKInitConfigV10deviceNameSSSgvp">deviceName</a>
+                    </code>
+                  </div>
+                  <div class="height-container">
+                    <div class="pointer-container"></div>
+                    <section class="section">
+                      <div class="pointer"></div>
+                      <div class="abstract">
+                        <p>Name of the enrolling device</p>
+
+<p>If this is left blank, the system device name will be used</p>
+
+                      </div>
+                      <div class="declaration">
+                        <h4>Declaration</h4>
+                        <div class="language">
+                          <p class="aside-title">Swift</p>
+                          <pre class="highlight swift"><code><span class="kd">public</span> <span class="k">var</span> <span class="nv">deviceName</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span></code></pre>
+
+                        </div>
+                      </div>
+                    </section>
+                  </div>
+                </li>
+                <li class="item">
+                  <div>
+                    <code>
                     <a name="/s:12SensoryCloud13SDKInitConfigVyACSS_SbSSAC14EnrollmentTypeOS2SSgAFtcfc"></a>
                     <a name="//apple_ref/swift/Method/init(_:_:_:_:_:_:_:)" class="dashAnchor"></a>
                     <a class="token" href="#/s:12SensoryCloud13SDKInitConfigVyACSS_SbSSAC14EnrollmentTypeOS2SSgAFtcfc">init(_:<wbr>_:<wbr>_:<wbr>_:<wbr>_:<wbr>_:<wbr>_:<wbr>)</a>
@@ -242,7 +447,7 @@
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-10-03)</p>
+          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-03-09)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>

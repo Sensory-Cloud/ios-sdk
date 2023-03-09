@@ -1022,9 +1022,9 @@ return a token upon successful enrollment regardless of server configuration</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC16synthesizeSpeech6phrase9voiceName12languageCode15onStreamReceive4GRPC19ServerStreamingCallVyAA0a8_Api_V1_c11_SynthesizeF7RequestVAA0a1_s1_t1_c1_uF8ResponseVGSS_S2SSgyAOctKF"></a>
-                    <a name="//apple_ref/swift/Method/synthesizeSpeech(phrase:voiceName:languageCode:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16synthesizeSpeech6phrase9voiceName12languageCode15onStreamReceive4GRPC19ServerStreamingCallVyAA0a8_Api_V1_c11_SynthesizeF7RequestVAA0a1_s1_t1_c1_uF8ResponseVGSS_S2SSgyAOctKF">synthesizeSpeech(phrase:<wbr>voiceName:<wbr>languageCode:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC16synthesizeSpeech6phrase9modelName15sampleRateHertz15onStreamReceive4GRPC19ServerStreamingCallVyAA0a8_Api_V1_c11_SynthesizeF7RequestVAA0a1_t1_u1_c1_vF8ResponseVGSS_SSs5Int32VyAOctKF"></a>
+                    <a name="//apple_ref/swift/Method/synthesizeSpeech(phrase:modelName:sampleRateHertz:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC16synthesizeSpeech6phrase9modelName15sampleRateHertz15onStreamReceive4GRPC19ServerStreamingCallVyAA0a8_Api_V1_c11_SynthesizeF7RequestVAA0a1_t1_u1_c1_vF8ResponseVGSS_SSs5Int32VyAOctKF">synthesizeSpeech(phrase:<wbr>modelName:<wbr>sampleRateHertz:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -1043,8 +1043,8 @@ return a token upon successful enrollment regardless of server configuration</p>
                           <p class="aside-title">Swift</p>
                           <pre class="highlight swift"><code><span class="kd">public</span> <span class="kd">func</span> <span class="nf">synthesizeSpeech</span><span class="p">(</span>
     <span class="nv">phrase</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">voiceName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
-    <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">modelName</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
+    <span class="nv">sampleRateHertz</span><span class="p">:</span> <span class="kt">Int32</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_SynthesizeSpeechResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">ServerStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_SynthesizeSpeechRequest</span><span class="p">,</span>
@@ -1072,24 +1072,12 @@ return a token upon successful enrollment regardless of server configuration</p>
                             <tr>
                               <td>
                                 <code>
-                                <em>voiceName</em>
+                                <em>modelName</em>
                                 </code>
                               </td>
                               <td>
                                 <div>
-                                  <p>The name of the voice to use during speech synthesis</p>
-                                </div>
-                              </td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <code>
-                                <em>languageCode</em>
-                                </code>
-                              </td>
-                              <td>
-                                <div>
-                                  <p>Preferred language code, pass nil to use the value from config</p>
+                                  <p>The name of the model to use for speech synthesis</p>
                                 </div>
                               </td>
                             </tr>
@@ -1120,7 +1108,7 @@ return a token upon successful enrollment regardless of server configuration</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2022 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2022-10-03)</p>
+          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-03-09)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
