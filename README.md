@@ -369,65 +369,7 @@ func stopAudioEvents() {
 }
 ```
 
-### Transcription (Sliding Window Transcript)
-
-Transcription is used to convert audio to text.
-
-```Swift
-var grpcStream: BidirectionalStreamingCall<
-    Sensory_Api_V1_Audio_TranscribeRequest,
-    Sensory_Api_V1_Audio_TranscribeResponse
->?
-
-func startAudioTranscription() throws {
-    let userID = "72f286b8-173f-436a-8869-6f7887789ee9"
-    let modelName = "wakeword-16kHz-open_sesame.ubm"
-
-    // Get an audio service
-    let service = AudioService()
-
-    // Set the delegate for AudioStreamInteractor
-    AudioStreamInteractor.shared.delegate = self
-
-    // Open the grpc stream
-    let stream = try service.transcribeAudio(
-        modelName: modelName,
-        userID: userID
-    ) {  response in
-        // Response contains information about the audio such as:
-        // * audioEnergy
-
-        // Transcript contains the current running transcript of the last 7 seconds of processed audio
-        // If you want a full transcript, see the below example
-        let transcript = response.transcript
-    }
-
-    // Save the open grpc stream and start audio recording
-    grpcStream = stream
-    try AudioStreamInteractor.shared.startRecording()
-}
-
-// Delegate method for AudioStreamInteractor
-func didProcessAudio(_ data: Data) {
-    if let stream = grpcStream {
-        // (Make sure you use the proper type for the grpc stream you're using)
-        var request = Sensory_Api_V1_Audio_TranscribeRequest()
-        request.audioContent = data
-        stream.sendMessage(request, promise: nil)
-    } else {
-        NSLog("Recording without an open grpc stream, stopping recording")
-        AudioStreamInteractor.shared.stopRecording()
-    }
-}
-
-// The SDK implementer can decide when they want to close the stream
-func stopAudioTranscription() {
-    _ = grpcStream?.sendEnd()
-    AudioStreamInteractor.shared.stopRecording()
-}
-```
-
-### Transcription (Full Transcript)
+### Transcription
 
 ```Swift
 var grpcStream: BidirectionalStreamingCall<

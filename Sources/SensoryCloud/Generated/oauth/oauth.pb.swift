@@ -68,6 +68,9 @@ public struct Sensory_Api_Oauth_SignTokenRequest {
 
     /// Read-only Administrator, capable of all read operations
     case readOnlyAdmin // = 3
+
+    /// Email verification, only allowed to verify user's email
+    case emailSelfVerify // = 4
     case UNRECOGNIZED(Int)
 
     public init() {
@@ -80,6 +83,7 @@ public struct Sensory_Api_Oauth_SignTokenRequest {
       case 1: self = .superAdmin
       case 2: self = .billingAdmin
       case 3: self = .readOnlyAdmin
+      case 4: self = .emailSelfVerify
       default: self = .UNRECOGNIZED(rawValue)
       }
     }
@@ -90,6 +94,7 @@ public struct Sensory_Api_Oauth_SignTokenRequest {
       case .superAdmin: return 1
       case .billingAdmin: return 2
       case .readOnlyAdmin: return 3
+      case .emailSelfVerify: return 4
       case .UNRECOGNIZED(let i): return i
       }
     }
@@ -108,6 +113,7 @@ extension Sensory_Api_Oauth_SignTokenRequest.TokenScope: CaseIterable {
     .superAdmin,
     .billingAdmin,
     .readOnlyAdmin,
+    .emailSelfVerify,
   ]
 }
 
@@ -268,6 +274,7 @@ extension Sensory_Api_Oauth_SignTokenRequest.TokenScope: SwiftProtobuf._ProtoNam
     1: .same(proto: "SUPER_ADMIN"),
     2: .same(proto: "BILLING_ADMIN"),
     3: .same(proto: "READ_ONLY_ADMIN"),
+    4: .same(proto: "EMAIL_SELF_VERIFY"),
   ]
 }
 

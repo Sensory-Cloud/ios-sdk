@@ -403,29 +403,23 @@ public class AudioService {
     /// Concatenating all of the `audioContent` of the responses passed to the `onStreamReceive` handler will result in a complete WAV file of the resultant audio
     /// - Parameters:
     ///   - phrase: The text phrase to synthesize a voice saying
-    ///   - voiceName: The name of the voice to use during speech synthesis
-    ///   - languageCode: Preferred language code, pass nil to use the value from config
+    ///   - modelName: The name of the model to use for speech synthesis
+    ///   - sampleRateHertz The desired sample rate of the synthesized audio, 16000Hz should be used in most cases
     ///   - onStreamReceive: Handler function to handle responses sent from the server
     /// - Returns: ServerStreamingCall object, can be used to prematurely close the grpc stream.
     public func synthesizeSpeech(
         phrase: String,
-        voiceName: String,
-        languageCode: String? = nil,
+        modelName: String,
+        sampleRateHertz: Int32,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_SynthesizeSpeechResponse) -> Void)
     ) throws -> ServerStreamingCall<
         Sensory_Api_V1_Audio_SynthesizeSpeechRequest,
         Sensory_Api_V1_Audio_SynthesizeSpeechResponse
     > {
         // Build request message
-        var audioConfig = Sensory_Api_V1_Audio_AudioConfig()
-        audioConfig.encoding = .linear16
-        audioConfig.sampleRateHertz = Int32(Config.audioSampleRate)
-        audioConfig.audioChannelCount = 1
-        audioConfig.languageCode = languageCode ?? Config.languageCode
-
         var voiceConfig = Sensory_Api_V1_Audio_VoiceSynthesisConfig()
-        voiceConfig.voice = voiceName
-        voiceConfig.audio = audioConfig
+        voiceConfig.modelName = modelName
+        voiceConfig.sampleRateHertz = sampleRateHertz
 
         var request = Sensory_Api_V1_Audio_SynthesizeSpeechRequest()
         request.phrase = phrase

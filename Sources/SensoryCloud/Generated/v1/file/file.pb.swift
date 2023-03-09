@@ -29,8 +29,8 @@ public enum Sensory_Api_V1_File_FileCategory: SwiftProtobuf.Enum {
   /// A model used with TSSV
   case tssvModel // = 0
 
-  /// A model used with the fenrir library
-  case fenrirModel // = 1
+  /// A model used with the Atlas library
+  case atlasModel // = 1
 
   /// A model used with the TNL library
   case tnlModel // = 2
@@ -46,7 +46,7 @@ public enum Sensory_Api_V1_File_FileCategory: SwiftProtobuf.Enum {
   public init?(rawValue: Int) {
     switch rawValue {
     case 0: self = .tssvModel
-    case 1: self = .fenrirModel
+    case 1: self = .atlasModel
     case 2: self = .tnlModel
     case 100: self = .unknown
     default: self = .UNRECOGNIZED(rawValue)
@@ -56,7 +56,7 @@ public enum Sensory_Api_V1_File_FileCategory: SwiftProtobuf.Enum {
   public var rawValue: Int {
     switch self {
     case .tssvModel: return 0
-    case .fenrirModel: return 1
+    case .atlasModel: return 1
     case .tnlModel: return 2
     case .unknown: return 100
     case .UNRECOGNIZED(let i): return i
@@ -71,7 +71,7 @@ extension Sensory_Api_V1_File_FileCategory: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
   public static var allCases: [Sensory_Api_V1_File_FileCategory] = [
     .tssvModel,
-    .fenrirModel,
+    .atlasModel,
     .tnlModel,
     .unknown,
   ]
@@ -329,7 +329,7 @@ fileprivate let _protobuf_package = "sensory.api.v1.file"
 extension Sensory_Api_V1_File_FileCategory: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     0: .same(proto: "TSSV_MODEL"),
-    1: .same(proto: "FENRIR_MODEL"),
+    1: .same(proto: "ATLAS_MODEL"),
     2: .same(proto: "TNL_MODEL"),
     100: .same(proto: "UNKNOWN"),
   ]

@@ -224,6 +224,45 @@ public struct Sensory_Api_V1_Event_UsageEventListResponse {
   fileprivate var _pagination: Sensory_Api_Common_PaginationResponse? = nil
 }
 
+public struct Sensory_Api_V1_Event_GlobalEventSummaryRequest {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// The list of tenants to return data for, If left empty all tenants will be included in the response
+  public var tenants: [String] = []
+
+  /// Optional Start UTC timestamp. Internally this timestamp is rounded to the nearest second.
+  public var after: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _after ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_after = newValue}
+  }
+  /// Returns true if `after` has been explicitly set.
+  public var hasAfter: Bool {return self._after != nil}
+  /// Clears the value of `after`. Subsequent reads from it will return its default value.
+  public mutating func clearAfter() {self._after = nil}
+
+  /// Optional End UTC timestamp. Internally this timestamp is rounded to the nearest second.
+  public var before: SwiftProtobuf.Google_Protobuf_Timestamp {
+    get {return _before ?? SwiftProtobuf.Google_Protobuf_Timestamp()}
+    set {_before = newValue}
+  }
+  /// Returns true if `before` has been explicitly set.
+  public var hasBefore: Bool {return self._before != nil}
+  /// Clears the value of `before`. Subsequent reads from it will return its default value.
+  public mutating func clearBefore() {self._before = nil}
+
+  /// Type of event to filter on, If left empty all event types will be included
+  public var billableFunctions: [Sensory_Api_Common_ModelType] = []
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+
+  fileprivate var _after: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+  fileprivate var _before: SwiftProtobuf.Google_Protobuf_Timestamp? = nil
+}
+
 public struct Sensory_Api_V1_Event_UsageEventSummary {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
@@ -257,6 +296,9 @@ public struct Sensory_Api_V1_Event_UsageEventModelSummary {
   /// Credits used by this event
   public var credits: Double = 0
 
+  /// Tenant that the events are from. For summaries that span multiple tenants, this field will be empty
+  public var tenantID: String = String()
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -279,6 +321,7 @@ extension Sensory_Api_V1_Event_UsageEvent: @unchecked Sendable {}
 extension Sensory_Api_V1_Event_UsageEventResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Event_UsageEventListRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Event_UsageEventListResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Event_GlobalEventSummaryRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Event_UsageEventSummary: @unchecked Sendable {}
 extension Sensory_Api_V1_Event_UsageEventModelSummary: @unchecked Sendable {}
 extension Sensory_Api_V1_Event_PublishUsageEventsResponse: @unchecked Sendable {}
@@ -632,6 +675,60 @@ extension Sensory_Api_V1_Event_UsageEventListResponse: SwiftProtobuf.Message, Sw
   }
 }
 
+extension Sensory_Api_V1_Event_GlobalEventSummaryRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".GlobalEventSummaryRequest"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "tenants"),
+    2: .same(proto: "after"),
+    3: .same(proto: "before"),
+    5: .same(proto: "billableFunctions"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeRepeatedStringField(value: &self.tenants) }()
+      case 2: try { try decoder.decodeSingularMessageField(value: &self._after) }()
+      case 3: try { try decoder.decodeSingularMessageField(value: &self._before) }()
+      case 5: try { try decoder.decodeRepeatedEnumField(value: &self.billableFunctions) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    if !self.tenants.isEmpty {
+      try visitor.visitRepeatedStringField(value: self.tenants, fieldNumber: 1)
+    }
+    try { if let v = self._after {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
+    } }()
+    try { if let v = self._before {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
+    } }()
+    if !self.billableFunctions.isEmpty {
+      try visitor.visitPackedEnumField(value: self.billableFunctions, fieldNumber: 5)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Event_GlobalEventSummaryRequest, rhs: Sensory_Api_V1_Event_GlobalEventSummaryRequest) -> Bool {
+    if lhs.tenants != rhs.tenants {return false}
+    if lhs._after != rhs._after {return false}
+    if lhs._before != rhs._before {return false}
+    if lhs.billableFunctions != rhs.billableFunctions {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Sensory_Api_V1_Event_UsageEventSummary: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".UsageEventSummary"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -672,6 +769,7 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
     3: .same(proto: "value"),
     4: .same(proto: "count"),
     5: .same(proto: "credits"),
+    6: .same(proto: "tenantId"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -685,6 +783,7 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
       case 3: try { try decoder.decodeSingularInt64Field(value: &self.value) }()
       case 4: try { try decoder.decodeSingularInt64Field(value: &self.count) }()
       case 5: try { try decoder.decodeSingularDoubleField(value: &self.credits) }()
+      case 6: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
       default: break
       }
     }
@@ -706,6 +805,9 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
     if self.credits != 0 {
       try visitor.visitSingularDoubleField(value: self.credits, fieldNumber: 5)
     }
+    if !self.tenantID.isEmpty {
+      try visitor.visitSingularStringField(value: self.tenantID, fieldNumber: 6)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -715,6 +817,7 @@ extension Sensory_Api_V1_Event_UsageEventModelSummary: SwiftProtobuf.Message, Sw
     if lhs.value != rhs.value {return false}
     if lhs.count != rhs.count {return false}
     if lhs.credits != rhs.credits {return false}
+    if lhs.tenantID != rhs.tenantID {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

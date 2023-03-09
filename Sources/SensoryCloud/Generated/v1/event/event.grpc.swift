@@ -47,6 +47,11 @@ public protocol Sensory_Api_V1_Event_EventServiceClientProtocol: GRPCClient {
     _ request: Sensory_Api_V1_Event_UsageEventListRequest,
     callOptions: CallOptions?
   ) -> UnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>
+
+  func getGlobalUsageSummary(
+    _ request: Sensory_Api_V1_Event_GlobalEventSummaryRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Event_GlobalEventSummaryRequest, Sensory_Api_V1_Event_UsageEventSummary>
 }
 
 extension Sensory_Api_V1_Event_EventServiceClientProtocol {
@@ -108,6 +113,25 @@ extension Sensory_Api_V1_Event_EventServiceClientProtocol {
       request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
       interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
+    )
+  }
+
+  /// Obtains a usage summary of events across all specified tenants
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  ///
+  /// - Parameters:
+  ///   - request: Request to send to GetGlobalUsageSummary.
+  ///   - callOptions: Call options.
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func getGlobalUsageSummary(
+    _ request: Sensory_Api_V1_Event_GlobalEventSummaryRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Event_GlobalEventSummaryRequest, Sensory_Api_V1_Event_UsageEventSummary> {
+    return self.makeUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getGlobalUsageSummary.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetGlobalUsageSummaryInterceptors() ?? []
     )
   }
 }
@@ -192,6 +216,11 @@ public protocol Sensory_Api_V1_Event_EventServiceAsyncClientProtocol: GRPCClient
     _ request: Sensory_Api_V1_Event_UsageEventListRequest,
     callOptions: CallOptions?
   ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>
+
+  func makeGetGlobalUsageSummaryCall(
+    _ request: Sensory_Api_V1_Event_GlobalEventSummaryRequest,
+    callOptions: CallOptions?
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_GlobalEventSummaryRequest, Sensory_Api_V1_Event_UsageEventSummary>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -239,6 +268,18 @@ extension Sensory_Api_V1_Event_EventServiceAsyncClientProtocol {
       interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
     )
   }
+
+  public func makeGetGlobalUsageSummaryCall(
+    _ request: Sensory_Api_V1_Event_GlobalEventSummaryRequest,
+    callOptions: CallOptions? = nil
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Event_GlobalEventSummaryRequest, Sensory_Api_V1_Event_UsageEventSummary> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getGlobalUsageSummary.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetGlobalUsageSummaryInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -278,6 +319,18 @@ extension Sensory_Api_V1_Event_EventServiceAsyncClientProtocol {
       interceptors: self.interceptors?.makeGetUsageEventSummaryInterceptors() ?? []
     )
   }
+
+  public func getGlobalUsageSummary(
+    _ request: Sensory_Api_V1_Event_GlobalEventSummaryRequest,
+    callOptions: CallOptions? = nil
+  ) async throws -> Sensory_Api_V1_Event_UsageEventSummary {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getGlobalUsageSummary.path,
+      request: request,
+      callOptions: callOptions ?? self.defaultCallOptions,
+      interceptors: self.interceptors?.makeGetGlobalUsageSummaryInterceptors() ?? []
+    )
+  }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -309,6 +362,9 @@ public protocol Sensory_Api_V1_Event_EventServiceClientInterceptorFactoryProtoco
 
   /// - Returns: Interceptors to use when invoking 'getUsageEventSummary'.
   func makeGetUsageEventSummaryInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>]
+
+  /// - Returns: Interceptors to use when invoking 'getGlobalUsageSummary'.
+  func makeGetGlobalUsageSummaryInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Event_GlobalEventSummaryRequest, Sensory_Api_V1_Event_UsageEventSummary>]
 }
 
 public enum Sensory_Api_V1_Event_EventServiceClientMetadata {
@@ -319,6 +375,7 @@ public enum Sensory_Api_V1_Event_EventServiceClientMetadata {
       Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.publishUsageEvents,
       Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventList,
       Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getUsageEventSummary,
+      Sensory_Api_V1_Event_EventServiceClientMetadata.Methods.getGlobalUsageSummary,
     ]
   )
 
@@ -338,6 +395,12 @@ public enum Sensory_Api_V1_Event_EventServiceClientMetadata {
     public static let getUsageEventSummary = GRPCMethodDescriptor(
       name: "GetUsageEventSummary",
       path: "/sensory.api.v1.event.EventService/GetUsageEventSummary",
+      type: GRPCCallType.unary
+    )
+
+    public static let getGlobalUsageSummary = GRPCMethodDescriptor(
+      name: "GetGlobalUsageSummary",
+      path: "/sensory.api.v1.event.EventService/GetGlobalUsageSummary",
       type: GRPCCallType.unary
     )
   }
@@ -360,6 +423,10 @@ public protocol Sensory_Api_V1_Event_EventServiceProvider: CallHandlerProvider {
   /// Obtains a summary of events given the filter critieria
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   func getUsageEventSummary(request: Sensory_Api_V1_Event_UsageEventListRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Event_UsageEventSummary>
+
+  /// Obtains a usage summary of events across all specified tenants
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  func getGlobalUsageSummary(request: Sensory_Api_V1_Event_GlobalEventSummaryRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Event_UsageEventSummary>
 }
 
 extension Sensory_Api_V1_Event_EventServiceProvider {
@@ -401,6 +468,15 @@ extension Sensory_Api_V1_Event_EventServiceProvider {
         userFunction: self.getUsageEventSummary(request:context:)
       )
 
+    case "GetGlobalUsageSummary":
+      return UnaryServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_GlobalEventSummaryRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_UsageEventSummary>(),
+        interceptors: self.interceptors?.makeGetGlobalUsageSummaryInterceptors() ?? [],
+        userFunction: self.getGlobalUsageSummary(request:context:)
+      )
+
     default:
       return nil
     }
@@ -435,6 +511,13 @@ public protocol Sensory_Api_V1_Event_EventServiceAsyncProvider: CallHandlerProvi
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   @Sendable func getUsageEventSummary(
     request: Sensory_Api_V1_Event_UsageEventListRequest,
+    context: GRPCAsyncServerCallContext
+  ) async throws -> Sensory_Api_V1_Event_UsageEventSummary
+
+  /// Obtains a usage summary of events across all specified tenants
+  /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
+  @Sendable func getGlobalUsageSummary(
+    request: Sensory_Api_V1_Event_GlobalEventSummaryRequest,
     context: GRPCAsyncServerCallContext
   ) async throws -> Sensory_Api_V1_Event_UsageEventSummary
 }
@@ -485,6 +568,15 @@ extension Sensory_Api_V1_Event_EventServiceAsyncProvider {
         wrapping: self.getUsageEventSummary(request:context:)
       )
 
+    case "GetGlobalUsageSummary":
+      return GRPCAsyncServerHandler(
+        context: context,
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Event_GlobalEventSummaryRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Event_UsageEventSummary>(),
+        interceptors: self.interceptors?.makeGetGlobalUsageSummaryInterceptors() ?? [],
+        wrapping: self.getGlobalUsageSummary(request:context:)
+      )
+
     default:
       return nil
     }
@@ -506,6 +598,10 @@ public protocol Sensory_Api_V1_Event_EventServiceServerInterceptorFactoryProtoco
   /// - Returns: Interceptors to use when handling 'getUsageEventSummary'.
   ///   Defaults to calling `self.makeInterceptors()`.
   func makeGetUsageEventSummaryInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Event_UsageEventListRequest, Sensory_Api_V1_Event_UsageEventSummary>]
+
+  /// - Returns: Interceptors to use when handling 'getGlobalUsageSummary'.
+  ///   Defaults to calling `self.makeInterceptors()`.
+  func makeGetGlobalUsageSummaryInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Event_GlobalEventSummaryRequest, Sensory_Api_V1_Event_UsageEventSummary>]
 }
 
 public enum Sensory_Api_V1_Event_EventServiceServerMetadata {
@@ -516,6 +612,7 @@ public enum Sensory_Api_V1_Event_EventServiceServerMetadata {
       Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.publishUsageEvents,
       Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.getUsageEventList,
       Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.getUsageEventSummary,
+      Sensory_Api_V1_Event_EventServiceServerMetadata.Methods.getGlobalUsageSummary,
     ]
   )
 
@@ -535,6 +632,12 @@ public enum Sensory_Api_V1_Event_EventServiceServerMetadata {
     public static let getUsageEventSummary = GRPCMethodDescriptor(
       name: "GetUsageEventSummary",
       path: "/sensory.api.v1.event.EventService/GetUsageEventSummary",
+      type: GRPCCallType.unary
+    )
+
+    public static let getGlobalUsageSummary = GRPCMethodDescriptor(
+      name: "GetGlobalUsageSummary",
+      path: "/sensory.api.v1.event.EventService/GetGlobalUsageSummary",
       type: GRPCCallType.unary
     )
   }

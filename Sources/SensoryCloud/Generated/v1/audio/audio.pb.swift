@@ -145,9 +145,6 @@ public enum Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf.Enum {
   /// Expects about 2 False Accepts per day for Fixed-Trigger models,
   /// and about 1 False Accept per day for SoundID models
   case highest // = 4
-
-  /// Turns the model OFF -- this is only supported in certain models and will cause error messages in those models which do not support an OFF setting
-  case off // = 5
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -161,7 +158,6 @@ public enum Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf.Enum {
     case 2: self = .medium
     case 3: self = .high
     case 4: self = .highest
-    case 5: self = .off
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -173,7 +169,6 @@ public enum Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf.Enum {
     case .medium: return 2
     case .high: return 3
     case .highest: return 4
-    case .off: return 5
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -190,7 +185,6 @@ extension Sensory_Api_V1_Audio_ThresholdSensitivity: CaseIterable {
     .medium,
     .high,
     .highest,
-    .off,
   ]
 }
 
@@ -1016,12 +1010,6 @@ public struct Sensory_Api_V1_Audio_TranscribeResponse {
   /// Relative energy of the processed audio as a value between 0 and 1
   public var audioEnergy: Float = 0
 
-  /// Text of the current transcript, sliding window on ~7 seconds
-  public var transcript: String = String()
-
-  /// Indicates if the returned transcript is an intermediate result
-  public var isPartialResult: Bool = false
-
   /// A response including word metadata
   public var wordList: Sensory_Api_V1_Audio_TranscribeWordResponse {
     get {return _wordList ?? Sensory_Api_V1_Audio_TranscribeWordResponse()}
@@ -1730,24 +1718,16 @@ public struct Sensory_Api_V1_Audio_VoiceSynthesisConfig {
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// Required. Provides information that specifies how the synthesized audio should be formatted
-  public var audio: Sensory_Api_V1_Audio_AudioConfig {
-    get {return _audio ?? Sensory_Api_V1_Audio_AudioConfig()}
-    set {_audio = newValue}
-  }
-  /// Returns true if `audio` has been explicitly set.
-  public var hasAudio: Bool {return self._audio != nil}
-  /// Clears the value of `audio`. Subsequent reads from it will return its default value.
-  public mutating func clearAudio() {self._audio = nil}
+  /// Name of model to use for voice synthesis
+  /// Model can be retrieved from the GetModels() gRPC call
+  public var modelName: String = String()
 
-  /// Required. The name of the voice to use for voice synthesis
-  public var voice: String = String()
+  /// The sample rate of the output audio file. Value should be between 8000Hz and 96000Hz
+  public var sampleRateHertz: Int32 = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
-
-  fileprivate var _audio: Sensory_Api_V1_Audio_AudioConfig? = nil
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
@@ -1825,7 +1805,6 @@ extension Sensory_Api_V1_Audio_ThresholdSensitivity: SwiftProtobuf._ProtoNamePro
     2: .same(proto: "MEDIUM"),
     3: .same(proto: "HIGH"),
     4: .same(proto: "HIGHEST"),
-    5: .same(proto: "OFF"),
   ]
 }
 
@@ -2850,8 +2829,6 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
   public static let protoMessageName: String = _protobuf_package + ".TranscribeResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "audioEnergy"),
-    2: .same(proto: "transcript"),
-    3: .same(proto: "isPartialResult"),
     4: .same(proto: "wordList"),
     5: .same(proto: "hasVoiceActivity"),
     10: .same(proto: "postProcessingAction"),
@@ -2864,8 +2841,6 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularFloatField(value: &self.audioEnergy) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.transcript) }()
-      case 3: try { try decoder.decodeSingularBoolField(value: &self.isPartialResult) }()
       case 4: try { try decoder.decodeSingularMessageField(value: &self._wordList) }()
       case 5: try { try decoder.decodeSingularBoolField(value: &self.hasVoiceActivity_p) }()
       case 10: try { try decoder.decodeSingularMessageField(value: &self._postProcessingAction) }()
@@ -2882,12 +2857,6 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
     if self.audioEnergy != 0 {
       try visitor.visitSingularFloatField(value: self.audioEnergy, fieldNumber: 1)
     }
-    if !self.transcript.isEmpty {
-      try visitor.visitSingularStringField(value: self.transcript, fieldNumber: 2)
-    }
-    if self.isPartialResult != false {
-      try visitor.visitSingularBoolField(value: self.isPartialResult, fieldNumber: 3)
-    }
     try { if let v = self._wordList {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 4)
     } }()
@@ -2902,8 +2871,6 @@ extension Sensory_Api_V1_Audio_TranscribeResponse: SwiftProtobuf.Message, SwiftP
 
   public static func ==(lhs: Sensory_Api_V1_Audio_TranscribeResponse, rhs: Sensory_Api_V1_Audio_TranscribeResponse) -> Bool {
     if lhs.audioEnergy != rhs.audioEnergy {return false}
-    if lhs.transcript != rhs.transcript {return false}
-    if lhs.isPartialResult != rhs.isPartialResult {return false}
     if lhs._wordList != rhs._wordList {return false}
     if lhs.hasVoiceActivity_p != rhs.hasVoiceActivity_p {return false}
     if lhs._postProcessingAction != rhs._postProcessingAction {return false}
@@ -3593,8 +3560,8 @@ extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: SwiftProtobuf._ProtoNa
 extension Sensory_Api_V1_Audio_VoiceSynthesisConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".VoiceSynthesisConfig"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "audio"),
-    2: .same(proto: "voice"),
+    2: .same(proto: "modelName"),
+    3: .same(proto: "sampleRateHertz"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3603,30 +3570,26 @@ extension Sensory_Api_V1_Audio_VoiceSynthesisConfig: SwiftProtobuf.Message, Swif
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularMessageField(value: &self._audio) }()
-      case 2: try { try decoder.decodeSingularStringField(value: &self.voice) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
+      case 3: try { try decoder.decodeSingularInt32Field(value: &self.sampleRateHertz) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    try { if let v = self._audio {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    } }()
-    if !self.voice.isEmpty {
-      try visitor.visitSingularStringField(value: self.voice, fieldNumber: 2)
+    if !self.modelName.isEmpty {
+      try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 2)
+    }
+    if self.sampleRateHertz != 0 {
+      try visitor.visitSingularInt32Field(value: self.sampleRateHertz, fieldNumber: 3)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Sensory_Api_V1_Audio_VoiceSynthesisConfig, rhs: Sensory_Api_V1_Audio_VoiceSynthesisConfig) -> Bool {
-    if lhs._audio != rhs._audio {return false}
-    if lhs.voice != rhs.voice {return false}
+    if lhs.modelName != rhs.modelName {return false}
+    if lhs.sampleRateHertz != rhs.sampleRateHertz {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

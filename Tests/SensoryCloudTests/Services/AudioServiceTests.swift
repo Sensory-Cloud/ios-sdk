@@ -137,7 +137,6 @@ final class AudioServiceTests: XCTestCase {
     static var expectedTranscribeResponse: Sensory_Api_V1_Audio_TranscribeResponse {
         var rsp = Sensory_Api_V1_Audio_TranscribeResponse()
         rsp.audioEnergy = 0.25
-        rsp.transcript = "Some Transcription"
         return rsp
     }
     static var expectedTranscribeRequest: Sensory_Api_V1_Audio_TranscribeRequest {
@@ -161,8 +160,8 @@ final class AudioServiceTests: XCTestCase {
     }
     static var expectedSynthesisRequest: Sensory_Api_V1_Audio_SynthesizeSpeechRequest {
         var config = Sensory_Api_V1_Audio_VoiceSynthesisConfig()
-        config.voice = "Mock Voice"
-        config.audio = mockAudioConfig
+        config.modelName = "Mock Model"
+        config.sampleRateHertz = 16000
         var req = Sensory_Api_V1_Audio_SynthesizeSpeechRequest()
         req.config = config
         req.phrase = "Mock Phrase"
@@ -324,7 +323,8 @@ final class AudioServiceTests: XCTestCase {
 
         _ = try audioService.synthesizeSpeech(
             phrase: "Mock Phrase",
-            voiceName: "Mock Voice"
+            modelName: "Mock Model",
+            sampleRateHertz: 16000
         ) { response in
             XCTAssertEqual(AudioServiceTests.expectedSynthesisResponse, response)
             AudioServiceTests.expectResponse.fulfill()
