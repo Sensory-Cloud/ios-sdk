@@ -7,6 +7,7 @@
 
 import Foundation
 import AVFoundation
+import VideoToolbox
 import UIKit
 
 /// Enumeration for the camera positions on device
@@ -30,6 +31,9 @@ public class VideoStreamInteractor: NSObject {
 
     /// `AVCaptureSession`  being used, this may be used for showing a photo preview layer to the user
     public let session = AVCaptureSession()
+
+    /// The desired orientation of the captured images
+    public let orientation = AVCaptureVideoOrientation.portrait
 
     /// Delegate to receive processed photo data
     public weak var delegate: VideoStreamDelegate?
@@ -133,6 +137,11 @@ public class VideoStreamInteractor: NSObject {
         // video Output
         let output = AVCaptureVideoDataOutput()
         output.videoSettings = [kCVPixelBufferPixelFormatTypeKey as String: kCVPixelFormatType_32BGRA]
+        if let connection = output.connection(with: .video) {
+            connection.automaticallyAdjustsVideoMirroring = false
+            connection.isVideoMirrored = false
+            connection.videoOrientation = orientation
+        }
         output.setSampleBufferDelegate(self, queue: DispatchQueue.global(qos: .userInteractive))
         if session.canAddOutput(output) {
             session.addOutput(output)
@@ -167,12 +176,24 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
     /// This function should not be directly called by an SDK implementer
     public func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
 
+        // Make sure that the connection is using the correct orientation
+        if connection.videoOrientation != orientation {
+            connection.videoOrientation = orientation
+        }
+
         if !photoRequested { return }
         photoRequested = false
 
         if delegate == nil { return }
 
-        guard let image = getImage(from: sampleBuffer) else {
+        var image: CGImage?
+        if let buffer = sampleBuffer.imageBuffer {
+            VTCreateCGImageFromCVPixelBuffer(buffer, options: nil, imageOut: &image)
+        } else {
+            delegate?.takePhotoDidFail(VideoStreamError.photoExportError)
+            return
+        }
+        guard let image = image else {
             delegate?.takePhotoDidFail(VideoStreamError.photoExportError)
             return
         }
@@ -185,42 +206,12 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         delegate?.didTakePhoto(data)
     }
 
-    func getImage(from sampleBuffer: CMSampleBuffer) -> CGImage? {
-        guard let imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else {
-            return nil
-        }
-
-        CVPixelBufferLockBaseAddress(imageBuffer, .readOnly)
-        defer { CVPixelBufferUnlockBaseAddress(imageBuffer, .readOnly) }
-        guard let context = CGContext(
-            data: CVPixelBufferGetBaseAddress(imageBuffer),
-            width: CVPixelBufferGetWidth(imageBuffer),
-            height: CVPixelBufferGetHeight(imageBuffer),
-            bitsPerComponent: 8,
-            bytesPerRow: CVPixelBufferGetBytesPerRow(imageBuffer),
-            space: CGColorSpaceCreateDeviceRGB(),
-            bitmapInfo: CGBitmapInfo(rawValue: CGImageAlphaInfo.premultipliedFirst.rawValue | CGBitmapInfo.byteOrder32Little.rawValue).rawValue
-        ) else {
-            return nil
-        }
-
-        guard let cgImage = context.makeImage() else {
-            return nil
-        }
-
-        return cgImage
-    }
-
     func imagePostProcessing(on baseImage: CGImage) -> Data? {
-        // Some of the math here may initially look a bit off.
-        // For some reason, the preview image comes w/ a 90 degree rotation
-        // It's easiest to un-rotate the image at the end, but it makes the widths/heights confusing
-
         let width = Config.photoWidth
         let height = Config.photoHeight
 
         // First correct the aspect ratio of the image
-        let targetAspectRatio = Double(height)/Double(width)
+        let targetAspectRatio = Double(width)/Double(height)
         var croppedOpt: CGImage?
         if targetAspectRatio < Double(baseImage.width) / Double(baseImage.height) {
             // crop width to match aspect ratio
@@ -249,8 +240,8 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         // Second, scale down the image to the proper size
         guard let context = CGContext(
             data: nil,
-            width: height,
-            height: width,
+            width: width,
+            height: height,
             bitsPerComponent: cropped.bitsPerComponent,
             bytesPerRow: cropped.bytesPerRow,
             space: CGColorSpaceCreateDeviceRGB(),
@@ -258,14 +249,13 @@ extension VideoStreamInteractor: AVCaptureVideoDataOutputSampleBufferDelegate {
         ) else {
             return nil
         }
-        context.draw(cropped, in: CGRect(x: 0, y: 0, width: height, height: width))
+        context.draw(cropped, in: CGRect(x: 0, y: 0, width: width, height: height))
 
         guard let resized = context.makeImage() else {
             return nil
         }
 
         // Third, export as a jpeg
-        let image = UIImage(cgImage: resized, scale: 0, orientation: .right)
-        return image.jpegData(compressionQuality: Config.jpegCompression)
+        return UIImage(cgImage: resized).jpegData(compressionQuality: Config.jpegCompression)
     }
 }

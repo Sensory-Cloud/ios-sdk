@@ -107,7 +107,7 @@ public class Config {
     /// Photo pixel width, defaults to 480 pixels
     public static var photoWidth = 480
     /// Jpeg Compression factor used, a value between 0 and 1 where 0 is most compressed, and 1 is highest quality
-    public static var jpegCompression: Double = 0.5 {
+    public static var jpegCompression: Double = 0.95 {
         didSet {
             if jpegCompression > 1 {
                 jpegCompression = 1

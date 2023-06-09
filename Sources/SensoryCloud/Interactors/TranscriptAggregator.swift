@@ -10,9 +10,13 @@ import Foundation
 /// A structure that aggregates and stores transcription responses
 ///
 /// This class can maintain the full transcript returned from the server's windowed response
-class TranscriptAggregator {
+public class TranscriptAggregator {
     private let filler = Sensory_Api_V1_Audio_TranscribeWord()
     private var wordList: [Sensory_Api_V1_Audio_TranscribeWord] = []
+
+    public init() {
+        return
+    }
 
     /// Processes a single sliding-window response from the server
     ///
