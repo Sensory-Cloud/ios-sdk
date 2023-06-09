@@ -1,6 +1,12 @@
 {
   "warnings": [
-
+    {
+      "file": "/Users/niles/ios-sdk/Sources/SensoryCloud/Interactors/TranscriptAggregator.swift",
+      "line": 17,
+      "symbol": "TranscriptAggregator.init()",
+      "symbol_kind": "source.lang.swift.decl.function.method.instance",
+      "warning": "undocumented"
+    }
   ],
   "source_directory": "/Users/niles/ios-sdk"
 }
