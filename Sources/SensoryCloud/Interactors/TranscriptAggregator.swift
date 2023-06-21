@@ -14,6 +14,7 @@ public class TranscriptAggregator {
     private let filler = Sensory_Api_V1_Audio_TranscribeWord()
     private var wordList: [Sensory_Api_V1_Audio_TranscribeWord] = []
 
+    /// Returns a new transcript aggregator
     public init() {
         return
     }

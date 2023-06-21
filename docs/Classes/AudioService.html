@@ -17,7 +17,7 @@
     <a title="AudioService Class Reference"></a>
     <header>
       <div class="content-wrapper">
-        <p><a href="../index.html">SensoryCloud Docs</a> (99% documented)</p>
+        <p><a href="../index.html">SensoryCloud Docs</a> (100% documented)</p>
         <div class="header-right">
           <form role="search" action="../search.json">
             <input type="text" placeholder="Search documentation" data-typeahead>
@@ -525,9 +525,9 @@ return a token upon successful enrollment regardless of server configuration</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName6userID12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_u1_v1_c1_wX8ResponseVGSS_S2SSgAA0a1_u1_v1_C21_ThresholdSensitivityOyAPctKF"></a>
-                    <a name="//apple_ref/swift/Method/validateTrigger(modelName:userID:languageCode:sensitivity:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName6userID12languageCode11sensitivity15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_u1_v1_c1_wX8ResponseVGSS_S2SSgAA0a1_u1_v1_C21_ThresholdSensitivityOyAPctKF">validateTrigger(modelName:<wbr>userID:<wbr>languageCode:<wbr>sensitivity:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName6userID12languageCode11sensitivity4topN15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_v1_w1_c1_xY8ResponseVGSS_S2SSgAA0a1_v1_w1_C21_ThresholdSensitivityOs5Int32VyAQctKF"></a>
+                    <a name="//apple_ref/swift/Method/validateTrigger(modelName:userID:languageCode:sensitivity:topN:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC15validateTrigger9modelName6userID12languageCode11sensitivity4topN15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C21_ValidateEventRequestVAA0a1_v1_w1_c1_xY8ResponseVGSS_S2SSgAA0a1_v1_w1_C21_ThresholdSensitivityOs5Int32VyAQctKF">validateTrigger(modelName:<wbr>userID:<wbr>languageCode:<wbr>sensitivity:<wbr>topN:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -554,6 +554,7 @@ return a token upon successful enrollment regardless of server configuration</p>
     <span class="nv">userID</span><span class="p">:</span> <span class="kt">String</span><span class="p">,</span>
     <span class="nv">languageCode</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
     <span class="nv">sensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span><span class="p">,</span>
+    <span class="nv">topN</span><span class="p">:</span> <span class="kt">Int32</span> <span class="o">=</span> <span class="mi">5</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_ValidateEventResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_ValidateEventRequest</span><span class="p">,</span>
@@ -611,6 +612,18 @@ return a token upon successful enrollment regardless of server configuration</p>
                               <td>
                                 <div>
                                   <p>How sensitive the model should be to false accepts</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>topN</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>When using the topN model, this determines how many results are returned</p>
                                 </div>
                               </td>
                             </tr>
@@ -868,9 +881,9 @@ return a token upon successful enrollment regardless of server configuration</p>
                 <li class="item">
                   <div>
                     <code>
-                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode31enablePunctuationCapitalization17doSingleUtterance14vadSensitivity0R8Duration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a8_Api_V1_C19_TranscribeResponseVGSS_S2SSgS2bAA0a8_Api_V1_c10_ThresholdS0OSfyASctKF"></a>
-                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:userID:languageCode:enablePunctuationCapitalization:doSingleUtterance:vadSensitivity:vadDuration:onStreamReceive:)" class="dashAnchor"></a>
-                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode31enablePunctuationCapitalization17doSingleUtterance14vadSensitivity0R8Duration15onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a8_Api_V1_C19_TranscribeResponseVGSS_S2SSgS2bAA0a8_Api_V1_c10_ThresholdS0OSfyASctKF">transcribeAudio(modelName:<wbr>userID:<wbr>languageCode:<wbr>enablePunctuationCapitalization:<wbr>doSingleUtterance:<wbr>vadSensitivity:<wbr>vadDuration:<wbr>onStreamReceive:<wbr>)</a>
+                    <a name="/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode31enablePunctuationCapitalization17doSingleUtterance14vadSensitivity0R8Duration0O11OfflineMode13wakewordModel0wS015onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a8_Api_V1_C19_TranscribeResponseVGSS_S2SSgS2bAA0a8_Api_V1_c10_ThresholdS0OSfSbAxZyAVctKF"></a>
+                    <a name="//apple_ref/swift/Method/transcribeAudio(modelName:userID:languageCode:enablePunctuationCapitalization:doSingleUtterance:vadSensitivity:vadDuration:doOfflineMode:wakewordModel:wakewordSensitivity:onStreamReceive:)" class="dashAnchor"></a>
+                    <a class="token" href="#/s:12SensoryCloud12AudioServiceC010transcribeC09modelName6userID12languageCode31enablePunctuationCapitalization17doSingleUtterance14vadSensitivity0R8Duration0O11OfflineMode13wakewordModel0wS015onStreamReceive4GRPC26BidirectionalStreamingCallVyAA0a8_Api_V1_C18_TranscribeRequestVAA0a8_Api_V1_C19_TranscribeResponseVGSS_S2SSgS2bAA0a8_Api_V1_c10_ThresholdS0OSfSbAxZyAVctKF">transcribeAudio(modelName:<wbr>userID:<wbr>languageCode:<wbr>enablePunctuationCapitalization:<wbr>doSingleUtterance:<wbr>vadSensitivity:<wbr>vadDuration:<wbr>doOfflineMode:<wbr>wakewordModel:<wbr>wakewordSensitivity:<wbr>onStreamReceive:<wbr>)</a>
                     </code>
                   </div>
                   <div class="height-container">
@@ -904,6 +917,9 @@ return a token upon successful enrollment regardless of server configuration</p>
     <span class="nv">doSingleUtterance</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
     <span class="nv">vadSensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
     <span class="nv">vadDuration</span><span class="p">:</span> <span class="kt">Float</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+    <span class="nv">doOfflineMode</span><span class="p">:</span> <span class="kt">Bool</span> <span class="o">=</span> <span class="kc">false</span><span class="p">,</span>
+    <span class="nv">wakewordModel</span><span class="p">:</span> <span class="kt">String</span><span class="p">?</span> <span class="o">=</span> <span class="kc">nil</span><span class="p">,</span>
+    <span class="nv">wakewordSensitivity</span><span class="p">:</span> <span class="kt">Sensory_Api_V1_Audio_ThresholdSensitivity</span> <span class="o">=</span> <span class="o">.</span><span class="n">low</span><span class="p">,</span>
     <span class="nv">onStreamReceive</span><span class="p">:</span> <span class="kd">@escaping</span> <span class="p">((</span><span class="kt">Sensory_Api_V1_Audio_TranscribeResponse</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kt">Void</span><span class="p">)</span>
 <span class="p">)</span> <span class="k">throws</span> <span class="o">-&gt;</span> <span class="kt">BidirectionalStreamingCall</span><span class="o">&lt;</span>
     <span class="kt">Sensory_Api_V1_Audio_TranscribeRequest</span><span class="p">,</span>
@@ -997,6 +1013,42 @@ return a token upon successful enrollment regardless of server configuration</p>
                               <td>
                                 <div>
                                   <p>The duration of silence to detect before automatically closing the stream as a number of seconds. Defaults to 1</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>doOfflineMode</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Enables offline transcriptions. This mode is optimized for uploading audio files instead of streaming from a microphone.</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wakewordModel</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>Optional wakeword model to require recognition on before beginning a transcript, leave nil to disable</p>
+                                </div>
+                              </td>
+                            </tr>
+                            <tr>
+                              <td>
+                                <code>
+                                <em>wakewordSensitivity</em>
+                                </code>
+                              </td>
+                              <td>
+                                <div>
+                                  <p>The sensitivity to use for the wakeword model, ignored if wakeword model is nil</p>
                                 </div>
                               </td>
                             </tr>
@@ -1111,7 +1163,7 @@ return a token upon successful enrollment regardless of server configuration</p>
           </section>
         </section>
         <section id="footer">
-          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-06-09)</p>
+          <p>&copy; 2023 <a class="link" href="" target="_blank" rel="external noopener"></a>. All rights reserved. (Last updated: 2023-06-21)</p>
           <p>Generated by <a class="link" href="https://github.com/realm/jazzy" target="_blank" rel="external noopener">jazzy ♪♫ v0.14.3</a>, a <a class="link" href="https://realm.io" target="_blank" rel="external noopener">Realm</a> project.</p>
         </section>
       </article>
