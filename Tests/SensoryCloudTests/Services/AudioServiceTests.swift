@@ -94,6 +94,7 @@ final class AudioServiceTests: XCTestCase {
         config.modelName = "Trigger Model"
         config.userID = "Some User"
         config.sensitivity = .medium
+        config.topN = 5
         var req = Sensory_Api_V1_Audio_ValidateEventRequest()
         req.config = config
         return req
