@@ -205,6 +205,7 @@ public class AudioService {
     ///   - userID: Unique user identifier
     ///   - languageCode: Preferred language code for the user, pass in nil to use the value from config
     ///   - sensitivity: How sensitive the model should be to false accepts
+    ///   - topN: When using the topN model, this determines how many results are returned
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -213,6 +214,7 @@ public class AudioService {
         userID: String,
         languageCode: String? = nil,
         sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity,
+        topN: Int32 = 5,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_ValidateEventResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_ValidateEventRequest,
@@ -235,6 +237,7 @@ public class AudioService {
         config.modelName = modelName
         config.userID = userID
         config.sensitivity = sensitivity
+        config.topN = topN
 
         var request = Sensory_Api_V1_Audio_ValidateEventRequest()
         request.config = config
@@ -353,6 +356,9 @@ public class AudioService {
     ///   - doSingleUtterance: If true, the server will automatically close the stream once the user stops talking
     ///   - vadSensitivity: The sensitivity of the voice activity detector. Defaults to `low`
     ///   - vadDuration: The duration of silence to detect before automatically closing the stream as a number of seconds. Defaults to 1
+    ///   - doOfflineMode: Enables offline transcriptions. This mode is optimized for uploading audio files instead of streaming from a microphone.
+    ///   - wakewordModel: Optional wakeword model to require recognition on before beginning a transcript, leave nil to disable
+    ///   - wakewordSensitivity: The sensitivity to use for the wakeword model, ignored if wakeword model is nil
     ///   - onStreamReceive: Handler function to handle response sent from the server
     /// - Throws: `NetworkError` if an error occurs while processing the cached server url
     /// - Returns: Bidirectional stream that can be used to send audio data to the server
@@ -364,6 +370,9 @@ public class AudioService {
         doSingleUtterance: Bool = false,
         vadSensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .low,
         vadDuration: Float = 1,
+        doOfflineMode: Bool = false,
+        wakewordModel: String? = nil,
+        wakewordSensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .low,
         onStreamReceive: @escaping ((Sensory_Api_V1_Audio_TranscribeResponse) -> Void)
     ) throws -> BidirectionalStreamingCall<
         Sensory_Api_V1_Audio_TranscribeRequest,
@@ -389,6 +398,14 @@ public class AudioService {
         config.doSingleUtterance = doSingleUtterance
         config.vadSensitivity = vadSensitivity
         config.vadDuration = vadDuration
+        config.doOfflineMode = doOfflineMode
+
+        if let wakewordModel = wakewordModel {
+            var wakewordConfig = Sensory_Api_V1_Audio_TranscribeEventConfig()
+            wakewordConfig.modelName = wakewordModel
+            wakewordConfig.sensitivity = wakewordSensitivity
+            config.wakeWordConfig = wakewordConfig
+        }
 
         var request = Sensory_Api_V1_Audio_TranscribeRequest()
         request.config = config

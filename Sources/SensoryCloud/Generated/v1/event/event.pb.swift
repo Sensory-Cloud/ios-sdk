@@ -84,6 +84,9 @@ public struct Sensory_Api_V1_Event_UsageEvent {
   /// Billable function, if applicable
   public var billableFunction: Sensory_Api_Common_ModelType = .unknown
 
+  /// The number of tokens processed
+  public var tokenCount: Int64 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -378,6 +381,7 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
     10: .same(proto: "videoFrameCount"),
     11: .same(proto: "tenantId"),
     12: .same(proto: "billableFunction"),
+    13: .same(proto: "tokenCount"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -398,6 +402,7 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
       case 10: try { try decoder.decodeSingularInt64Field(value: &self.videoFrameCount) }()
       case 11: try { try decoder.decodeSingularStringField(value: &self.tenantID) }()
       case 12: try { try decoder.decodeSingularEnumField(value: &self.billableFunction) }()
+      case 13: try { try decoder.decodeSingularInt64Field(value: &self.tokenCount) }()
       default: break
       }
     }
@@ -444,6 +449,9 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
     if self.billableFunction != .unknown {
       try visitor.visitSingularEnumField(value: self.billableFunction, fieldNumber: 12)
     }
+    if self.tokenCount != 0 {
+      try visitor.visitSingularInt64Field(value: self.tokenCount, fieldNumber: 13)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -460,6 +468,7 @@ extension Sensory_Api_V1_Event_UsageEvent: SwiftProtobuf.Message, SwiftProtobuf.
     if lhs.videoFrameCount != rhs.videoFrameCount {return false}
     if lhs.tenantID != rhs.tenantID {return false}
     if lhs.billableFunction != rhs.billableFunction {return false}
+    if lhs.tokenCount != rhs.tokenCount {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

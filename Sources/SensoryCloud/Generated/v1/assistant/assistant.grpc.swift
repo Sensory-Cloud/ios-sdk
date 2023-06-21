@@ -26,17 +26,15 @@ import NIOConcurrencyHelpers
 import SwiftProtobuf
 
 
-/// Serivce to comunicate with an assistant
-///
 /// Usage: instantiate `Sensory_Api_V1_Assistant_AssistantServiceClient`, then call methods of this protocol to make API calls.
 public protocol Sensory_Api_V1_Assistant_AssistantServiceClientProtocol: GRPCClient {
   var serviceName: String { get }
   var interceptors: Sensory_Api_V1_Assistant_AssistantServiceClientInterceptorFactoryProtocol? { get }
 
-  func processMessage(
-    callOptions: CallOptions?,
-    handler: @escaping (Sensory_Api_V1_Assistant_AssistantMessageResponse) -> Void
-  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse>
+  func textChat(
+    _ request: Sensory_Api_V1_Assistant_TextChatRequest,
+    callOptions: CallOptions?
+  ) -> UnaryCall<Sensory_Api_V1_Assistant_TextChatRequest, Sensory_Api_V1_Assistant_TextChatResponse>
 }
 
 extension Sensory_Api_V1_Assistant_AssistantServiceClientProtocol {
@@ -44,25 +42,22 @@ extension Sensory_Api_V1_Assistant_AssistantServiceClientProtocol {
     return "sensory.api.v1.assistant.AssistantService"
   }
 
-  /// Sends and process messages from a virtual assistant
+  /// Allows a user to verify their own email. Will fail if the email is already verified.
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
   ///
-  /// Callers should use the `send` method on the returned object to send messages
-  /// to the server. The caller should send an `.end` after the final message has been sent.
-  ///
   /// - Parameters:
+  ///   - request: Request to send to TextChat.
   ///   - callOptions: Call options.
-  ///   - handler: A closure called when each response is received from the server.
-  /// - Returns: A `ClientStreamingCall` with futures for the metadata and status.
-  public func processMessage(
-    callOptions: CallOptions? = nil,
-    handler: @escaping (Sensory_Api_V1_Assistant_AssistantMessageResponse) -> Void
-  ) -> BidirectionalStreamingCall<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse> {
-    return self.makeBidirectionalStreamingCall(
-      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage.path,
+  /// - Returns: A `UnaryCall` with futures for the metadata, status and response.
+  public func textChat(
+    _ request: Sensory_Api_V1_Assistant_TextChatRequest,
+    callOptions: CallOptions? = nil
+  ) -> UnaryCall<Sensory_Api_V1_Assistant_TextChatRequest, Sensory_Api_V1_Assistant_TextChatResponse> {
+    return self.makeUnaryCall(
+      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.textChat.path,
+      request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? [],
-      handler: handler
+      interceptors: self.interceptors?.makeTextChatInterceptors() ?? []
     )
   }
 }
@@ -127,15 +122,15 @@ public struct Sensory_Api_V1_Assistant_AssistantServiceNIOClient: Sensory_Api_V1
 }
 
 #if compiler(>=5.6)
-/// Serivce to comunicate with an assistant
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 public protocol Sensory_Api_V1_Assistant_AssistantServiceAsyncClientProtocol: GRPCClient {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Sensory_Api_V1_Assistant_AssistantServiceClientInterceptorFactoryProtocol? { get }
 
-  func makeProcessMessageCall(
+  func makeTextChatCall(
+    _ request: Sensory_Api_V1_Assistant_TextChatRequest,
     callOptions: CallOptions?
-  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse>
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Assistant_TextChatRequest, Sensory_Api_V1_Assistant_TextChatResponse>
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -148,40 +143,30 @@ extension Sensory_Api_V1_Assistant_AssistantServiceAsyncClientProtocol {
     return nil
   }
 
-  public func makeProcessMessageCall(
+  public func makeTextChatCall(
+    _ request: Sensory_Api_V1_Assistant_TextChatRequest,
     callOptions: CallOptions? = nil
-  ) -> GRPCAsyncBidirectionalStreamingCall<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse> {
-    return self.makeAsyncBidirectionalStreamingCall(
-      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage.path,
+  ) -> GRPCAsyncUnaryCall<Sensory_Api_V1_Assistant_TextChatRequest, Sensory_Api_V1_Assistant_TextChatResponse> {
+    return self.makeAsyncUnaryCall(
+      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.textChat.path,
+      request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? []
+      interceptors: self.interceptors?.makeTextChatInterceptors() ?? []
     )
   }
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 extension Sensory_Api_V1_Assistant_AssistantServiceAsyncClientProtocol {
-  public func processMessage<RequestStream>(
-    _ requests: RequestStream,
+  public func textChat(
+    _ request: Sensory_Api_V1_Assistant_TextChatRequest,
     callOptions: CallOptions? = nil
-  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Assistant_AssistantMessageResponse> where RequestStream: Sequence, RequestStream.Element == Sensory_Api_V1_Assistant_AssistantMessageRequest {
-    return self.performAsyncBidirectionalStreamingCall(
-      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage.path,
-      requests: requests,
+  ) async throws -> Sensory_Api_V1_Assistant_TextChatResponse {
+    return try await self.performAsyncUnaryCall(
+      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.textChat.path,
+      request: request,
       callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? []
-    )
-  }
-
-  public func processMessage<RequestStream>(
-    _ requests: RequestStream,
-    callOptions: CallOptions? = nil
-  ) -> GRPCAsyncResponseStream<Sensory_Api_V1_Assistant_AssistantMessageResponse> where RequestStream: AsyncSequence & Sendable, RequestStream.Element == Sensory_Api_V1_Assistant_AssistantMessageRequest {
-    return self.performAsyncBidirectionalStreamingCall(
-      path: Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage.path,
-      requests: requests,
-      callOptions: callOptions ?? self.defaultCallOptions,
-      interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? []
+      interceptors: self.interceptors?.makeTextChatInterceptors() ?? []
     )
   }
 }
@@ -207,8 +192,8 @@ public struct Sensory_Api_V1_Assistant_AssistantServiceAsyncClient: Sensory_Api_
 
 public protocol Sensory_Api_V1_Assistant_AssistantServiceClientInterceptorFactoryProtocol: GRPCSendable {
 
-  /// - Returns: Interceptors to use when invoking 'processMessage'.
-  func makeProcessMessageInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse>]
+  /// - Returns: Interceptors to use when invoking 'textChat'.
+  func makeTextChatInterceptors() -> [ClientInterceptor<Sensory_Api_V1_Assistant_TextChatRequest, Sensory_Api_V1_Assistant_TextChatResponse>]
 }
 
 public enum Sensory_Api_V1_Assistant_AssistantServiceClientMetadata {
@@ -216,28 +201,26 @@ public enum Sensory_Api_V1_Assistant_AssistantServiceClientMetadata {
     name: "AssistantService",
     fullName: "sensory.api.v1.assistant.AssistantService",
     methods: [
-      Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.processMessage,
+      Sensory_Api_V1_Assistant_AssistantServiceClientMetadata.Methods.textChat,
     ]
   )
 
   public enum Methods {
-    public static let processMessage = GRPCMethodDescriptor(
-      name: "ProcessMessage",
-      path: "/sensory.api.v1.assistant.AssistantService/ProcessMessage",
-      type: GRPCCallType.bidirectionalStreaming
+    public static let textChat = GRPCMethodDescriptor(
+      name: "TextChat",
+      path: "/sensory.api.v1.assistant.AssistantService/TextChat",
+      type: GRPCCallType.unary
     )
   }
 }
 
-/// Serivce to comunicate with an assistant
-///
 /// To build a server, implement a class that conforms to this protocol.
 public protocol Sensory_Api_V1_Assistant_AssistantServiceProvider: CallHandlerProvider {
   var interceptors: Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol? { get }
 
-  /// Sends and process messages from a virtual assistant
+  /// Allows a user to verify their own email. Will fail if the email is already verified.
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
-  func processMessage(context: StreamingResponseCallContext<Sensory_Api_V1_Assistant_AssistantMessageResponse>) -> EventLoopFuture<(StreamEvent<Sensory_Api_V1_Assistant_AssistantMessageRequest>) -> Void>
+  func textChat(request: Sensory_Api_V1_Assistant_TextChatRequest, context: StatusOnlyCallContext) -> EventLoopFuture<Sensory_Api_V1_Assistant_TextChatResponse>
 }
 
 extension Sensory_Api_V1_Assistant_AssistantServiceProvider {
@@ -252,13 +235,13 @@ extension Sensory_Api_V1_Assistant_AssistantServiceProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
-    case "ProcessMessage":
-      return BidirectionalStreamingServerHandler(
+    case "TextChat":
+      return UnaryServerHandler(
         context: context,
-        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Assistant_AssistantMessageRequest>(),
-        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Assistant_AssistantMessageResponse>(),
-        interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? [],
-        observerFactory: self.processMessage(context:)
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Assistant_TextChatRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Assistant_TextChatResponse>(),
+        interceptors: self.interceptors?.makeTextChatInterceptors() ?? [],
+        userFunction: self.textChat(request:context:)
       )
 
     default:
@@ -269,21 +252,18 @@ extension Sensory_Api_V1_Assistant_AssistantServiceProvider {
 
 #if compiler(>=5.6)
 
-/// Serivce to comunicate with an assistant
-///
 /// To implement a server, implement an object which conforms to this protocol.
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
 public protocol Sensory_Api_V1_Assistant_AssistantServiceAsyncProvider: CallHandlerProvider {
   static var serviceDescriptor: GRPCServiceDescriptor { get }
   var interceptors: Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol? { get }
 
-  /// Sends and process messages from a virtual assistant
+  /// Allows a user to verify their own email. Will fail if the email is already verified.
   /// Authorization metadata is required {"authorization": "Bearer <TOKEN>"}
-  @Sendable func processMessage(
-    requestStream: GRPCAsyncRequestStream<Sensory_Api_V1_Assistant_AssistantMessageRequest>,
-    responseStream: GRPCAsyncResponseStreamWriter<Sensory_Api_V1_Assistant_AssistantMessageResponse>,
+  @Sendable func textChat(
+    request: Sensory_Api_V1_Assistant_TextChatRequest,
     context: GRPCAsyncServerCallContext
-  ) async throws
+  ) async throws -> Sensory_Api_V1_Assistant_TextChatResponse
 }
 
 @available(macOS 10.15, iOS 13, tvOS 13, watchOS 6, *)
@@ -305,13 +285,13 @@ extension Sensory_Api_V1_Assistant_AssistantServiceAsyncProvider {
     context: CallHandlerContext
   ) -> GRPCServerHandlerProtocol? {
     switch name {
-    case "ProcessMessage":
+    case "TextChat":
       return GRPCAsyncServerHandler(
         context: context,
-        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Assistant_AssistantMessageRequest>(),
-        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Assistant_AssistantMessageResponse>(),
-        interceptors: self.interceptors?.makeProcessMessageInterceptors() ?? [],
-        wrapping: self.processMessage(requestStream:responseStream:context:)
+        requestDeserializer: ProtobufDeserializer<Sensory_Api_V1_Assistant_TextChatRequest>(),
+        responseSerializer: ProtobufSerializer<Sensory_Api_V1_Assistant_TextChatResponse>(),
+        interceptors: self.interceptors?.makeTextChatInterceptors() ?? [],
+        wrapping: self.textChat(request:context:)
       )
 
     default:
@@ -324,9 +304,9 @@ extension Sensory_Api_V1_Assistant_AssistantServiceAsyncProvider {
 
 public protocol Sensory_Api_V1_Assistant_AssistantServiceServerInterceptorFactoryProtocol {
 
-  /// - Returns: Interceptors to use when handling 'processMessage'.
+  /// - Returns: Interceptors to use when handling 'textChat'.
   ///   Defaults to calling `self.makeInterceptors()`.
-  func makeProcessMessageInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Assistant_AssistantMessageRequest, Sensory_Api_V1_Assistant_AssistantMessageResponse>]
+  func makeTextChatInterceptors() -> [ServerInterceptor<Sensory_Api_V1_Assistant_TextChatRequest, Sensory_Api_V1_Assistant_TextChatResponse>]
 }
 
 public enum Sensory_Api_V1_Assistant_AssistantServiceServerMetadata {
@@ -334,15 +314,15 @@ public enum Sensory_Api_V1_Assistant_AssistantServiceServerMetadata {
     name: "AssistantService",
     fullName: "sensory.api.v1.assistant.AssistantService",
     methods: [
-      Sensory_Api_V1_Assistant_AssistantServiceServerMetadata.Methods.processMessage,
+      Sensory_Api_V1_Assistant_AssistantServiceServerMetadata.Methods.textChat,
     ]
   )
 
   public enum Methods {
-    public static let processMessage = GRPCMethodDescriptor(
-      name: "ProcessMessage",
-      path: "/sensory.api.v1.assistant.AssistantService/ProcessMessage",
-      type: GRPCCallType.bidirectionalStreaming
+    public static let textChat = GRPCMethodDescriptor(
+      name: "TextChat",
+      path: "/sensory.api.v1.assistant.AssistantService/TextChat",
+      type: GRPCCallType.unary
     )
   }
 }

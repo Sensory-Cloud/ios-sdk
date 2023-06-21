@@ -694,17 +694,20 @@ public struct Sensory_Api_V1_Audio_TranscribeRequest {
   // methods supported on all messages.
 
   /// The streaming request, which is either a config or audio content.
-  public var streamingRequest: Sensory_Api_V1_Audio_TranscribeRequest.OneOf_StreamingRequest? = nil
+  public var streamingRequest: OneOf_StreamingRequest? {
+    get {return _storage._streamingRequest}
+    set {_uniqueStorage()._streamingRequest = newValue}
+  }
 
   /// Provides information that specifies how to process the
   /// request. The first `TranscribeRequest` message must contain a
   /// `config`  message.
   public var config: Sensory_Api_V1_Audio_TranscribeConfig {
     get {
-      if case .config(let v)? = streamingRequest {return v}
+      if case .config(let v)? = _storage._streamingRequest {return v}
       return Sensory_Api_V1_Audio_TranscribeConfig()
     }
-    set {streamingRequest = .config(newValue)}
+    set {_uniqueStorage()._streamingRequest = .config(newValue)}
   }
 
   /// The audio data to be recognized. Sequential chunks of audio data are sent
@@ -715,21 +718,21 @@ public struct Sensory_Api_V1_Audio_TranscribeRequest {
   /// `TranscribeConfig`.
   public var audioContent: Data {
     get {
-      if case .audioContent(let v)? = streamingRequest {return v}
+      if case .audioContent(let v)? = _storage._streamingRequest {return v}
       return Data()
     }
-    set {streamingRequest = .audioContent(newValue)}
+    set {_uniqueStorage()._streamingRequest = .audioContent(newValue)}
   }
 
   /// Message used to instruct the audio recognition engine to flush or reset.
   public var postProcessingAction: Sensory_Api_V1_Audio_AudioRequestPostProcessingAction {
-    get {return _postProcessingAction ?? Sensory_Api_V1_Audio_AudioRequestPostProcessingAction()}
-    set {_postProcessingAction = newValue}
+    get {return _storage._postProcessingAction ?? Sensory_Api_V1_Audio_AudioRequestPostProcessingAction()}
+    set {_uniqueStorage()._postProcessingAction = newValue}
   }
   /// Returns true if `postProcessingAction` has been explicitly set.
-  public var hasPostProcessingAction: Bool {return self._postProcessingAction != nil}
+  public var hasPostProcessingAction: Bool {return _storage._postProcessingAction != nil}
   /// Clears the value of `postProcessingAction`. Subsequent reads from it will return its default value.
-  public mutating func clearPostProcessingAction() {self._postProcessingAction = nil}
+  public mutating func clearPostProcessingAction() {_uniqueStorage()._postProcessingAction = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -769,7 +772,7 @@ public struct Sensory_Api_V1_Audio_TranscribeRequest {
 
   public init() {}
 
-  fileprivate var _postProcessingAction: Sensory_Api_V1_Audio_AudioRequestPostProcessingAction? = nil
+  fileprivate var _storage = _StorageClass.defaultInstance
 }
 
 /// The top-level message sent by the client for the `SynthesizeSpeech` method.
@@ -888,6 +891,26 @@ public struct Sensory_Api_V1_Audio_AuthenticateResponse {
   fileprivate var _token: Sensory_Api_Common_TokenResponse? = nil
 }
 
+public struct Sensory_Api_V1_Audio_SoundIdTopNResponse {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Indicates the id of the particular sound that was recognized.
+  /// Useful for combined models where multiple sound events can be recognized by the same model.
+  public var resultID: String = String()
+
+  /// Logit value for the given result
+  public var logitScore: Float = 0
+
+  /// Probability value for the given result
+  public var probabilityScore: Float = 0
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// Response from a ValidateEventRequest
 public struct Sensory_Api_V1_Audio_ValidateEventResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -907,8 +930,15 @@ public struct Sensory_Api_V1_Audio_ValidateEventResponse {
   /// The score of the event between -100 to +100. Smaller values typically indicate an invalid sound while larger values would generally indicate a detected sound.
   public var score: Float = 0
 
+  /// Array of the top N most likely results
+  public var topNresponse: [Sensory_Api_V1_Audio_SoundIdTopNResponse] = []
+
   /// If a post processing audio action was requested, this will be populated with the specific
   /// action that was completed along with the actionId optionally set by the client.
+  public var resultStartTime: Float = 0
+
+  public var resultEndTime: Float = 0
+
   public var postProcessingAction: Sensory_Api_V1_Audio_AudioResponsePostProcessingAction {
     get {return _postProcessingAction ?? Sensory_Api_V1_Audio_AudioResponsePostProcessingAction()}
     set {_postProcessingAction = newValue}
@@ -1381,6 +1411,10 @@ public struct Sensory_Api_V1_Audio_ValidateEventConfig {
   /// The model sensitivity
   public var sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .lowest
 
+  /// TopN is for the sound_id_topn model and dictates the top N most likely
+  /// results to return
+  public var topN: Int32 = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -1571,6 +1605,24 @@ public struct Sensory_Api_V1_Audio_CustomVocabularyWords {
   public init() {}
 }
 
+/// Provides information for an audio-based event recognition
+public struct Sensory_Api_V1_Audio_TranscribeEventConfig {
+  // SwiftProtobuf.Message conformance is added in an extension below. See the
+  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
+  // methods supported on all messages.
+
+  /// Name of model to validate against
+  /// Models can be retrieved from the GetModels() gRPC call
+  public var modelName: String = String()
+
+  /// The model sensitivity
+  public var sensitivity: Sensory_Api_V1_Audio_ThresholdSensitivity = .lowest
+
+  public var unknownFields = SwiftProtobuf.UnknownStorage()
+
+  public init() {}
+}
+
 /// Provides information for an audio-based transcription
 public struct Sensory_Api_V1_Audio_TranscribeConfig {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
@@ -1625,12 +1677,27 @@ public struct Sensory_Api_V1_Audio_TranscribeConfig {
   /// Clears the value of `customWordList`. Subsequent reads from it will return its default value.
   public mutating func clearCustomWordList() {self._customWordList = nil}
 
+  /// Offline mode is faster at processing large transcripts, but increases the latency in individual transcription responses.
+  /// This mode is not recommended when streaming audio from a microphone, and should only be used for processing audio files.
+  public var doOfflineMode: Bool = false
+
+  /// A wakeword that must be recognized before transcription will be returned.
+  public var wakeWordConfig: Sensory_Api_V1_Audio_TranscribeEventConfig {
+    get {return _wakeWordConfig ?? Sensory_Api_V1_Audio_TranscribeEventConfig()}
+    set {_wakeWordConfig = newValue}
+  }
+  /// Returns true if `wakeWordConfig` has been explicitly set.
+  public var hasWakeWordConfig: Bool {return self._wakeWordConfig != nil}
+  /// Clears the value of `wakeWordConfig`. Subsequent reads from it will return its default value.
+  public mutating func clearWakeWordConfig() {self._wakeWordConfig = nil}
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 
   fileprivate var _audio: Sensory_Api_V1_Audio_AudioConfig? = nil
   fileprivate var _customWordList: Sensory_Api_V1_Audio_CustomVocabularyWords? = nil
+  fileprivate var _wakeWordConfig: Sensory_Api_V1_Audio_TranscribeEventConfig? = nil
 }
 
 /// Provides audio configuration information that specifies how to process the request.
@@ -1754,6 +1821,7 @@ extension Sensory_Api_V1_Audio_TranscribeRequest.OneOf_StreamingRequest: @unchec
 extension Sensory_Api_V1_Audio_SynthesizeSpeechRequest: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_CreateEnrollmentResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AuthenticateResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_SoundIdTopNResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEventResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventResponse: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_TranscribeWord: @unchecked Sendable {}
@@ -1772,6 +1840,7 @@ extension Sensory_Api_V1_Audio_CreateEnrollmentEventConfig.OneOf_EnrollLength: @
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_ValidateEnrolledEventConfig.OneOf_AuthID: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_CustomVocabularyWords: @unchecked Sendable {}
+extension Sensory_Api_V1_Audio_TranscribeEventConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_TranscribeConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AudioConfig: @unchecked Sendable {}
 extension Sensory_Api_V1_Audio_AudioConfig.AudioEncoding: @unchecked Sendable {}
@@ -2348,64 +2417,98 @@ extension Sensory_Api_V1_Audio_TranscribeRequest: SwiftProtobuf.Message, SwiftPr
     10: .same(proto: "postProcessingAction"),
   ]
 
+  fileprivate class _StorageClass {
+    var _streamingRequest: Sensory_Api_V1_Audio_TranscribeRequest.OneOf_StreamingRequest?
+    var _postProcessingAction: Sensory_Api_V1_Audio_AudioRequestPostProcessingAction? = nil
+
+    static let defaultInstance = _StorageClass()
+
+    private init() {}
+
+    init(copying source: _StorageClass) {
+      _streamingRequest = source._streamingRequest
+      _postProcessingAction = source._postProcessingAction
+    }
+  }
+
+  fileprivate mutating func _uniqueStorage() -> _StorageClass {
+    if !isKnownUniquelyReferenced(&_storage) {
+      _storage = _StorageClass(copying: _storage)
+    }
+    return _storage
+  }
+
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try {
-        var v: Sensory_Api_V1_Audio_TranscribeConfig?
-        var hadOneofValue = false
-        if let current = self.streamingRequest {
-          hadOneofValue = true
-          if case .config(let m) = current {v = m}
+    _ = _uniqueStorage()
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      while let fieldNumber = try decoder.nextFieldNumber() {
+        // The use of inline closures is to circumvent an issue where the compiler
+        // allocates stack space for every case branch when no optimizations are
+        // enabled. https://github.com/apple/swift-protobuf/issues/1034
+        switch fieldNumber {
+        case 1: try {
+          var v: Sensory_Api_V1_Audio_TranscribeConfig?
+          var hadOneofValue = false
+          if let current = _storage._streamingRequest {
+            hadOneofValue = true
+            if case .config(let m) = current {v = m}
+          }
+          try decoder.decodeSingularMessageField(value: &v)
+          if let v = v {
+            if hadOneofValue {try decoder.handleConflictingOneOf()}
+            _storage._streamingRequest = .config(v)
+          }
+        }()
+        case 2: try {
+          var v: Data?
+          try decoder.decodeSingularBytesField(value: &v)
+          if let v = v {
+            if _storage._streamingRequest != nil {try decoder.handleConflictingOneOf()}
+            _storage._streamingRequest = .audioContent(v)
+          }
+        }()
+        case 10: try { try decoder.decodeSingularMessageField(value: &_storage._postProcessingAction) }()
+        default: break
         }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.streamingRequest = .config(v)
-        }
-      }()
-      case 2: try {
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
-        if let v = v {
-          if self.streamingRequest != nil {try decoder.handleConflictingOneOf()}
-          self.streamingRequest = .audioContent(v)
-        }
-      }()
-      case 10: try { try decoder.decodeSingularMessageField(value: &self._postProcessingAction) }()
-      default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.streamingRequest {
-    case .config?: try {
-      guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .audioContent?: try {
-      guard case .audioContent(let v)? = self.streamingRequest else { preconditionFailure() }
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
-    }()
-    case nil: break
+    try withExtendedLifetime(_storage) { (_storage: _StorageClass) in
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every if/case branch local when no optimizations
+      // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+      // https://github.com/apple/swift-protobuf/issues/1182
+      switch _storage._streamingRequest {
+      case .config?: try {
+        guard case .config(let v)? = _storage._streamingRequest else { preconditionFailure() }
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+      }()
+      case .audioContent?: try {
+        guard case .audioContent(let v)? = _storage._streamingRequest else { preconditionFailure() }
+        try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
+      }()
+      case nil: break
+      }
+      try { if let v = _storage._postProcessingAction {
+        try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
+      } }()
     }
-    try { if let v = self._postProcessingAction {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Sensory_Api_V1_Audio_TranscribeRequest, rhs: Sensory_Api_V1_Audio_TranscribeRequest) -> Bool {
-    if lhs.streamingRequest != rhs.streamingRequest {return false}
-    if lhs._postProcessingAction != rhs._postProcessingAction {return false}
+    if lhs._storage !== rhs._storage {
+      let storagesAreEqual: Bool = withExtendedLifetime((lhs._storage, rhs._storage)) { (_args: (_StorageClass, _StorageClass)) in
+        let _storage = _args.0
+        let rhs_storage = _args.1
+        if _storage._streamingRequest != rhs_storage._streamingRequest {return false}
+        if _storage._postProcessingAction != rhs_storage._postProcessingAction {return false}
+        return true
+      }
+      if !storagesAreEqual {return false}
+    }
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -2603,6 +2706,50 @@ extension Sensory_Api_V1_Audio_AuthenticateResponse: SwiftProtobuf.Message, Swif
   }
 }
 
+extension Sensory_Api_V1_Audio_SoundIdTopNResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".SoundIdTopNResponse"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "resultId"),
+    2: .same(proto: "logitScore"),
+    3: .same(proto: "probabilityScore"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.resultID) }()
+      case 2: try { try decoder.decodeSingularFloatField(value: &self.logitScore) }()
+      case 3: try { try decoder.decodeSingularFloatField(value: &self.probabilityScore) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.resultID.isEmpty {
+      try visitor.visitSingularStringField(value: self.resultID, fieldNumber: 1)
+    }
+    if self.logitScore != 0 {
+      try visitor.visitSingularFloatField(value: self.logitScore, fieldNumber: 2)
+    }
+    if self.probabilityScore != 0 {
+      try visitor.visitSingularFloatField(value: self.probabilityScore, fieldNumber: 3)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Audio_SoundIdTopNResponse, rhs: Sensory_Api_V1_Audio_SoundIdTopNResponse) -> Bool {
+    if lhs.resultID != rhs.resultID {return false}
+    if lhs.logitScore != rhs.logitScore {return false}
+    if lhs.probabilityScore != rhs.probabilityScore {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".ValidateEventResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -2610,6 +2757,9 @@ extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, Swi
     2: .same(proto: "success"),
     3: .same(proto: "resultId"),
     4: .same(proto: "score"),
+    5: .same(proto: "topNResponse"),
+    6: .same(proto: "ResultStartTime"),
+    7: .same(proto: "ResultEndTime"),
     10: .same(proto: "postProcessingAction"),
   ]
 
@@ -2623,6 +2773,9 @@ extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, Swi
       case 2: try { try decoder.decodeSingularBoolField(value: &self.success) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.resultID) }()
       case 4: try { try decoder.decodeSingularFloatField(value: &self.score) }()
+      case 5: try { try decoder.decodeRepeatedMessageField(value: &self.topNresponse) }()
+      case 6: try { try decoder.decodeSingularFloatField(value: &self.resultStartTime) }()
+      case 7: try { try decoder.decodeSingularFloatField(value: &self.resultEndTime) }()
       case 10: try { try decoder.decodeSingularMessageField(value: &self._postProcessingAction) }()
       default: break
       }
@@ -2646,6 +2799,15 @@ extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, Swi
     if self.score != 0 {
       try visitor.visitSingularFloatField(value: self.score, fieldNumber: 4)
     }
+    if !self.topNresponse.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.topNresponse, fieldNumber: 5)
+    }
+    if self.resultStartTime != 0 {
+      try visitor.visitSingularFloatField(value: self.resultStartTime, fieldNumber: 6)
+    }
+    if self.resultEndTime != 0 {
+      try visitor.visitSingularFloatField(value: self.resultEndTime, fieldNumber: 7)
+    }
     try { if let v = self._postProcessingAction {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
     } }()
@@ -2657,6 +2819,9 @@ extension Sensory_Api_V1_Audio_ValidateEventResponse: SwiftProtobuf.Message, Swi
     if lhs.success != rhs.success {return false}
     if lhs.resultID != rhs.resultID {return false}
     if lhs.score != rhs.score {return false}
+    if lhs.topNresponse != rhs.topNresponse {return false}
+    if lhs.resultStartTime != rhs.resultStartTime {return false}
+    if lhs.resultEndTime != rhs.resultEndTime {return false}
     if lhs._postProcessingAction != rhs._postProcessingAction {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
@@ -3162,6 +3327,7 @@ extension Sensory_Api_V1_Audio_ValidateEventConfig: SwiftProtobuf.Message, Swift
     2: .same(proto: "modelName"),
     3: .same(proto: "userId"),
     4: .same(proto: "sensitivity"),
+    5: .same(proto: "topN"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3174,6 +3340,7 @@ extension Sensory_Api_V1_Audio_ValidateEventConfig: SwiftProtobuf.Message, Swift
       case 2: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
       case 3: try { try decoder.decodeSingularStringField(value: &self.userID) }()
       case 4: try { try decoder.decodeSingularEnumField(value: &self.sensitivity) }()
+      case 5: try { try decoder.decodeSingularInt32Field(value: &self.topN) }()
       default: break
       }
     }
@@ -3196,6 +3363,9 @@ extension Sensory_Api_V1_Audio_ValidateEventConfig: SwiftProtobuf.Message, Swift
     if self.sensitivity != .lowest {
       try visitor.visitSingularEnumField(value: self.sensitivity, fieldNumber: 4)
     }
+    if self.topN != 0 {
+      try visitor.visitSingularInt32Field(value: self.topN, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3204,6 +3374,7 @@ extension Sensory_Api_V1_Audio_ValidateEventConfig: SwiftProtobuf.Message, Swift
     if lhs.modelName != rhs.modelName {return false}
     if lhs.userID != rhs.userID {return false}
     if lhs.sensitivity != rhs.sensitivity {return false}
+    if lhs.topN != rhs.topN {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -3409,6 +3580,44 @@ extension Sensory_Api_V1_Audio_CustomVocabularyWords: SwiftProtobuf.Message, Swi
   }
 }
 
+extension Sensory_Api_V1_Audio_TranscribeEventConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".TranscribeEventConfig"
+  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
+    1: .same(proto: "modelName"),
+    2: .same(proto: "sensitivity"),
+  ]
+
+  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
+    while let fieldNumber = try decoder.nextFieldNumber() {
+      // The use of inline closures is to circumvent an issue where the compiler
+      // allocates stack space for every case branch when no optimizations are
+      // enabled. https://github.com/apple/swift-protobuf/issues/1034
+      switch fieldNumber {
+      case 1: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
+      case 2: try { try decoder.decodeSingularEnumField(value: &self.sensitivity) }()
+      default: break
+      }
+    }
+  }
+
+  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
+    if !self.modelName.isEmpty {
+      try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 1)
+    }
+    if self.sensitivity != .lowest {
+      try visitor.visitSingularEnumField(value: self.sensitivity, fieldNumber: 2)
+    }
+    try unknownFields.traverse(visitor: &visitor)
+  }
+
+  public static func ==(lhs: Sensory_Api_V1_Audio_TranscribeEventConfig, rhs: Sensory_Api_V1_Audio_TranscribeEventConfig) -> Bool {
+    if lhs.modelName != rhs.modelName {return false}
+    if lhs.sensitivity != rhs.sensitivity {return false}
+    if lhs.unknownFields != rhs.unknownFields {return false}
+    return true
+  }
+}
+
 extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
   public static let protoMessageName: String = _protobuf_package + ".TranscribeConfig"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
@@ -3422,6 +3631,8 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     8: .same(proto: "customVocabRewardThreshold"),
     9: .same(proto: "customVocabularyId"),
     10: .same(proto: "customWordList"),
+    11: .same(proto: "doOfflineMode"),
+    12: .same(proto: "wakeWordConfig"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -3440,6 +3651,8 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
       case 8: try { try decoder.decodeSingularEnumField(value: &self.customVocabRewardThreshold) }()
       case 9: try { try decoder.decodeSingularStringField(value: &self.customVocabularyID) }()
       case 10: try { try decoder.decodeSingularMessageField(value: &self._customWordList) }()
+      case 11: try { try decoder.decodeSingularBoolField(value: &self.doOfflineMode) }()
+      case 12: try { try decoder.decodeSingularMessageField(value: &self._wakeWordConfig) }()
       default: break
       }
     }
@@ -3480,6 +3693,12 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     try { if let v = self._customWordList {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
     } }()
+    if self.doOfflineMode != false {
+      try visitor.visitSingularBoolField(value: self.doOfflineMode, fieldNumber: 11)
+    }
+    try { if let v = self._wakeWordConfig {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 12)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -3494,6 +3713,8 @@ extension Sensory_Api_V1_Audio_TranscribeConfig: SwiftProtobuf.Message, SwiftPro
     if lhs.customVocabRewardThreshold != rhs.customVocabRewardThreshold {return false}
     if lhs.customVocabularyID != rhs.customVocabularyID {return false}
     if lhs._customWordList != rhs._customWordList {return false}
+    if lhs.doOfflineMode != rhs.doOfflineMode {return false}
+    if lhs._wakeWordConfig != rhs._wakeWordConfig {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

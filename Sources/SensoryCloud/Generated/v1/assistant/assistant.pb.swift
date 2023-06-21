@@ -22,32 +22,31 @@ fileprivate struct _GeneratedWithProtocGenSwiftVersion: SwiftProtobuf.ProtobufAP
   typealias Version = _2
 }
 
-public enum Sensory_Api_V1_Assistant_AssistantPostProcessingAction: SwiftProtobuf.Enum {
+public enum Sensory_Api_V1_Assistant_ChatRole: SwiftProtobuf.Enum {
   public typealias RawValue = Int
-
-  /// Default value to perform no action
-  case notSet // = 0
-
-  /// Indicates the final message has been sent. The server will wrap up and close the stream.
-  case final // = 1
+  case system // = 0
+  case user // = 1
+  case assistant // = 2
   case UNRECOGNIZED(Int)
 
   public init() {
-    self = .notSet
+    self = .system
   }
 
   public init?(rawValue: Int) {
     switch rawValue {
-    case 0: self = .notSet
-    case 1: self = .final
+    case 0: self = .system
+    case 1: self = .user
+    case 2: self = .assistant
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
 
   public var rawValue: Int {
     switch self {
-    case .notSet: return 0
-    case .final: return 1
+    case .system: return 0
+    case .user: return 1
+    case .assistant: return 2
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -56,307 +55,90 @@ public enum Sensory_Api_V1_Assistant_AssistantPostProcessingAction: SwiftProtobu
 
 #if swift(>=4.2)
 
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingAction: CaseIterable {
+extension Sensory_Api_V1_Assistant_ChatRole: CaseIterable {
   // The compiler won't synthesize support with the UNRECOGNIZED case.
-  public static var allCases: [Sensory_Api_V1_Assistant_AssistantPostProcessingAction] = [
-    .notSet,
-    .final,
+  public static var allCases: [Sensory_Api_V1_Assistant_ChatRole] = [
+    .system,
+    .user,
+    .assistant,
   ]
 }
 
 #endif  // swift(>=4.2)
 
-/// Request to process a message with a virutal assistant
-public struct Sensory_Api_V1_Assistant_AssistantMessageRequest {
+public struct Sensory_Api_V1_Assistant_ChatMessage {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// The streaming request, which is either a config or content.
-  public var streamingRequest: Sensory_Api_V1_Assistant_AssistantMessageRequest.OneOf_StreamingRequest? = nil
+  public var role: Sensory_Api_V1_Assistant_ChatRole = .system
 
-  /// Provides information that specifies how to process the
-  /// request. The first `CreateEnrollmentRequest` message must contain a
-  /// `config`  message.
-  public var config: Sensory_Api_V1_Assistant_AssistantMessageConfig {
-    get {
-      if case .config(let v)? = streamingRequest {return v}
-      return Sensory_Api_V1_Assistant_AssistantMessageConfig()
-    }
-    set {streamingRequest = .config(newValue)}
-  }
-
-  /// The data to be recognized. Sequential chunks of data are sent
-  /// in sequential `AssistantMessageRequest` messages. The first
-  /// `AssistantMessageRequest` message must not contain `config` data
-  /// and all subsequent `AssistantMessageRequest` messages must contain
-  /// `message` data.
-  public var message: Sensory_Api_V1_Assistant_AssistantMessage {
-    get {
-      if case .message(let v)? = streamingRequest {return v}
-      return Sensory_Api_V1_Assistant_AssistantMessage()
-    }
-    set {streamingRequest = .message(newValue)}
-  }
-
-  /// Message used to instruct the assistant engine to process audio data.
-  public var postProcessingAction: Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest {
-    get {return _postProcessingAction ?? Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest()}
-    set {_postProcessingAction = newValue}
-  }
-  /// Returns true if `postProcessingAction` has been explicitly set.
-  public var hasPostProcessingAction: Bool {return self._postProcessingAction != nil}
-  /// Clears the value of `postProcessingAction`. Subsequent reads from it will return its default value.
-  public mutating func clearPostProcessingAction() {self._postProcessingAction = nil}
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  /// The streaming request, which is either a config or content.
-  public enum OneOf_StreamingRequest: Equatable {
-    /// Provides information that specifies how to process the
-    /// request. The first `CreateEnrollmentRequest` message must contain a
-    /// `config`  message.
-    case config(Sensory_Api_V1_Assistant_AssistantMessageConfig)
-    /// The data to be recognized. Sequential chunks of data are sent
-    /// in sequential `AssistantMessageRequest` messages. The first
-    /// `AssistantMessageRequest` message must not contain `config` data
-    /// and all subsequent `AssistantMessageRequest` messages must contain
-    /// `message` data.
-    case message(Sensory_Api_V1_Assistant_AssistantMessage)
-
-  #if !swift(>=4.1)
-    public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantMessageRequest.OneOf_StreamingRequest, rhs: Sensory_Api_V1_Assistant_AssistantMessageRequest.OneOf_StreamingRequest) -> Bool {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch (lhs, rhs) {
-      case (.config, .config): return {
-        guard case .config(let l) = lhs, case .config(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.message, .message): return {
-        guard case .message(let l) = lhs, case .message(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      default: return false
-      }
-    }
-  #endif
-  }
-
-  public init() {}
-
-  fileprivate var _postProcessingAction: Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest? = nil
-}
-
-/// A message from the assistant
-public struct Sensory_Api_V1_Assistant_AssistantMessage {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  public var message: Sensory_Api_V1_Assistant_AssistantMessage.OneOf_Message? = nil
-
-  public var text: String {
-    get {
-      if case .text(let v)? = message {return v}
-      return String()
-    }
-    set {message = .text(newValue)}
-  }
-
-  /// Audio content if requested
-  public var audioContent: Data {
-    get {
-      if case .audioContent(let v)? = message {return v}
-      return Data()
-    }
-    set {message = .audioContent(newValue)}
-  }
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  public enum OneOf_Message: Equatable {
-    case text(String)
-    /// Audio content if requested
-    case audioContent(Data)
-
-  #if !swift(>=4.1)
-    public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantMessage.OneOf_Message, rhs: Sensory_Api_V1_Assistant_AssistantMessage.OneOf_Message) -> Bool {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch (lhs, rhs) {
-      case (.text, .text): return {
-        guard case .text(let l) = lhs, case .text(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      case (.audioContent, .audioContent): return {
-        guard case .audioContent(let l) = lhs, case .audioContent(let r) = rhs else { preconditionFailure() }
-        return l == r
-      }()
-      default: return false
-      }
-    }
-  #endif
-  }
-
-  public init() {}
-}
-
-/// An intent based on an AssistantMessageRequest
-public struct Sensory_Api_V1_Assistant_Intent {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  /// Name of the intent
-  public var name: String = String()
-
-  /// Confidence of the intent as indicated by the engine
-  public var confidence: Double = 0
+  public var content: String = String()
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 }
 
-/// Response from a virtual assistant
-public struct Sensory_Api_V1_Assistant_AssistantMessageResponse {
+public struct Sensory_Api_V1_Assistant_TextChatRequest {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  public var text: String = String()
-
-  /// Audio content if requested
-  public var audioContent: Data = Data()
-
-  /// The primary intent selected by the engine
-  public var intent: Sensory_Api_V1_Assistant_Intent {
-    get {return _intent ?? Sensory_Api_V1_Assistant_Intent()}
-    set {_intent = newValue}
-  }
-  /// Returns true if `intent` has been explicitly set.
-  public var hasIntent: Bool {return self._intent != nil}
-  /// Clears the value of `intent`. Subsequent reads from it will return its default value.
-  public mutating func clearIntent() {self._intent = nil}
-
-  /// A list of the ranked intents as determined by the engine
-  public var intents: [Sensory_Api_V1_Assistant_Intent] = []
-
-  /// Indicates the audio is done streaming
-  public var isAudioComplete: Bool = false
-
-  /// Message used to instruct the assistant engine to process audio data.
-  public var postProcessingAction: Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse {
-    get {return _postProcessingAction ?? Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse()}
-    set {_postProcessingAction = newValue}
-  }
-  /// Returns true if `postProcessingAction` has been explicitly set.
-  public var hasPostProcessingAction: Bool {return self._postProcessingAction != nil}
-  /// Clears the value of `postProcessingAction`. Subsequent reads from it will return its default value.
-  public mutating func clearPostProcessingAction() {self._postProcessingAction = nil}
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  public init() {}
-
-  fileprivate var _intent: Sensory_Api_V1_Assistant_Intent? = nil
-  fileprivate var _postProcessingAction: Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse? = nil
-}
-
-/// Provides information for an audio-based enrollment
-public struct Sensory_Api_V1_Assistant_AssistantMessageConfig {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  /// The unique user Identifer. This value should be a unique email address or username known by the user.
-  public var userID: String = String()
-
-  /// The unique device Identifer. This value should be something retrieved by the devie prior to enrollment (like MAC Address)
-  /// this value is used to identify a device uniquely across multiple enrollments
-  public var deviceID: String = String()
-
-  /// Name of background model to be enrolled in
-  /// Background models can be retrieved from the GetModels() gRPC call
   public var modelName: String = String()
 
-  /// Indicates if audio content should be returned along with text and intent content
-  public var includeAudioResponse: Bool = false
+  public var messages: [Sensory_Api_V1_Assistant_ChatMessage] = []
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
 }
 
-/// Action that can be passed along with any audio data. This message instructs the audio engine to
-/// perfrom some kind of action after the data is processed.
-public struct Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest {
+public struct Sensory_Api_V1_Assistant_TextChatResponse {
   // SwiftProtobuf.Message conformance is added in an extension below. See the
   // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
   // methods supported on all messages.
 
-  /// ID that can be set by the client. This ID will be returned to the client upon a successful flush or reset.
-  public var actionID: String = String()
-
-  /// The specific action that is being requested.
-  public var action: Sensory_Api_V1_Assistant_AssistantPostProcessingAction = .notSet
-
-  public var unknownFields = SwiftProtobuf.UnknownStorage()
-
-  public init() {}
-}
-
-/// Action that can be passed along with any audio data. This message instructs the audio engine to
-/// perfrom some kind of action after the data is processed.
-public struct Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse {
-  // SwiftProtobuf.Message conformance is added in an extension below. See the
-  // `Message` and `Message+*Additions` files in the SwiftProtobuf library for
-  // methods supported on all messages.
-
-  /// ID that can be set by the client. This ID will be returned to the client upon a successful flush or reset.
-  public var actionID: String = String()
-
-  /// The specific action that is being requested.
-  public var action: Sensory_Api_V1_Assistant_AssistantPostProcessingAction = .notSet
+  public var message: Sensory_Api_V1_Assistant_ChatMessage {
+    get {return _message ?? Sensory_Api_V1_Assistant_ChatMessage()}
+    set {_message = newValue}
+  }
+  /// Returns true if `message` has been explicitly set.
+  public var hasMessage: Bool {return self._message != nil}
+  /// Clears the value of `message`. Subsequent reads from it will return its default value.
+  public mutating func clearMessage() {self._message = nil}
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
+
+  fileprivate var _message: Sensory_Api_V1_Assistant_ChatMessage? = nil
 }
 
 #if swift(>=5.5) && canImport(_Concurrency)
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingAction: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantMessageRequest: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantMessageRequest.OneOf_StreamingRequest: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantMessage: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantMessage.OneOf_Message: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_Intent: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantMessageResponse: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantMessageConfig: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest: @unchecked Sendable {}
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse: @unchecked Sendable {}
+extension Sensory_Api_V1_Assistant_ChatRole: @unchecked Sendable {}
+extension Sensory_Api_V1_Assistant_ChatMessage: @unchecked Sendable {}
+extension Sensory_Api_V1_Assistant_TextChatRequest: @unchecked Sendable {}
+extension Sensory_Api_V1_Assistant_TextChatResponse: @unchecked Sendable {}
 #endif  // swift(>=5.5) && canImport(_Concurrency)
 
 // MARK: - Code below here is support for the SwiftProtobuf runtime.
 
 fileprivate let _protobuf_package = "sensory.api.v1.assistant"
 
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingAction: SwiftProtobuf._ProtoNameProviding {
+extension Sensory_Api_V1_Assistant_ChatRole: SwiftProtobuf._ProtoNameProviding {
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    0: .same(proto: "NOT_SET"),
-    1: .same(proto: "FINAL"),
+    0: .same(proto: "SYSTEM"),
+    1: .same(proto: "USER"),
+    2: .same(proto: "ASSISTANT"),
   ]
 }
 
-extension Sensory_Api_V1_Assistant_AssistantMessageRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".AssistantMessageRequest"
+extension Sensory_Api_V1_Assistant_ChatMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".ChatMessage"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "config"),
-    2: .same(proto: "message"),
-    10: .same(proto: "postProcessingAction"),
+    1: .same(proto: "role"),
+    2: .same(proto: "content"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -365,73 +147,36 @@ extension Sensory_Api_V1_Assistant_AssistantMessageRequest: SwiftProtobuf.Messag
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
-        var v: Sensory_Api_V1_Assistant_AssistantMessageConfig?
-        var hadOneofValue = false
-        if let current = self.streamingRequest {
-          hadOneofValue = true
-          if case .config(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.streamingRequest = .config(v)
-        }
-      }()
-      case 2: try {
-        var v: Sensory_Api_V1_Assistant_AssistantMessage?
-        var hadOneofValue = false
-        if let current = self.streamingRequest {
-          hadOneofValue = true
-          if case .message(let m) = current {v = m}
-        }
-        try decoder.decodeSingularMessageField(value: &v)
-        if let v = v {
-          if hadOneofValue {try decoder.handleConflictingOneOf()}
-          self.streamingRequest = .message(v)
-        }
-      }()
-      case 10: try { try decoder.decodeSingularMessageField(value: &self._postProcessingAction) }()
+      case 1: try { try decoder.decodeSingularEnumField(value: &self.role) }()
+      case 2: try { try decoder.decodeSingularStringField(value: &self.content) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.streamingRequest {
-    case .config?: try {
-      guard case .config(let v)? = self.streamingRequest else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
-    }()
-    case .message?: try {
-      guard case .message(let v)? = self.streamingRequest else { preconditionFailure() }
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 2)
-    }()
-    case nil: break
+    if self.role != .system {
+      try visitor.visitSingularEnumField(value: self.role, fieldNumber: 1)
     }
-    try { if let v = self._postProcessingAction {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    } }()
+    if !self.content.isEmpty {
+      try visitor.visitSingularStringField(value: self.content, fieldNumber: 2)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantMessageRequest, rhs: Sensory_Api_V1_Assistant_AssistantMessageRequest) -> Bool {
-    if lhs.streamingRequest != rhs.streamingRequest {return false}
-    if lhs._postProcessingAction != rhs._postProcessingAction {return false}
+  public static func ==(lhs: Sensory_Api_V1_Assistant_ChatMessage, rhs: Sensory_Api_V1_Assistant_ChatMessage) -> Bool {
+    if lhs.role != rhs.role {return false}
+    if lhs.content != rhs.content {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Sensory_Api_V1_Assistant_AssistantMessage: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".AssistantMessage"
+extension Sensory_Api_V1_Assistant_TextChatRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".TextChatRequest"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "text"),
-    2: .same(proto: "audioContent"),
+    1: .same(proto: "modelName"),
+    2: .same(proto: "messages"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -440,212 +185,35 @@ extension Sensory_Api_V1_Assistant_AssistantMessage: SwiftProtobuf.Message, Swif
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try {
-        var v: String?
-        try decoder.decodeSingularStringField(value: &v)
-        if let v = v {
-          if self.message != nil {try decoder.handleConflictingOneOf()}
-          self.message = .text(v)
-        }
-      }()
-      case 2: try {
-        var v: Data?
-        try decoder.decodeSingularBytesField(value: &v)
-        if let v = v {
-          if self.message != nil {try decoder.handleConflictingOneOf()}
-          self.message = .audioContent(v)
-        }
-      }()
+      case 1: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
+      case 2: try { try decoder.decodeRepeatedMessageField(value: &self.messages) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    switch self.message {
-    case .text?: try {
-      guard case .text(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularStringField(value: v, fieldNumber: 1)
-    }()
-    case .audioContent?: try {
-      guard case .audioContent(let v)? = self.message else { preconditionFailure() }
-      try visitor.visitSingularBytesField(value: v, fieldNumber: 2)
-    }()
-    case nil: break
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantMessage, rhs: Sensory_Api_V1_Assistant_AssistantMessage) -> Bool {
-    if lhs.message != rhs.message {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension Sensory_Api_V1_Assistant_Intent: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".Intent"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "name"),
-    2: .same(proto: "confidence"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.name) }()
-      case 2: try { try decoder.decodeSingularDoubleField(value: &self.confidence) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.name.isEmpty {
-      try visitor.visitSingularStringField(value: self.name, fieldNumber: 1)
-    }
-    if self.confidence != 0 {
-      try visitor.visitSingularDoubleField(value: self.confidence, fieldNumber: 2)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Assistant_Intent, rhs: Sensory_Api_V1_Assistant_Intent) -> Bool {
-    if lhs.name != rhs.name {return false}
-    if lhs.confidence != rhs.confidence {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension Sensory_Api_V1_Assistant_AssistantMessageResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".AssistantMessageResponse"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "text"),
-    2: .same(proto: "audioContent"),
-    3: .same(proto: "intent"),
-    4: .same(proto: "intents"),
-    5: .same(proto: "isAudioComplete"),
-    10: .same(proto: "postProcessingAction"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.text) }()
-      case 2: try { try decoder.decodeSingularBytesField(value: &self.audioContent) }()
-      case 3: try { try decoder.decodeSingularMessageField(value: &self._intent) }()
-      case 4: try { try decoder.decodeRepeatedMessageField(value: &self.intents) }()
-      case 5: try { try decoder.decodeSingularBoolField(value: &self.isAudioComplete) }()
-      case 10: try { try decoder.decodeSingularMessageField(value: &self._postProcessingAction) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    // The use of inline closures is to circumvent an issue where the compiler
-    // allocates stack space for every if/case branch local when no optimizations
-    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
-    // https://github.com/apple/swift-protobuf/issues/1182
-    if !self.text.isEmpty {
-      try visitor.visitSingularStringField(value: self.text, fieldNumber: 1)
-    }
-    if !self.audioContent.isEmpty {
-      try visitor.visitSingularBytesField(value: self.audioContent, fieldNumber: 2)
-    }
-    try { if let v = self._intent {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 3)
-    } }()
-    if !self.intents.isEmpty {
-      try visitor.visitRepeatedMessageField(value: self.intents, fieldNumber: 4)
-    }
-    if self.isAudioComplete != false {
-      try visitor.visitSingularBoolField(value: self.isAudioComplete, fieldNumber: 5)
-    }
-    try { if let v = self._postProcessingAction {
-      try visitor.visitSingularMessageField(value: v, fieldNumber: 10)
-    } }()
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantMessageResponse, rhs: Sensory_Api_V1_Assistant_AssistantMessageResponse) -> Bool {
-    if lhs.text != rhs.text {return false}
-    if lhs.audioContent != rhs.audioContent {return false}
-    if lhs._intent != rhs._intent {return false}
-    if lhs.intents != rhs.intents {return false}
-    if lhs.isAudioComplete != rhs.isAudioComplete {return false}
-    if lhs._postProcessingAction != rhs._postProcessingAction {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension Sensory_Api_V1_Assistant_AssistantMessageConfig: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".AssistantMessageConfig"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    2: .same(proto: "userId"),
-    3: .same(proto: "deviceId"),
-    4: .same(proto: "modelName"),
-    5: .same(proto: "includeAudioResponse"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 2: try { try decoder.decodeSingularStringField(value: &self.userID) }()
-      case 3: try { try decoder.decodeSingularStringField(value: &self.deviceID) }()
-      case 4: try { try decoder.decodeSingularStringField(value: &self.modelName) }()
-      case 5: try { try decoder.decodeSingularBoolField(value: &self.includeAudioResponse) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.userID.isEmpty {
-      try visitor.visitSingularStringField(value: self.userID, fieldNumber: 2)
-    }
-    if !self.deviceID.isEmpty {
-      try visitor.visitSingularStringField(value: self.deviceID, fieldNumber: 3)
-    }
     if !self.modelName.isEmpty {
-      try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 4)
+      try visitor.visitSingularStringField(value: self.modelName, fieldNumber: 1)
     }
-    if self.includeAudioResponse != false {
-      try visitor.visitSingularBoolField(value: self.includeAudioResponse, fieldNumber: 5)
+    if !self.messages.isEmpty {
+      try visitor.visitRepeatedMessageField(value: self.messages, fieldNumber: 2)
     }
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantMessageConfig, rhs: Sensory_Api_V1_Assistant_AssistantMessageConfig) -> Bool {
-    if lhs.userID != rhs.userID {return false}
-    if lhs.deviceID != rhs.deviceID {return false}
+  public static func ==(lhs: Sensory_Api_V1_Assistant_TextChatRequest, rhs: Sensory_Api_V1_Assistant_TextChatRequest) -> Bool {
     if lhs.modelName != rhs.modelName {return false}
-    if lhs.includeAudioResponse != rhs.includeAudioResponse {return false}
+    if lhs.messages != rhs.messages {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
 }
 
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".AssistantPostProcessingActionRequest"
+extension Sensory_Api_V1_Assistant_TextChatResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
+  public static let protoMessageName: String = _protobuf_package + ".TextChatResponse"
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "actionId"),
-    2: .same(proto: "action"),
+    1: .same(proto: "message"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -654,64 +222,25 @@ extension Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest: SwiftPr
       // allocates stack space for every case branch when no optimizations are
       // enabled. https://github.com/apple/swift-protobuf/issues/1034
       switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.actionID) }()
-      case 2: try { try decoder.decodeSingularEnumField(value: &self.action) }()
+      case 1: try { try decoder.decodeSingularMessageField(value: &self._message) }()
       default: break
       }
     }
   }
 
   public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.actionID.isEmpty {
-      try visitor.visitSingularStringField(value: self.actionID, fieldNumber: 1)
-    }
-    if self.action != .notSet {
-      try visitor.visitSingularEnumField(value: self.action, fieldNumber: 2)
-    }
+    // The use of inline closures is to circumvent an issue where the compiler
+    // allocates stack space for every if/case branch local when no optimizations
+    // are enabled. https://github.com/apple/swift-protobuf/issues/1034 and
+    // https://github.com/apple/swift-protobuf/issues/1182
+    try { if let v = self._message {
+      try visitor.visitSingularMessageField(value: v, fieldNumber: 1)
+    } }()
     try unknownFields.traverse(visitor: &visitor)
   }
 
-  public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest, rhs: Sensory_Api_V1_Assistant_AssistantPostProcessingActionRequest) -> Bool {
-    if lhs.actionID != rhs.actionID {return false}
-    if lhs.action != rhs.action {return false}
-    if lhs.unknownFields != rhs.unknownFields {return false}
-    return true
-  }
-}
-
-extension Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse: SwiftProtobuf.Message, SwiftProtobuf._MessageImplementationBase, SwiftProtobuf._ProtoNameProviding {
-  public static let protoMessageName: String = _protobuf_package + ".AssistantPostProcessingActionResponse"
-  public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
-    1: .same(proto: "actionId"),
-    2: .same(proto: "action"),
-  ]
-
-  public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
-    while let fieldNumber = try decoder.nextFieldNumber() {
-      // The use of inline closures is to circumvent an issue where the compiler
-      // allocates stack space for every case branch when no optimizations are
-      // enabled. https://github.com/apple/swift-protobuf/issues/1034
-      switch fieldNumber {
-      case 1: try { try decoder.decodeSingularStringField(value: &self.actionID) }()
-      case 2: try { try decoder.decodeSingularEnumField(value: &self.action) }()
-      default: break
-      }
-    }
-  }
-
-  public func traverse<V: SwiftProtobuf.Visitor>(visitor: inout V) throws {
-    if !self.actionID.isEmpty {
-      try visitor.visitSingularStringField(value: self.actionID, fieldNumber: 1)
-    }
-    if self.action != .notSet {
-      try visitor.visitSingularEnumField(value: self.action, fieldNumber: 2)
-    }
-    try unknownFields.traverse(visitor: &visitor)
-  }
-
-  public static func ==(lhs: Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse, rhs: Sensory_Api_V1_Assistant_AssistantPostProcessingActionResponse) -> Bool {
-    if lhs.actionID != rhs.actionID {return false}
-    if lhs.action != rhs.action {return false}
+  public static func ==(lhs: Sensory_Api_V1_Assistant_TextChatResponse, rhs: Sensory_Api_V1_Assistant_TextChatResponse) -> Bool {
+    if lhs._message != rhs._message {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }

@@ -234,6 +234,12 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
 
   /// Image Transformation
   case imageTransform // = 204
+
+  /// Face Embedding
+  case faceEmbedding // = 205
+
+  /// Large Language Model
+  case llmGpt35 // = 301
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -261,6 +267,8 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case 202: self = .faceRecognition
     case 203: self = .objectRecognition
     case 204: self = .imageTransform
+    case 205: self = .faceEmbedding
+    case 301: self = .llmGpt35
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -286,6 +294,8 @@ public enum Sensory_Api_Common_ModelType: SwiftProtobuf.Enum {
     case .faceRecognition: return 202
     case .objectRecognition: return 203
     case .imageTransform: return 204
+    case .faceEmbedding: return 205
+    case .llmGpt35: return 301
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -316,6 +326,8 @@ extension Sensory_Api_Common_ModelType: CaseIterable {
     .faceRecognition,
     .objectRecognition,
     .imageTransform,
+    .faceEmbedding,
+    .llmGpt35,
   ]
 }
 
@@ -342,6 +354,9 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
 
   /// Text to Speech, a voice synthesis tool
   case tts // = 5
+
+  /// Sound Id, a sound identification tool
+  case soundID // = 6
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -356,6 +371,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case 3: self = .tnl
     case 4: self = .stt
     case 5: self = .tts
+    case 6: self = .soundID
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -368,6 +384,7 @@ public enum Sensory_Api_Common_TechnologyType: SwiftProtobuf.Enum {
     case .tnl: return 3
     case .stt: return 4
     case .tts: return 5
+    case .soundID: return 6
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -385,6 +402,7 @@ extension Sensory_Api_Common_TechnologyType: CaseIterable {
     .tnl,
     .stt,
     .tts,
+    .soundID,
   ]
 }
 
@@ -530,6 +548,9 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
 
   /// Speech to text usage event
   case transcription // = 4
+
+  /// Large Language Model
+  case llm // = 5
   case UNRECOGNIZED(Int)
 
   public init() {
@@ -543,6 +564,7 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
     case 2: self = .enrollment
     case 3: self = .synthesis
     case 4: self = .transcription
+    case 5: self = .llm
     default: self = .UNRECOGNIZED(rawValue)
     }
   }
@@ -554,6 +576,7 @@ public enum Sensory_Api_Common_UsageEventType: SwiftProtobuf.Enum {
     case .enrollment: return 2
     case .synthesis: return 3
     case .transcription: return 4
+    case .llm: return 5
     case .UNRECOGNIZED(let i): return i
     }
   }
@@ -570,6 +593,7 @@ extension Sensory_Api_Common_UsageEventType: CaseIterable {
     .enrollment,
     .synthesis,
     .transcription,
+    .llm,
   ]
 }
 
@@ -1057,6 +1081,8 @@ extension Sensory_Api_Common_ModelType: SwiftProtobuf._ProtoNameProviding {
     202: .same(proto: "FACE_RECOGNITION"),
     203: .same(proto: "OBJECT_RECOGNITION"),
     204: .same(proto: "IMAGE_TRANSFORM"),
+    205: .same(proto: "FACE_EMBEDDING"),
+    301: .same(proto: "LLM_GPT_3_5"),
   ]
 }
 
@@ -1068,6 +1094,7 @@ extension Sensory_Api_Common_TechnologyType: SwiftProtobuf._ProtoNameProviding {
     3: .same(proto: "TNL"),
     4: .same(proto: "STT"),
     5: .same(proto: "TTS"),
+    6: .same(proto: "SOUND_ID"),
   ]
 }
 
@@ -1097,6 +1124,7 @@ extension Sensory_Api_Common_UsageEventType: SwiftProtobuf._ProtoNameProviding {
     2: .same(proto: "ENROLLMENT"),
     3: .same(proto: "SYNTHESIS"),
     4: .same(proto: "TRANSCRIPTION"),
+    5: .same(proto: "LLM"),
   ]
 }
 

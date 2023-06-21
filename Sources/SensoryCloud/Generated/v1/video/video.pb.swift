@@ -364,6 +364,15 @@ public struct Sensory_Api_V1_Video_CreateEnrollmentResponse {
   /// Clears the value of `enrollmentToken`. Subsequent reads from it will return its default value.
   public mutating func clearEnrollmentToken() {self._enrollmentToken = nil}
 
+  /// Indicates if a face was found in the uploaded image
+  public var didFindFace: Bool = false
+
+  /// The bounding box of the face
+  public var boundingBox: [Int64] = []
+
+  /// The model's confidence in its face detection
+  public var probabilityFace: Float = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -404,6 +413,15 @@ public struct Sensory_Api_V1_Video_AuthenticateResponse {
   /// Useful when evaluating enrollment groups
   public var enrollmentID: String = String()
 
+  /// Indicates if a face was found in the uploaded image
+  public var didFindFace: Bool = false
+
+  /// The bounding box of the face
+  public var boundingBox: [Int64] = []
+
+  /// The model's confidence in its face detection
+  public var probabilityFace: Float = 0
+
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
   public init() {}
@@ -422,6 +440,15 @@ public struct Sensory_Api_V1_Video_LivenessRecognitionResponse {
 
   /// Score of the liveness (lower is better)
   public var score: Float = 0
+
+  /// Indicates if a face was found in the uploaded image
+  public var didFindFace: Bool = false
+
+  /// The bounding box of the face
+  public var boundingBox: [Int64] = []
+
+  /// The model's confidence in its face detection
+  public var probabilityFace: Float = 0
 
   public var unknownFields = SwiftProtobuf.UnknownStorage()
 
@@ -947,6 +974,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     5: .same(proto: "modelVersion"),
     6: .same(proto: "score"),
     7: .same(proto: "enrollmentToken"),
+    8: .same(proto: "didFindFace"),
+    9: .same(proto: "boundingBox"),
+    10: .same(proto: "probabilityFace"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -962,6 +992,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
       case 5: try { try decoder.decodeSingularStringField(value: &self.modelVersion) }()
       case 6: try { try decoder.decodeSingularFloatField(value: &self.score) }()
       case 7: try { try decoder.decodeSingularMessageField(value: &self._enrollmentToken) }()
+      case 8: try { try decoder.decodeSingularBoolField(value: &self.didFindFace) }()
+      case 9: try { try decoder.decodeRepeatedInt64Field(value: &self.boundingBox) }()
+      case 10: try { try decoder.decodeSingularFloatField(value: &self.probabilityFace) }()
       default: break
       }
     }
@@ -993,6 +1026,15 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     try { if let v = self._enrollmentToken {
       try visitor.visitSingularMessageField(value: v, fieldNumber: 7)
     } }()
+    if self.didFindFace != false {
+      try visitor.visitSingularBoolField(value: self.didFindFace, fieldNumber: 8)
+    }
+    if !self.boundingBox.isEmpty {
+      try visitor.visitPackedInt64Field(value: self.boundingBox, fieldNumber: 9)
+    }
+    if self.probabilityFace != 0 {
+      try visitor.visitSingularFloatField(value: self.probabilityFace, fieldNumber: 10)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1004,6 +1046,9 @@ extension Sensory_Api_V1_Video_CreateEnrollmentResponse: SwiftProtobuf.Message, 
     if lhs.modelVersion != rhs.modelVersion {return false}
     if lhs.score != rhs.score {return false}
     if lhs._enrollmentToken != rhs._enrollmentToken {return false}
+    if lhs.didFindFace != rhs.didFindFace {return false}
+    if lhs.boundingBox != rhs.boundingBox {return false}
+    if lhs.probabilityFace != rhs.probabilityFace {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1018,6 +1063,9 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     4: .same(proto: "token"),
     5: .same(proto: "userId"),
     6: .same(proto: "enrollmentId"),
+    7: .same(proto: "didFindFace"),
+    8: .same(proto: "boundingBox"),
+    9: .same(proto: "probabilityFace"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1032,6 +1080,9 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
       case 4: try { try decoder.decodeSingularMessageField(value: &self._token) }()
       case 5: try { try decoder.decodeSingularStringField(value: &self.userID) }()
       case 6: try { try decoder.decodeSingularStringField(value: &self.enrollmentID) }()
+      case 7: try { try decoder.decodeSingularBoolField(value: &self.didFindFace) }()
+      case 8: try { try decoder.decodeRepeatedInt64Field(value: &self.boundingBox) }()
+      case 9: try { try decoder.decodeSingularFloatField(value: &self.probabilityFace) }()
       default: break
       }
     }
@@ -1060,6 +1111,15 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     if !self.enrollmentID.isEmpty {
       try visitor.visitSingularStringField(value: self.enrollmentID, fieldNumber: 6)
     }
+    if self.didFindFace != false {
+      try visitor.visitSingularBoolField(value: self.didFindFace, fieldNumber: 7)
+    }
+    if !self.boundingBox.isEmpty {
+      try visitor.visitPackedInt64Field(value: self.boundingBox, fieldNumber: 8)
+    }
+    if self.probabilityFace != 0 {
+      try visitor.visitSingularFloatField(value: self.probabilityFace, fieldNumber: 9)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
@@ -1070,6 +1130,9 @@ extension Sensory_Api_V1_Video_AuthenticateResponse: SwiftProtobuf.Message, Swif
     if lhs._token != rhs._token {return false}
     if lhs.userID != rhs.userID {return false}
     if lhs.enrollmentID != rhs.enrollmentID {return false}
+    if lhs.didFindFace != rhs.didFindFace {return false}
+    if lhs.boundingBox != rhs.boundingBox {return false}
+    if lhs.probabilityFace != rhs.probabilityFace {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
@@ -1080,6 +1143,9 @@ extension Sensory_Api_V1_Video_LivenessRecognitionResponse: SwiftProtobuf.Messag
   public static let _protobuf_nameMap: SwiftProtobuf._NameMap = [
     1: .same(proto: "isAlive"),
     2: .same(proto: "score"),
+    3: .same(proto: "didFindFace"),
+    4: .same(proto: "boundingBox"),
+    5: .same(proto: "probabilityFace"),
   ]
 
   public mutating func decodeMessage<D: SwiftProtobuf.Decoder>(decoder: inout D) throws {
@@ -1090,6 +1156,9 @@ extension Sensory_Api_V1_Video_LivenessRecognitionResponse: SwiftProtobuf.Messag
       switch fieldNumber {
       case 1: try { try decoder.decodeSingularBoolField(value: &self.isAlive) }()
       case 2: try { try decoder.decodeSingularFloatField(value: &self.score) }()
+      case 3: try { try decoder.decodeSingularBoolField(value: &self.didFindFace) }()
+      case 4: try { try decoder.decodeRepeatedInt64Field(value: &self.boundingBox) }()
+      case 5: try { try decoder.decodeSingularFloatField(value: &self.probabilityFace) }()
       default: break
       }
     }
@@ -1102,12 +1171,24 @@ extension Sensory_Api_V1_Video_LivenessRecognitionResponse: SwiftProtobuf.Messag
     if self.score != 0 {
       try visitor.visitSingularFloatField(value: self.score, fieldNumber: 2)
     }
+    if self.didFindFace != false {
+      try visitor.visitSingularBoolField(value: self.didFindFace, fieldNumber: 3)
+    }
+    if !self.boundingBox.isEmpty {
+      try visitor.visitPackedInt64Field(value: self.boundingBox, fieldNumber: 4)
+    }
+    if self.probabilityFace != 0 {
+      try visitor.visitSingularFloatField(value: self.probabilityFace, fieldNumber: 5)
+    }
     try unknownFields.traverse(visitor: &visitor)
   }
 
   public static func ==(lhs: Sensory_Api_V1_Video_LivenessRecognitionResponse, rhs: Sensory_Api_V1_Video_LivenessRecognitionResponse) -> Bool {
     if lhs.isAlive != rhs.isAlive {return false}
     if lhs.score != rhs.score {return false}
+    if lhs.didFindFace != rhs.didFindFace {return false}
+    if lhs.boundingBox != rhs.boundingBox {return false}
+    if lhs.probabilityFace != rhs.probabilityFace {return false}
     if lhs.unknownFields != rhs.unknownFields {return false}
     return true
   }
